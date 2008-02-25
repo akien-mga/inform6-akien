@@ -1,0 +1,471 @@
+!% -SD
+!=======================================================================================
+
+Constant Story "Katabasis";
+Constant Headline
+            "^^Une fiction interactive de Rémi Verschelde (Akien).^^";
+Release 0;  Serial "080220";
+
+Constant MAX_SCORE 1;
+
+Include "Parser";
+Include "VerbLib";
+
+!=======================================================================================
+
+Global  dans_barque = 1;
+
+!=======================================================================================
+
+Class   AverneScenic
+  with  scenic_all
+            'poissons' 'poisson' 'animaux' 'animal' 'marins' 'marin' 'terrestre'
+            'terrestres' 0 "Vous ne concevez pas comment un animal terrestre ou marin
+            pourrait vivre dans ce lieu macabre.",
+        scenic_look
+            'eaux' 'eau' 'lac' 'noir' 'sombre' 'flots' 'mer' 'liquide' 'flux' 'Averne'
+            'remous' 'nauséeuses' 0 "C'est un immense lac noir dont les eaux ténébreuses
+            semblent se perdre dans les profondeurs, mais vous dénotez une lueur
+            jaillissant en son fond.",
+        scenic_touch
+            'eaux' 'eau' 'lac' 'noir' 'sombre' 'flots' 'mer' 'liquide' 'flux' 'Averne'
+            'remous' 'nauséeuses' 0 "Vous glissez votre main dans l'eau glacée du lac
+            et la retirez aussitôt, soudain pris d'une angoisse indéfinissable. Vous
+            vous resolvez à continuer votre périple en descendant la rivière.",
+        scenic_taste
+            'eaux' 'eau' 'lac' 'noir' 'sombre' 'flots' 'mer' 'liquide' 'flux' 'Averne'
+            'remous' 'nauséeuses' 0 "Le désespoir n'est pas encore assez grand pour
+            tenter de vous empoisonner avec ces eaux nauséeuses.",
+        scenic_smell
+            'eaux' 'eau' 'lac' 'noir' 'sombre' 'flots' 'mer' 'liquide' 'flux' 'Averne'
+            'remous' 'nauséeuses' 0 "De toutes parts, les odeurs vous assaillent,
+            mêlées de cendres et d'encens, la poussière environnante se joignant aux
+            relents nauséeux en provenance de la rivière.",
+        scenic_listen
+            'eaux' 'eau' 'lac' 'noir' 'sombre' 'flots' 'mer' 'liquide' 'flux' 'Averne'
+            'remous' 'nauséeuses' 0 "Les quelques remous de l'eau s'estompent et un
+            silence macabre vient s'installer.";
+
+Class   AverneTerre
+  with  initial [;
+          if (dans_barque == 1) {
+            dans_barque = 0;
+            "Vous accostez votre barque le long de la rive du lac, et posez avec force
+            précaution votre pied à terre.";
+          }
+        ],
+        scenic_all
+            'poussiere' 'poussieres' 'etrange' 'substance' 'malodorante' 0 "Vous vous
+            penchez un peu plus pour identifier cette étrange poussière mais vous ne
+            faites qu'emplir vos poumons d'une substance malodorante qui vous fait
+            éternuer.",
+        before [;
+          Smell: "De toutes parts, les odeurs vous assaillent, mêlées de cendres et
+            d'encens, la poussière environnante se joignant aux relents nauséeux en
+            provenance de la rivière.";
+          Listen: "Le silence vous pèse. Les eaux stagnantes ont fini d'onduler suite
+            aux remous de votre accostage, et maintenant, plus aucun son ne parvient
+            jusqu'à vous.";
+          Swim: "Les eaux noirâtres de la rivière vous répugnent et vous n'avez
+            réellement aucune envie d'y entrer.";
+        ],
+        cant_go "Aucune issue apparente dans la paroi granitique. La rivière semble
+            être la seule échappatoire.",
+        barque_la 0,
+  has   light;
+
+!=======================================================================================
+
+Object  averne_lac "L'Averne" class AverneScenic
+  with  name 'surface', 
+        description "Votre barque se situe au beau milieu d'un immense lac noir dont
+            les eaux ténébreuses semblent se perdre dans les profondeurs, bien que perle
+            dans l'abysse une lueur qui éclaire le lieu d'une lumière diffuse. Au dessus
+            du lac, ce que vous preniez pour un firmament étoilé n'est en fait qu'une
+            gigantesque voute de roche granitique parsemée de cristaux bleutés et
+            violacés. Ce lac souterrain est sans nul doute la source de la rivière que
+            vous voyez s'écouler au sud. La rive ouest est bien trop escarpée pour être
+            rejointe par les eaux, mais vous devriez être en mesure d'accoster à l'est
+            et au nord.",
+        initial [;
+          if (dans_barque == 0) {
+            dans_barque = 1;
+            "Vous réembarquez sur votre frêle embarcation, craignant de la voir
+            s'effriter lorsque vous y posez le pied.";
+          }
+        ],
+        before [;
+          Smell: "De toutes parts, les odeurs vous assaillent, mêlées de cendres et
+            d'encens, la poussière environnante se joignant aux relents nauséeux en
+            provenance de la rivière.";
+          Listen: "Le silence n'est troublé que par les doux remous de l'eau ondulant
+            depuis votre barque. Vous retenez votre respiration quelques instants et
+            arrêtez de bouger. Les ondes finissent de couler jusqu'au rivage, puis plus
+            rien. Un silence macabre.";
+          Swim: "Les eaux noirâtres de la rivière vous répugnent et vous n'avez
+            réellement aucune envie d'y entrer.";
+        ],
+        barque_la 1,
+        e_to [;
+          move rame to averne_est;
+          move barque to averne_est;
+          averne_est.barque_la = 1;
+          return averne_est;
+        ],
+        n_to [;
+          move rame to averne_nord;
+          move barque to averne_nord;
+          averne_nord.barque_la = 1;
+          return averne_nord;
+        ],
+        ne_to "Ici encore, des roches aiguisées vous font rebrousser chemin.",
+        nw_to "Vous tentez d'accoster votre barque le long de la rive ouest du lac,
+            mais des roches aiguisées vous font rebrousser chemin.",
+        w_to "Vous tentez d'accoster votre barque le long de la rive ouest du lac,
+            mais des roches aiguisées vous font rebrousser chemin.",
+        s_to [;
+          if (cristal in player) {
+            print "Tenant fermement votre cristal diaphane dans une main, vous
+            entreprenez d'approcher votre barque de la rivière qui s'étend au sud du
+            lac, et fermant les yeux, vous laissez votre embarcation dériver d'elle
+            même dans la pente douce.^";
+            move rame to averne_sud;
+            move barque to averne_sud;
+            PlayerTo(averne_sud);
+            return;
+          }
+          else {
+            "Plongeant votre regard dans les profondeurs glaciales où sillonne la
+            rivière, vous vous dites qu'il serait préférable de trouver un quelconque
+            objet pour vous éclairer avant de vous enfoncer dans les ténèbres.";
+          }
+        ],
+  has   light;
+
+Object  averne_lueur "lueur"
+  with  name 'lueur' 'abysse' 'lumiere' 'entree' 'passage' 'profondeurs' 'fond'
+            'abyssales',
+        description "Vous scrutez les profondeurs abyssales avec intérêt, et la lumière
+            qui en provient vous remplit d'un sentiment de paix intérieure. Vous lancez
+            un regard du côté de la rivière qui semble plonger dans les ténèbres
+            infinies et formez l'hypothèse que cette lumière, luisant depuis le fin
+            fond du lac, serait le seul lien avec la surface terrestre.^
+            Cependant vous voyez mal comment vous pourriez y retourner, si tant est que
+            vous en venez.",
+        found_in averne_lac averne_est averne_nord averne_ouest,
+  has   scenery female;
+
+Object  averne_caverne "caverne"
+  with  name 'caverne' 'grotte' 'plafond' 'toit' 'murs' 'mur' 'firmament' 'etoile'
+            'gigantesque' 'granit' 'granitiques' 'granitique' 'relief' 'reliefs'
+            'parois' 'paroi',
+        description "Votre esprit obscuranti par un sommeil peu agréable avait tout
+            d'abord pris ces reliefs pour un firmament étoilé, mais vous remarquez bien
+            vite que ce sont des parois de roche granitique incrustées de cristaux
+            aux reflets bleus et violets, qui diffusent dans la caverne une doucereuse
+            lumière.",
+        found_in averne_lac averne_est averne_nord averne_ouest,
+  has   scenery female;
+
+Object  averne_riviere "riviere"
+  with  name 'fleuve' 'riviere' 'Acheron' 'torrent' 'effluves' 'source' 'tenebres',
+        description "Des effluves nauséeuses parviennent jusqu'à vous de cette rivière
+            qui plonge dans les ténèbres.",
+        found_in averne_lac averne_est averne_nord averne_ouest,
+  has   scenery female;
+
+Object  barque "barque vermoulue" averne_lac
+  with  name 'barque' 'bateau' 'embarcation' 'miteuse' 'fortune' 'bois' 'frele' 'ebene'
+            'rebord' 'echardes' 'echarde' 'acerees' 'aceree' 'planche' 'planches'
+            'vermoulue' 'poreux',
+        description "Une frêle embarcation rongée par le temps autant que par les flots,
+            qui semble vouloir se disloquer à chaque instant, redevenir poussière sous
+            son propre poids. L'ébène est poreux et recouvert de poussière, et vous
+            manquez de vous couper en promenant votre main le long du rebord aux
+            échardes acérées.",
+        before [;
+          Touch: "Vous faites glisser votre main sur l'ébène poreux et vous écorchez
+            au contact d'une écharde acérée qui provoque un léger saignement. Vous
+            plongez votre main dans l'eau glaciale après avoir expulsé l'acteur de
+            votre souffrance d'une pichenette dans les eaux profondes. Vous restez
+            ébranlé de frissons étranges pendant quelques secondes.";
+          Take: "C'est bien trop lourd pour être porté à la seule force de vos bras.";
+          Push,Pull,Turn: "Et vous séparer de votre seule moyen de transport ? Vous
+            préférez abandonner cette idée.";
+          PushDir:
+            if (location == averne_est && second == nw_obj) {
+              print "Vous tirez votre barque vers le nord-ouest et l'amarrez cette fois
+              à la rive nord du lac.^";
+              move rame to averne_nord;
+              move barque to averne_nord;
+              averne_est.barque_la = 0;
+              averne_nord.barque_la = 1;
+              PlayerTo(averne_nord);
+              return true;
+            }
+            else if (location == averne_nord && second == se_obj) {
+              print "Vous tirez votre barque vers le sud-est et l'amarrez cette
+              fois à la rive est du lac.^";
+              move rame to averne_est;
+              move barque to averne_est;
+              averne_est.barque_la = 1;
+              averne_nord.barque_la = 0;
+              PlayerTo(averne_est);
+              return true;
+            }
+            else if ((location == averne_est && second == w_obj or sw_obj)
+                     || (location == averne_nord && second == s_obj)) {
+              "Oui, bien sûr, et rester coincé sur la rive sans la barque...";
+            }
+            else {
+              "Vous ne pouvez pas acheminer votre barque dans cette direction.";
+            }
+        ],
+  has   static female;
+
+Object  rame "rame" averne_lac
+  with  name 'rame' 'rames' 'pagaie' 'pagaies',
+        description "Une rame de bois noir, comme votre barque, et dont l'état de
+            conservation est tout aussi déplorable. Vous la maniez avec grande
+            précaution de peur qu'elle ne s'effrite au contact des flots.",
+        before [;
+          Take: "Vous saisissez fermement votre rame dans la main droite, prêt à
+            ramer.";
+        ],
+  has   static female;
+
+Object  averne_est "Est de la caverne" class AverneTerre AverneScenic
+  with  name 'averne' 'caverne' 'grotte' 'sol' 'rocailleux' 'rive',
+        description "Vous êtes sur la rive est du lac dont les eaux noirâtres vous
+            répugnent de plus en plus. Le sol que vous foulez est rocailleux, et la
+            masse impressionnante de poussière que vous soulevez vient altérer un peu
+            plus l'air déjà vicié qui emplit vos poumons. A l'ouest vous retrouvez le
+            lac tandis qu'au nord-ouest, vous longez la paroi de la caverne
+            circulaire.",
+        w_to [;
+          if (self.barque_la == 1) {
+            move rame to averne_lac;
+            move barque to averne_lac;
+            self.barque_la = 0;
+            return averne_lac;
+          }
+          else "Vous préfèreriez retourner au milieu du lac avec votre barque.";
+        ],
+        nw_to averne_nord,
+        sw_to [; 
+          if (self.barque_la == 1) {
+            if (cristal in player) {
+              print "Tenant fermement votre cristal diaphane contre votre coeur, vous
+              entreprenez d'approcher votre barque de la rivière qui s'étend au sud du
+              lac, et fermant les yeux, vous laissez votre embarcation dériver d'elle
+              même dans la pente douce.^";
+              move rame to averne_sud;
+              move barque to averne_sud;
+              PlayerTo(averne_sud);
+              return;
+            }
+            else {
+              "Plongeant votre regard dans les profondeurs glaciales où sillonne la
+              rivière, vous vous dites qu'il serait préférable de trouver un quelconque
+              objet pour vous éclairer avant de vous enfoncer dans les ténèbres.";
+            }
+          }
+          else "Vous ne pouvez manifestement pas aller vers la rivière à pied, et l'idée
+                d'y aller à la nage vous glace le sang.";
+        ];
+
+Object  averne_cristaux "cristaux"
+  with  name 'cristal' 'violet' 'violace' 'bleu' 'bleute' 'cristaux' 'violets'
+            'violaces' 'bleus' 'bleutes' 'couleur' 'bleue' 'violette',
+        description "La principale source de lumière du lieu réside en ces cristaux
+            bleutés et violacés dont est incrustée la paroi, et qui vous éclairent d'une
+            lumière blafarde.",
+        before [;
+          Take: "Vous pensez évidemment qu'un de ces cristaux ferait un très bon
+            éclairage pour descendre la rivière, mais vous constatez vite que vous ne
+            pourrez les déloger de la paroi sans outillage. Vous allez chercher votre
+            rame et tentez d'en extraire un de la taille de votre poing, mais en vain.
+            Il vous faudra trouver autre chose.";
+        ],
+        found_in averne_est averne_lac,
+  has   scenery light pluralname;
+
+Object  averne_nord "Nord de la caverne" class AverneTerre AverneScenic
+  with  name 'averne' 'caverne' 'grotte' 'rive',
+        description "La rive nord du lac ne vous inspire guère plus de confiance que
+            le frêle amas de planches d'ébène qui vous sert d'embarcation. Vous foulez
+            le sol rocailleux de vos pieds incertains et commencez votre investigation.
+            Un détail retient votre attention : il s'agit d'une petite rigole qui
+            ruisselle vers le sud-ouest, emplie d'un liquide violet opaque.^
+            Vous pouvez retrouver le lac au sud ou continuer à pied vers le sud-est,
+            ou encore en suivant la rigole, au sud-ouest.",
+        s_to [;
+          if (self.barque_la == 1) {
+            move rame to averne_lac;
+            move barque to averne_lac;
+            self.barque_la = 0;
+            return averne_lac;
+          }
+          else "Vous préfèreriez retourner au milieu du lac avec votre barque.";
+        ],
+        sw_to averne_ouest,
+        se_to averne_est;
+
+Object  averne_rigole "petite rigole"
+  with  name 'rigole' 'petite' 'ruisseau' 'cours d^eau' 'liquide' 'opaque' 'violet',
+        description "Depuis la paroi de la caverne au nord du lac d'où elle jaillit à
+            hauteur d'homme, la rigole continue paisiblement son chemin au milieu des
+            roches dentées et des amas de poussière pour finalement déboucher sur la
+            grande rivière qui s'étend au sud. Alors que cet affluent vous semblait
+            contenir un étrange liquide violet, vous observez que c'est toujours de
+            l'eau sombre et nauséeuse qui coule ici mais qu'elle charrie des petits
+            cristaux violacés comme en sont incrustés les parois granitiques.",
+        found_in averne_nord averne_ouest,
+  has   scenery female;
+
+Object  averne_rigole_cristaux "cristaux"
+  with  name 'cristaux' 'violets' 'violaces' 'bleus' 'bleutes' 'couleur' 'bleue'
+            'violette' 'nuances' 'bleu' 'violet',
+        description "Des cristaux violacés avec des nuances de bleu, qui semblent de la
+            même espèce que ceux que vous pouvez admirer incrustés dans la paroi, bien
+            qu'ils soient beaucoup plus petits. Ils jaillissent de la paroi nord pour
+            être acheminés sans heurt jusqu'à la rivière qui s'étend au sud.",
+        before [;
+          Take,Touch:
+            "Vous glissez votre main dans la rigole mais les fins cristaux glissent
+            entre vos doigts, écorchant au passage vos doigts.";
+        ],
+        found_in averne_nord averne_ouest,
+  has   scenery light pluralname;
+
+Object  averne_ouest "Ouest de la caverne" class AverneTerre AverneScenic
+  with  name 'averne' 'caverne' 'grotte' 'rive',
+        description "En suivant la rigole, vous débouchez sur la rive ouest du lac,
+            dont le relief escarpé contraste grandement avec ce que vous avez pu voir
+            jusqu'alors. Le parterre poussiéreux a ici laissé place à des roches
+            aiguisées que vous n'osez effleurer de peur de vous couper. Non loin de
+            l'endroit où le petit ruisseau se jette dans la rivière, vous observez une
+            mince cavité.^
+            La seule issue de ce lieu désolé se profile au nord-est, d'où vous venez.",
+        e_to "Mieux vaudrait utiliser un autre chemin, vous n'avez vraiment pas
+            envie de plonger dans ces eaux troubles et votre embarcation se trouve un
+            peu plus loin.",
+        ne_to averne_nord,
+        se_to "Vous ne pouvez manifestement pas aller vers la rivière à pied, et l'idée
+            d'y aller à la nage vous glace le sang.";
+
+Object  averne_ouest_roches "roches aiguisées" averne_ouest
+  with  name 'roche' 'roches' 'pierre' 'pierres' 'aiguisee' 'aiguisees' 'dentee'
+            'dentees' 'pointue' 'pointues' 'coupante' 'coupantes' 'aceree' 'acerees',
+        description "Des roches acérées qui vous paraissent, étrangement, menaçantes.
+            Elles vous intriguent mais vous préférez les éviter et vous concentrer
+            sur votre objectif.",
+        before [;
+          Take,Touch: "Vous laissez votre doigt danser sur les dents aiguisées d'une de
+            ces roches et évitez de justesse la blessure. Mieux vaudrait éviter de
+            jouer avec ce qui semble dangereux.";
+        ],
+  has   scenery;
+
+Object  averne_cavite "cavité" averne_ouest
+  with  name 'cavite' 'mince' 'trou',
+        before [;
+          Examine,Look,Search:
+            if (cristal notin player) {
+              move cristal to averne_ouest;
+              "Vous découvrez un somptueux cristal de la taille de votre paume, qui
+              reluit des couleurs de l'arc-en-ciel, éclairant brillamment le lieu de
+              ses rayons. La pierre diaphane apparaît comme être la meilleure solution
+              d'éclairage si vous souhaitez entreprendre de naviguer sur la rivière qui
+              s'enfonce dans les ténèbres.";
+            }
+            else {
+              "Vous avez beau plonger votre main dans ce trou incertain et l'observer
+              de toutes parts, vous ne découvrez rien d'autre que de l'eau opaque et
+              sombre, qui imbibe votre chair de son empreinte glacée.";
+            }
+        ],
+  has   scenery female;
+
+Object  cristal "cristal diaphane"
+  with  name 'cristal' 'diaphane' 'somptueux' 'arc-en-ciel' 'pierre',
+        description "Un somptueux cristal diaphane de la taille de votre paume, qui
+            reluit des couleurs de l'arc-en-ciel, éclairant brillamment le lieu de ses
+            rayons.",
+  has   light;
+
+Object  averne_sud "Source de l'Acheron"
+  with  name 'averne' 'caverne' 'grotte',
+        description "To do.",
+        n_to "Il vous est désormais impossible de faire marche arrière. La seule issue
+        coule vers l'ouest.";
+
+!=======================================================================================
+
+[ Initialise;
+    lookmode = 2;
+    location = averne_lac;
+        "Une légère brise vient caresser votre visage, apportant à vos narines
+        des odeurs mêlées de cendres et d'encens. Peu à peu vous arrivez à sortir de
+        votre torpeur, apposant vos mains sur des surfaces de bois aux échardes
+        tranchantes. Une fois assis, vous contemplez l'espace environnant :
+        ^Vous êtes sur une barque de fortune, au bois sombre et vermoulu, rongé par
+        le temps dans un lieu où la notion même de temps vous échappe.^^";
+];
+
+[ RamerSub;
+    if (dans_barque == 1) {
+      "Vous lancez quelques coups de rame dans l'eau, mais sans objectif précis vous
+       n'avancez pas beaucoup.";
+    }
+    else { "À quoi bon ramer hors d'une embarcation ?"; }
+];
+
+[ RamerGoSub;
+    if (dans_barque == 1) { <<Go noun>>; }
+    else { <<Ramer>>; }
+];
+
+[ SautillerSub;
+    "Vous sautillez sur place pour exprimer votre contentement.";
+];
+
+!=======================================================================================
+
+Global ScenicFlag = 4;
+Include "scenic5sens";
+
+! Version 1.0.
+
+!=======================================================================================
+
+Include "FrenchG";
+
+! Version 2.2 de la bibliothèque française.
+
+Verb 'ramer' 'pagayer' 'rame' 'pagaie'
+    *                        -> Ramer
+    * noun                   -> RamerGo
+!    * 'a' noun               -> RamerGo
+!    * 'au' noun              -> RamerGo
+!    * 'a' 'l^' noun          -> RamerGo
+!    * 'vers' noun            -> RamerGo
+!    * 'vers' 'le' noun       -> RamerGo
+!    * 'vers' 'l^' noun       -> RamerGo;
+! (Stormi) J'ai simplifié les lignes précédentes :
+! - pas besoin de préciser les articles (l')
+! - plusieurs solutions séparées par des /
+! - ajout de 'à' sinon ce n'est pas reconnu dans la grammaire du verbe
+    * 'a'/'à'/'au'/'vers' noun -> RamerGo;
+
+Verb 'sautiller' 'sautille'
+    *                        -> Sautiller;
+
+! Extension de tirer pour qu'on puisse tirer dans une direction
+! Cela renvoie en fait l'action PushDir car je ne crois pas 
+! Que PullDir existe (voir si à terme cette amélioration ne pourrait
+! pas être ajoutée à FrenchG.h directement)
+Extend 'tirer'
+    * noun 'vers'/'à'/'a'/'au' noun  -> PushDir;
+
+!=======================================================================================
