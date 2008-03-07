@@ -168,7 +168,7 @@ Object  averne_caverne "caverne"
   has   scenery female;
 
 Object  averne_riviere "riviere"
-  with  name 'fleuve' 'riviere' 'Acheron' 'torrent' 'effluves' 'source' 'tenebres',
+  with  name 'fleuve' 'riviere' 'torrent' 'effluves' 'source' 'tenebres',
         description "Des effluves nauséeuses parviennent jusqu'à vous de cette rivière
             qui plonge dans les ténèbres.",
         found_in averne_lac averne_est averne_nord averne_ouest,
@@ -220,6 +220,15 @@ Object  barque "barque vermoulue" averne_lac
             else {
               "Vous ne pouvez pas acheminer votre barque dans cette direction.";
             }
+            Enter:
+              if (dans_barque == 1) {
+                "Vous êtes manifestement déjà dans la barque, bien qu'elle ne vous inspire
+                guère confiance.";
+              }
+              else {
+                "Vous n'avez aucune envie de remonter dans cet édifice de planches
+                vermoulues mais décidez pourtant d'y poser le pied.";
+              }
         ],
   has   static female;
 
@@ -394,7 +403,7 @@ Object  cristal "cristal diaphane"
             rayons.",
   has   light;
 
-Object  averne_sud "Source de l'Acheron"
+Object  averne_sud "Source de la rivière"
   with  name 'averne' 'caverne' 'grotte',
         description "To do.",
         n_to "Il vous est désormais impossible de faire marche arrière. La seule issue
