@@ -129,9 +129,9 @@ Object  averne_lac "L'Averne" class AverneScenic
             entreprenez d'approcher votre barque de la rivière qui s'étend au sud du
             lac, et fermant les yeux, vous laissez votre embarcation dériver d'elle
             même dans la pente douce.^";
-            move rame to averne_sud;
-            move barque to averne_sud;
-            PlayerTo(averne_sud);
+            move rame to cocyte_01;
+            move barque to cocyte_01;
+            PlayerTo(cocyte_01);
             return;
           }
           else {
@@ -168,7 +168,7 @@ Object  averne_caverne "caverne"
   has   scenery female;
 
 Object  averne_riviere "riviere"
-  with  name 'fleuve' 'riviere' 'torrent' 'effluves' 'source' 'tenebres',
+  with  name 'fleuve' 'riviere' 'torrent' 'effluves' 'source' 'tenebres' 'cocyte',
         description "Des effluves nauséeuses parviennent jusqu'à vous de cette rivière
             qui plonge dans les ténèbres.",
         found_in averne_lac averne_est averne_nord averne_ouest,
@@ -220,15 +220,33 @@ Object  barque "barque vermoulue" averne_lac
             else {
               "Vous ne pouvez pas acheminer votre barque dans cette direction.";
             }
-            Enter:
-              if (dans_barque == 1) {
-                "Vous êtes manifestement déjà dans la barque, bien qu'elle ne vous inspire
-                guère confiance.";
+          Enter:
+            if (dans_barque == 1) {
+              "Vous êtes manifestement déjà dans la barque, bien qu'elle ne vous
+              inspire guère confiance.";
+            }
+            else {
+              "Vous n'avez aucune envie de remonter dans cet édifice de planches
+              vermoulues mais décidez pourtant d'y poser le pied.";
+            }
+          Tie:
+            if (location ofclass AverneTerre) {
+              if (corde in player) {
+                "Vous arrimez solidement votre barque à une roche s'y prêtant, vous
+                servant de la corde que vous avez trouvée dans la barque.";
               }
-              else {
-                "Vous n'avez aucune envie de remonter dans cet édifice de planches
-                vermoulues mais décidez pourtant d'y poser le pied.";
-              }
+              else "Vous n'avez pas de corde et n'avez plus qu'à espérer que votre
+                barque ne s'enfuira pas sans vous.";
+            }
+            else "Vous ne pouvez pas vous arrimer tout en naviguant.";
+          Search:
+            if (corde.trouvee == 0) {
+              move corde to player;
+              corde.trouvee = 1;
+              "Vous découvrez une corde de mauvaise facture et rongée par le temps
+              qui trainait au fond de la barque.";
+            }
+            else "Il n'y a plus rien dans cette barque.";
         ],
   has   static female;
 
@@ -242,6 +260,13 @@ Object  rame "rame" averne_lac
             ramer.";
         ],
   has   static female;
+
+Object  corde "corde"
+  with  name 'corde' 'mauvaise' 'facture' 'cordelette' 'ficelle' 'fil' 'rouleau',
+        description "Une corde rongée par le temps qui semble sur le point de se
+            déchirer en plusieurs endroits.",
+        trouvee 0,
+  has   female;
 
 Object  averne_est "Est de la caverne" class AverneTerre AverneScenic
   with  name 'averne' 'caverne' 'grotte' 'sol' 'rocailleux' 'rive',
@@ -268,9 +293,9 @@ Object  averne_est "Est de la caverne" class AverneTerre AverneScenic
               entreprenez d'approcher votre barque de la rivière qui s'étend au sud du
               lac, et fermant les yeux, vous laissez votre embarcation dériver d'elle
               même dans la pente douce.^";
-              move rame to averne_sud;
-              move barque to averne_sud;
-              PlayerTo(averne_sud);
+              move rame to cocyte_01;
+              move barque to cocyte_01;
+              PlayerTo(cocyte_01);
               return;
             }
             else {
@@ -403,11 +428,59 @@ Object  cristal "cristal diaphane"
             rayons.",
   has   light;
 
-Object  averne_sud "Source de la rivière"
-  with  name 'averne' 'caverne' 'grotte',
-        description "To do.",
+Object  cocyte_01 "Source de la rivière"
+  with  name 'averne' 'caverne' 'grotte' 'cocyte' 'fleuve' 'affluent',
+        description "Vous êtes désormais en train de voguer lentement sur les eaux
+            nauséabondes de la rivière. Les rives vous sont inaccessibles, le courant
+            vous forçant à suivre ses méandres, mais vous observez que pousse, sur la
+            terre noire et poussiéreuse, une allée de saules, d'ormes et de peupliers,
+            aux contours étrangement flous et inquiétants. La rivière continue à
+            l'ouest.",
         n_to "Il vous est désormais impossible de faire marche arrière. La seule issue
-        coule vers l'ouest.";
+            coule vers l'ouest.",
+        w_to cocyte_02,
+        cant_go "Le courant est trop important pour pouvoir accoster ici.";
+
+Object  cocyte_02 "La rivière"
+  with  name 'riviere' 'cocyte' 'fleuve' 'affluent',
+        description "Les roches de la caverne vous semblent déjà fort lointaines, voguant
+            sur les flots de cette rivière nauséabonde au milieu d'un paysage désolé de
+            terre sombre et aride dont les seuls fruits sont une rangée d'arbres de
+            chaque côté de la rivière. Vous constatez que les courants évitent une
+            petite zone où les eaux vous semblent beaucoup plus claires, au sud. La
+            rivière continue son écoulement vers l'ouest.",
+        e_to cocyte_01,
+        w_to cocyte_03,
+        s_to [;
+          if (cocyte_orme.visite == 0) {
+            cocyte_orme.visite = 1;
+            print "Intrigué, vous ramez jusqu'à cette zone plus claire et constatez
+              qu'elle est totalement dépourvue de courant, vous permettant d'approcher
+              sans emcombre de la rive.^";
+            return cocyte_orme;
+          }
+          else { return cocyte_orme; }
+        ],
+        cant_go "Le courant est trop important pour pouvoir accoster ici.";
+
+Object  cocyte_orme "Près de l'orme"
+  with  description "Vous vous tenez au pied d'un orme majestueux qui se dresse dans
+            toute sa splendeur sur cette terre aride et sombre. Bien que ce lieu vous
+            semble intemporel, ses branches arborent les couleurs de l'automne et vous
+            distinguez au pied de l'arbre un petit écriteau. Au nord vous retournez sur
+            le fleuve.",
+        visite 0,
+        n_to cocyte_02;
+
+Object  orme "Orme du sommeil" cocyte_orme
+  with  name 'orme' 'peuplier' 'saule' 'arbre' 'tronc' 'sommeil' 'oubli' 'majestueux'
+            'branches' 'feuilles' 'feuille' 'branche',
+        description "todo",
+
+Object  cocyte_03 "La rivière"
+  with  description "",
+        e_to cocyte_02,
+        cant_go "Le courant est trop important pour pouvoir accoster ici.";
 
 !=======================================================================================
 
