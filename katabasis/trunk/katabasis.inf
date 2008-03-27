@@ -6,7 +6,7 @@ Constant Headline
             "^^Une fiction interactive de Rémi Verschelde (Akien).^^";
 Release 0;  Serial "080220";
 
-Constant MAX_SCORE 1;
+Constant MAX_SCORE 2;
 
 Include "Parser";
 Include "VerbLib";
@@ -74,7 +74,17 @@ Class   AverneTerre
         barque_la 0,
   has   light;
 
+Class   Cocyte
+  with  scenic_smell
+            'eaux' 'eau' 'flots' 'mer' 'liquide' 'flux' 'Cocyte' 'riviere' 'fleuve'
+            'ruisseau' 'affluent' 'remous' 'nauséeuses' 0 "De toutes parts, les odeurs
+            vous assaillent, mêlées de cendres et d'encens, les relents nauséeux de
+            la rivière s'alliant aux vapeurs sulfures en provenance des profondeurs.";
+
 !=======================================================================================
+
+Object  neant "néant"
+  with  description "Néant.";
 
 Object  averne_lac "L'Averne" class AverneScenic
   with  name 'surface', 
@@ -126,9 +136,19 @@ Object  averne_lac "L'Averne" class AverneScenic
         s_to [;
           if (cristal in player) {
             print "Tenant fermement votre cristal diaphane dans une main, vous
-            entreprenez d'approcher votre barque de la rivière qui s'étend au sud du
-            lac, et fermant les yeux, vous laissez votre embarcation dériver d'elle
-            même dans la pente douce.^";
+              entreprenez d'approcher votre barque de la rivière qui s'étend au sud du
+              lac, et fermant les yeux, vous laissez votre embarcation dériver d'elle
+              même dans la pente douce.^";
+            ClearScreen();
+            box "~Je te frapperai sans colère"
+              "Et sans haine, comme un boucher,"
+              "Comme Moise le rocher !"
+              "Et je ferai de ta paupière,"
+              ""
+              "Pour abreuver mon Saharah,"
+              "Jaillir les eaux de la souffrance."
+              "Mon désir gonflé d'espérance"
+              "Sur tes pleurs salés nagera~";
             move rame to cocyte_01;
             move barque to cocyte_01;
             PlayerTo(cocyte_01);
@@ -258,6 +278,7 @@ Object  rame "rame" averne_lac
         before [;
           Take: "Vous saisissez fermement votre rame dans la main droite, prêt à
             ramer.";
+          Touch: "La bois est rugueux mais léger.";
         ],
   has   static female;
 
@@ -406,7 +427,8 @@ Object  averne_cavite "cavité" averne_ouest
         before [;
           Examine,Look,Search:
             if (cristal notin player) {
-              move cristal to averne_ouest;
+              move cristal to player;
+              score = score + 1;
               "Vous découvrez un somptueux cristal de la taille de votre paume, qui
               reluit des couleurs de l'arc-en-ciel, éclairant brillamment le lieu de
               ses rayons. La pierre diaphane apparaît comme être la meilleure solution
@@ -426,11 +448,14 @@ Object  cristal "cristal diaphane"
         description "Un somptueux cristal diaphane de la taille de votre paume, qui
             reluit des couleurs de l'arc-en-ciel, éclairant brillamment le lieu de ses
             rayons.",
+        before [;
+          Drop: "Vous n'osez imaginer ce que serait votre périple sans cette source de
+            lumière inespérée.";
+        ],
   has   light;
 
-Object  cocyte_01 "Source de la rivière"
-  with  name 'averne' 'caverne' 'grotte' 'cocyte' 'fleuve' 'affluent',
-        description "Vous êtes désormais en train de voguer lentement sur les eaux
+Object  cocyte_01 "Source de la rivière" class Cocyte
+  with  description "Vous êtes désormais en train de voguer lentement sur les eaux
             nauséabondes de la rivière. Les rives vous sont inaccessibles, le courant
             vous forçant à suivre ses méandres, mais vous observez que pousse, sur la
             terre noire et poussiéreuse, une allée de saules, d'ormes et de peupliers,
@@ -438,25 +463,47 @@ Object  cocyte_01 "Source de la rivière"
             l'ouest.",
         n_to "Il vous est désormais impossible de faire marche arrière. La seule issue
             coule vers l'ouest.",
-        w_to cocyte_02,
+        w_to [;
+          move rame to cocyte_02;
+          move barque to cocyte_02;
+          return cocyte_02;
+        ],
         cant_go "Le courant est trop important pour pouvoir accoster ici.";
 
-Object  cocyte_02 "La rivière"
-  with  name 'riviere' 'cocyte' 'fleuve' 'affluent',
-        description "Les roches de la caverne vous semblent déjà fort lointaines, voguant
+Object  cocyte_02 "Le Cocyte" class Cocyte
+  with  description "Les roches de la caverne vous semblent déjà fort lointaines, voguant
             sur les flots de cette rivière nauséabonde au milieu d'un paysage désolé de
             terre sombre et aride dont les seuls fruits sont une rangée d'arbres de
             chaque côté de la rivière. Vous constatez que les courants évitent une
             petite zone où les eaux vous semblent beaucoup plus claires, au sud. La
             rivière continue son écoulement vers l'ouest.",
-        e_to cocyte_01,
-        w_to cocyte_03,
+        e_to [;
+          move rame to cocyte_01;
+          move barque to cocyte_01;
+          return cocyte_01;
+        ],
+        w_to [;
+          box "Comme un vaisseau qui prend le large,"
+            "Et dans mon coeur qu'ils souleront"
+            "Tes chers sanglots retentiront"
+            "Comme un tambour qui bat la charge !"
+            ""
+            "Ne suis-je pas un faux accord"
+            "Dans la divine symphonie,"
+            "Grâce à la vorace Ironie"
+            "Qui me secoue et qui me mord ?";
+          move rame to cocyte_03;
+          move barque to cocyte_03;
+          return cocyte_03;
+        ],
         s_to [;
           if (cocyte_orme.visite == 0) {
             cocyte_orme.visite = 1;
             print "Intrigué, vous ramez jusqu'à cette zone plus claire et constatez
               qu'elle est totalement dépourvue de courant, vous permettant d'approcher
               sans emcombre de la rive.^";
+            move rame to cocyte_orme;
+            move barque to cocyte_orme;
             return cocyte_orme;
           }
           else { return cocyte_orme; }
@@ -470,30 +517,150 @@ Object  cocyte_orme "Près de l'orme"
             distinguez au pied de l'arbre un petit écriteau. Au nord vous retournez sur
             le fleuve.",
         visite 0,
-        n_to cocyte_02;
+        n_to [;
+          move rame to cocyte_02;
+          move barque to cocyte_02;
+          return cocyte_02;
+        ];
 
-Object  orme "Orme du sommeil" cocyte_orme
+Object  orme "orme du sommeil" cocyte_orme
   with  name 'orme' 'peuplier' 'saule' 'arbre' 'tronc' 'sommeil' 'oubli' 'majestueux'
-            'branches' 'feuilles' 'feuille' 'branche',
-        description "todo",
+            'racine' 'racines',
+        description "Cet arbre vous procure une intense sensation de douceur, de par
+            son feuillage automnal aux nuances d'ocre et de pourpre et par l'aura
+            revigorante qu'il émet. À son pied repose un écriteau qui semble solidement
+            ancré au milieu de ses racines.",
+        scenic_all
+            'aura' 'lumiere' 'revigorante' 0 "Cette aura provient probablement de
+            l'arbre qui se trouve à quelques mètres de vous mais vous ne parvenez pas
+            à comprendre comment un arbre arrive à vous transmettre une telle impression
+            de bien-être.",
+  has   scenery;
 
-Object  cocyte_03 "La rivière"
-  with  description "",
-        e_to cocyte_02,
+Object  orme_feuillage "feuillage" cocyte_orme
+  with  name 'feuillages' 'feuillage' 'feuilles' 'feuille' 'branche' 'branches' 'ocre'
+            'pourpre' 'branchages' 'branchage',
+        description "Les feuilles aux couleurs vives ondulent sous un vent léger, ne
+            semblant pas vouloir se détacher de l'orme qui les a vues naître.",
+        before [;
+          Take,Touch:
+            if (feuille.prise == 0) {
+              move feuille to player;
+              feuille.prise = 1;
+              score = score + 1;
+              "Vous glissez votre doigt sur une branche basse et en subtilisez en
+              douceur une feuille dorée.";
+            }
+            else {
+              if (feuille.prise == 1 && feuille notin player) {
+                move feuille to player;
+                feuille.prise = 2;
+                "Vous décrochez une seconde feuille des branches en vous persuadant que
+                vous ne perdrez pas celle là, évitant ainsi une crampe qui commence à se
+                faire sentir.";
+              }
+              else {
+                "Vous avez déjà une feuille, celà vous semble amplement suffisant.";
+              }
+            }
+        ],
+  has   scenery;
+
+Object  feuille "feuille doree"
+  with  name 'feuille' 'seconde' 'doree',
+        description "Une magnifique feuille dorée de l'orme du sommeil.",
+        prise 0,
+        before [;
+          Drop: 
+            if (self.prise == 1) {
+              print "Vous déposez votre feuille dorée qui s'envole sous l'action de
+                quelque vent et disparaît dans les ténèbres.^";
+              move feuille to neant;
+              return true;
+            }
+            else {
+              "Vous ne referez pas deux fois la même erreur.";
+            }
+          Touch: "Elle est douce et légère, une note de bonheur dans ce milieu
+            infernal.";
+          Eat:
+            print "Bien que l'idée soit saugrenue, vous tentez de mordre la feuille, dont
+              le goût sucré vous ravit. Vous vous endormez bientôt d'un sommeil infini.";
+            deadflag = 1;
+            return true;
+        ],
+  has   female;
+
+Object  ecriteau "écriteau" cocyte_orme
+  with  name 'ecriteau' 'planche' 'planchette' 'pancarte' 'texte' 'message' 'ecrit',
+        description "C'est une épaisse planche de bois sur laquelle reluit un message en
+            lettres argentées. Vous observez simultanément votre barque au nord et
+            l'écriteau et supposez qu'ils sont fait du même bois. Le message suivant y
+            est écrit :^^
+            ~Non loin du lieu où se rejoignent Cocyte et Pyriphlégéthon pour donner vie
+            à l'Achéron se situe un arbre millénaire, l'orme du sommeil, qui recèle la
+            sagesse des héros.~",
+        before [;
+          Take: "Vous tentez d'arracher l'écriteau à l'étreinte des racines mais il vous
+            résiste. Alors que vous vous acharnez résonne au loin un cri qui vous glace
+            le sang.";
+          Touch: "L'ébène est poreux et à son contact s'évanouissent vos sentiments de
+            bien-être que vous procure l'arbre, et au loin retentit un cri strident.";
+        ],
+  has   scenery;
+
+Object  cocyte_03 "Le Cocyte" class Cocyte
+  with  description "Vous continuez de voguer sur les eaux de la rivière en direction
+            d'un lieu où la température semble considérablement se réchauffer. Déjà
+            quelques vapeurs parviennent jusqu'à vous et vous écoeurent. Le courant
+            s'intensifie au fur et à mesure que vous allez vers le sud-ouest où se
+            poursuit la rivière.",
+        e_to [;
+          move rame to cocyte_02;
+          move barque to cocyte_02;
+          return cocyte_02;
+        ],
+        sw_to [;
+          move rame to confluence;
+          move barque to confluence;
+          return confluence;
+        ],
         cant_go "Le courant est trop important pour pouvoir accoster ici.";
+
+Object  confluence "Confluence du Cocyte et de Pyriphlégéthon"
+  with  description "",
+        ne_to [;
+          move rame to cocyte_03;
+          move barque to cocyte_03;
+          return cocyte_03;
+        ];
 
 !=======================================================================================
 
 [ Initialise;
     lookmode = 2;
     location = averne_lac;
-        "Une légère brise vient caresser votre visage, apportant à vos narines
-        des odeurs mêlées de cendres et d'encens. Peu à peu vous arrivez à sortir de
-        votre torpeur, apposant vos mains sur des surfaces de bois aux échardes
-        tranchantes. Une fois assis, vous contemplez l'espace environnant :
-        ^Vous êtes sur une barque de fortune, au bois sombre et vermoulu, rongé par
-        le temps dans un lieu où la notion même de temps vous échappe.^^";
+    print "Une légère brise vient caresser votre visage, apportant à vos narines
+      des odeurs mêlées de cendres et d'encens. Peu à peu vous arrivez à sortir de
+      votre torpeur, apposant vos mains sur des surfaces de bois aux échardes
+      tranchantes. Une fois assis, vous contemplez l'espace environnant :
+      ^Vous êtes sur une barque de fortune, au bois sombre et vermoulu, rongé par
+      le temps dans un lieu où la notion même de temps vous échappe.^^";
+    KeyCharPrimitive();
+    ClearScreen();
 ];
+
+!Code Lieux Communs
+
+![ Attend;
+!   if (modereplay == 0)
+!       KeyCharPrimitive();
+!];
+
+![ Pause;
+!    if (modereplay == 0)
+!        KeyDelay(40);
+!];
 
 [ RamerSub;
     if (dans_barque == 1) {
