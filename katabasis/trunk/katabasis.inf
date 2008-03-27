@@ -538,7 +538,7 @@ Object  orme "orme du sommeil" cocyte_orme
   has   scenery;
 
 Object  orme_feuillage "feuillage" cocyte_orme
-  with  name 'feuillages' 'feuillage' 'feuilles' 'feuille' 'branche' 'branches' 'ocre'
+  with  name 'feuillages' 'feuillage' 'feuilles' 'branche' 'branches' 'ocre'
             'pourpre' 'branchages' 'branchage',
         description "Les feuilles aux couleurs vives ondulent sous un vent léger, ne
             semblant pas vouloir se détacher de l'orme qui les a vues naître.",
