@@ -79,7 +79,12 @@ Class   Cocyte
             'eaux' 'eau' 'flots' 'mer' 'liquide' 'flux' 'Cocyte' 'riviere' 'fleuve'
             'ruisseau' 'affluent' 'remous' 'nauséeuses' 0 "De toutes parts, les odeurs
             vous assaillent, mêlées de cendres et d'encens, les relents nauséeux de
-            la rivière s'alliant aux vapeurs sulfures en provenance des profondeurs.";
+            la rivière s'alliant aux vapeurs sulfures en provenance des profondeurs.",
+        scenic_look
+            'orme' 'ormes' 'peuplier' 'peupliers' 'saule' 'saules' 'arbre' 'arbres' 'foret'
+            'oree' 'rangee' 'allee' 'fruits' 0 "Des arbres aux couleurs de l'automne mais
+            qui vous procurent une étrange sensation de malaise, rangés en ligne droite de
+            chaque côté de la rivière.";
 
 !=======================================================================================
 
@@ -139,6 +144,7 @@ Object  averne_lac "L'Averne" class AverneScenic
               entreprenez d'approcher votre barque de la rivière qui s'étend au sud du
               lac, et fermant les yeux, vous laissez votre embarcation dériver d'elle
               même dans la pente douce.^";
+            KeyCharPrimitive();
             ClearScreen();
             box "~Je te frapperai sans colère"
               "Et sans haine, comme un boucher,"
@@ -310,10 +316,21 @@ Object  averne_est "Est de la caverne" class AverneTerre AverneScenic
         sw_to [; 
           if (self.barque_la == 1) {
             if (cristal in player) {
-              print "Tenant fermement votre cristal diaphane contre votre coeur, vous
-              entreprenez d'approcher votre barque de la rivière qui s'étend au sud du
-              lac, et fermant les yeux, vous laissez votre embarcation dériver d'elle
-              même dans la pente douce.^";
+              print "Tenant fermement votre cristal diaphane dans une main, vous
+                entreprenez d'approcher votre barque de la rivière qui s'étend au sud du
+                lac, et fermant les yeux, vous laissez votre embarcation dériver d'elle
+                même dans la pente douce.^";
+              KeyCharPrimitive();
+              ClearScreen();
+              box "~Je te frapperai sans colère"
+                "Et sans haine, comme un boucher,"
+                "Comme Moise le rocher !"
+                "Et je ferai de ta paupière,"
+                ""
+                "Pour abreuver mon Saharah,"
+                "Jaillir les eaux de la souffrance."
+                "Mon désir gonflé d'espérance"
+                "Sur tes pleurs salés nagera~";
               move rame to cocyte_01;
               move barque to cocyte_01;
               PlayerTo(cocyte_01);
@@ -483,15 +500,18 @@ Object  cocyte_02 "Le Cocyte" class Cocyte
           return cocyte_01;
         ],
         w_to [;
-          box "Comme un vaisseau qui prend le large,"
-            "Et dans mon coeur qu'ils souleront"
-            "Tes chers sanglots retentiront"
-            "Comme un tambour qui bat la charge !"
-            ""
-            "Ne suis-je pas un faux accord"
-            "Dans la divine symphonie,"
-            "Grâce à la vorace Ironie"
-            "Qui me secoue et qui me mord ?";
+          if (cocyte_03.visite == 0) {
+            cocyte_03.visite = 1;
+            box "Comme un vaisseau qui prend le large,"
+              "Et dans mon coeur qu'ils souleront"
+              "Tes chers sanglots retentiront"
+              "Comme un tambour qui bat la charge !"
+              ""
+              "Ne suis-je pas un faux accord"
+              "Dans la divine symphonie,"
+              "Grâce à la vorace Ironie"
+              "Qui me secoue et qui me mord ?";
+          }
           move rame to cocyte_03;
           move barque to cocyte_03;
           return cocyte_03;
@@ -615,6 +635,7 @@ Object  cocyte_03 "Le Cocyte" class Cocyte
             quelques vapeurs parviennent jusqu'à vous et vous écoeurent. Le courant
             s'intensifie au fur et à mesure que vous allez vers le sud-ouest où se
             poursuit la rivière.",
+        visite 0,
         e_to [;
           move rame to cocyte_02;
           move barque to cocyte_02;
