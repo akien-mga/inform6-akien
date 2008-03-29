@@ -81,14 +81,19 @@ Class   Cocyte
             vous assaillent, mêlées de cendres et d'encens, les relents nauséeux de
             la rivière s'alliant aux vapeurs sulfures en provenance des profondeurs.",
         scenic_look
-            'orme' 'ormes' 'peuplier' 'peupliers' 'saule' 'saules' 'arbre' 'arbres' 'foret'
-            'oree' 'rangee' 'allee' 'fruits' 0 "Des arbres aux couleurs de l'automne mais
-            qui vous procurent une étrange sensation de malaise, rangés en ligne droite de
-            chaque côté de la rivière.";
+            'orme' 'ormes' 'peuplier' 'peupliers' 'saule' 'saules' 'arbre' 'arbres'
+            'foret' 'oree' 'rangee' 'allee' 'fruits' 0 "Des arbres aux couleurs de
+            l'automne mais qui vous procurent une étrange sensation de malaise, rangés
+            en ligne droite de chaque côté de la rivière.",
+        scenic_smell2
+            'orme' 'ormes' 'peuplier' 'peupliers' 'saule' 'saules' 'arbre' 'arbres'
+            'foret' 'oree' 'rangee' 'allee' 'fruits' 0 "Ces arbres n'ont étrangement
+            aucune odeur particulière si ce n'est la mort qui semble omniprésente dans
+            ces lieux, ce qui n'a pas pour effet de vous rassurer.";
 
 !=======================================================================================
 
-Object  neant "néant"
+Object  neant "Néant"
   with  description "Néant.";
 
 Object  averne_lac "L'Averne" class AverneScenic
@@ -256,7 +261,7 @@ Object  barque "barque vermoulue" averne_lac
               vermoulues mais décidez pourtant d'y poser le pied.";
             }
           Tie:
-            if (location ofclass AverneTerre) {
+            if (location ofclass AverneTerre || location == cocyte_orme) {
               if (corde in player) {
                 "Vous arrimez solidement votre barque à une roche s'y prêtant, vous
                 servant de la corde que vous avez trouvée dans la barque.";
