@@ -151,7 +151,7 @@ Object  averne_lac "L'Averne" class AverneScenic
               même dans la pente douce.^";
             KeyCharPrimitive();
             ClearScreen();
-            box "~Je te frapperai sans colère"
+            box "Je te frapperai sans colère"
               "Et sans haine, comme un boucher,"
               "Comme Moise le rocher !"
               "Et je ferai de ta paupière,"
@@ -159,7 +159,7 @@ Object  averne_lac "L'Averne" class AverneScenic
               "Pour abreuver mon Saharah,"
               "Jaillir les eaux de la souffrance."
               "Mon désir gonflé d'espérance"
-              "Sur tes pleurs salés nagera~";
+              "Sur tes pleurs salés nagera";
             move rame to cocyte_01;
             move barque to cocyte_01;
             PlayerTo(cocyte_01);
@@ -261,7 +261,7 @@ Object  barque "barque vermoulue" averne_lac
               vermoulues mais décidez pourtant d'y poser le pied.";
             }
           Tie:
-            if (location ofclass AverneTerre || location == cocyte_orme) {
+            if (location ofclass AverneTerre || location == orme) {
               if (corde in player) {
                 "Vous arrimez solidement votre barque à une roche s'y prêtant, vous
                 servant de la corde que vous avez trouvée dans la barque.";
@@ -522,20 +522,20 @@ Object  cocyte_02 "Le Cocyte" class Cocyte
           return cocyte_03;
         ],
         s_to [;
-          if (cocyte_orme.visite == 0) {
-            cocyte_orme.visite = 1;
+          if (orme.visite == 0) {
+            orme.visite = 1;
             print "Intrigué, vous ramez jusqu'à cette zone plus claire et constatez
               qu'elle est totalement dépourvue de courant, vous permettant d'approcher
               sans emcombre de la rive.^";
-            move rame to cocyte_orme;
-            move barque to cocyte_orme;
-            return cocyte_orme;
+            move rame to orme;
+            move barque to orme;
+            return orme;
           }
-          else { return cocyte_orme; }
+          else { return orme; }
         ],
         cant_go "Le courant est trop important pour pouvoir accoster ici.";
 
-Object  cocyte_orme "Près de l'orme"
+Object  orme "Près de l'orme"
   with  description "Vous vous tenez au pied d'un orme majestueux qui se dresse dans
             toute sa splendeur sur cette terre aride et sombre. Bien que ce lieu vous
             semble intemporel, ses branches arborent les couleurs de l'automne et vous
@@ -548,7 +548,7 @@ Object  cocyte_orme "Près de l'orme"
           return cocyte_02;
         ];
 
-Object  orme "orme du sommeil" cocyte_orme
+Object  orme_orme "orme du sommeil" orme
   with  name 'orme' 'peuplier' 'saule' 'arbre' 'tronc' 'sommeil' 'oubli' 'majestueux'
             'racine' 'racines',
         description "Cet arbre vous procure une intense sensation de douceur, de par
@@ -562,7 +562,7 @@ Object  orme "orme du sommeil" cocyte_orme
             de bien-être.",
   has   scenery;
 
-Object  orme_feuillage "feuillage" cocyte_orme
+Object  orme_feuillage "feuillage" orme
   with  name 'feuillages' 'feuillage' 'feuilles' 'branche' 'branches' 'ocre'
             'pourpre' 'branchages' 'branchage',
         description "Les feuilles aux couleurs vives ondulent sous un vent léger, ne
@@ -616,7 +616,7 @@ Object  feuille "feuille doree"
         ],
   has   female;
 
-Object  ecriteau "écriteau" cocyte_orme
+Object  orme_ecriteau "écriteau" orme
   with  name 'ecriteau' 'planche' 'planchette' 'pancarte' 'texte' 'message' 'ecrit',
         description "C'est une épaisse planche de bois sur laquelle reluit un message en
             lettres argentées. Vous observez simultanément votre barque au nord et
@@ -647,19 +647,103 @@ Object  cocyte_03 "Le Cocyte" class Cocyte
           return cocyte_02;
         ],
         sw_to [;
-          move rame to confluence;
-          move barque to confluence;
-          return confluence;
+          move rame to acheron_01;
+          move barque to acheron_01;
+          return acheron_01;
         ],
         cant_go "Le courant est trop important pour pouvoir accoster ici.";
 
-Object  confluence "Confluence du Cocyte et de Pyriphlégéthon"
-  with  description "",
+Object  acheron_01 "La confluence"
+  with  name 'lieu' 'confluence',
+        description "La sueur perle sur votre front et goutte par intermittence,
+            humidifiant un peu plus le bois de votre barque. Vous êtes désormais dans un
+            lieu où deux rivières semblent se joindre pour n'en former plus qu'une, ce
+            que vous indique un grand panneau de bois :^^
+            ~Là où la splendeur macabre du Cocyte s'unit aux remous embrasés du
+            Pyriphlégéthon naît l'Achéron, fleuve que seul Charon saura vous faire
+            apprécier, si son tribut vous avez.~^^
+            Vous estimez donc que le Pyriphlégéthon est la rivière de flammes qui se
+            rue depuis le nord, diffusant sa chaleur étouffante, tandis qu'ayant
+            navigué sur le Cocyte jusqu'alors, l'Achéron s'étend donc à l'ouest.",
+        scenic_look
+             'panneau' 'ecriteau' 'pannonceau' 'pancarte' 'borne' 'pieu' 0 "Un simple
+             panneau de bois planté sur un pieu de même constitution, aborant cette
+             simple phrase en grec :^^
+             ~Là où la splendeur macabre du Cocyte s'unit aux remous embrasés du
+             Pyriphlégéthon naît l'Achéron, fleuve que seul Charon saura vous faire
+             apprécier, si son tribut vous avez.~",
+        scenic_look2
+             'pyriphlegethon' 'phlegethon' 'phlegeton' 'pyriphlegeton' 'feu' 'flammes'
+             'incineres' 'corps' 'remous' 0 "Le Pyriphlégéthon, second
+             affluent de l'Acheron s'étend vers le nord, charriant dans ses remous les
+             cendres des corps incinérés. La chaleur qu'il diffuse emplit toute
+             l'atmosphère et vous avez du mal à respirer.",
+        scenic_look3
+             'cocyte' 0 "La rivière qui vous a porté jusqu'ici, dont les eaux hostiles
+             semblent se dérober à votre regard. Vous clignez des yeux, et la rivière
+             réintègre son lit. Vous mettez cela sur le compte de vos angoisses et de la
+             fatigue.",
+        scenic_look4
+             'acheron' 'styx' 'fleuve' 0 "Le grand fleuve Achéron, dont les eaux
+             profondes sont mêlées de cendre et de vapeur, s'étend douloureusement vers
+             l'ouest, où il rejoint bien plus loin le Styx, fleuve qui entoure les
+             Enfers de ses neufs anneaux, dont il est le principal affluent.",
         ne_to [;
           move rame to cocyte_03;
           move barque to cocyte_03;
           return cocyte_03;
-        ];
+        ],
+        w_to [;
+          if (acheron_02.visite == 0) {
+            acheron_02.visite = 1;
+            print "Le courant vous force à laisser votre embarcation et à continuer à
+              pied, longeant l'Achéron par sa rive gauche.";
+            KeyCharPrimitive();
+            ClearScreen();
+            box "Elle est dans ma voix, la criarde !"
+              "C'est tout mon sang, ce poison noir !"
+              "Je suis le sinistre miroir"
+              "Où la mégère se regarde."
+              ""
+              "Je suis la plaie et le couteau !"
+              "Je suis le soufflet et la joue !"
+              "Je suis les membres et la roue !"
+              "Et la victime et le bourreau !";
+            return acheron_02;
+          }
+          else return acheron_02;
+        ],
+        n_to "On vous avait promis que vous bruleriez dans les flammes de l'Enfer mais
+            l'idée de naviguer sur un fleuve de feu avec votre embarcation de bois
+            vermoulu vous semble quelque peu déraisonnable.",
+        cant_go "Les terres qui s'étendent par là ne vous semblent guère plus engageantes
+            que celles qui sont déjà balisées.";
+
+Object  acheron_02 "Le long de l'Achéron"
+  with  name 'rive' 'berge' 'fleuve',
+        description "Vous continuez votre progression sur la rive de l'Achéron durant
+            plusieurs dizaines de mètres, vos pieds nus foulant avec peine les galets
+            noirs de la berge. La confluence du Cocyte et du Pyriphlégéthon se trouve à
+            l'est tandis que le fleuve continue à l'ouest.",
+        visite 0,
+        e_to acheron_01,
+        w_to acheron_03;
+
+Object  acheron_galets "galets rugueux" acheron_02
+  with  description "Des galets noirs en grand nombre, relativement communs.",
+        before [;
+          Take: "Vous n'aviez alors aucune envie de vous encombrer de petites pierres
+            aussi communes, et visiblement inutiles.";
+          Touch: "D'aspect rugueux, ces galets sont pourtant très doux au toucher.";
+          Smell: "Vous vous baissez et inspirez grandement, emplissant vos narines de
+            poussière noire. Vous vous relevez rapidement et éternuez deux ou trois fois
+            tout en frottant vos yeux irrités par la poudre soulevée par votre souffle.";
+        ],
+  has   scenery pluralname;
+
+Object  acheron_03 "Embarcadère du nocher Charon"
+  with  description "Vous débouchez à présent sur une petite plage de gravier.",
+        e_to acheron_02;
 
 !=======================================================================================
 
