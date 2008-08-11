@@ -71,6 +71,16 @@ Object  trou_dortoirs "Dortoirs du palais"
             dernière ait la particularité d'être nouée à l'aide de poils longs de
             Choupinette, dont la conquête est l'exploit qui à fait votre renommée et
             vous a valu d'être Chevalier du roi.",
+        initial [;
+          print "^^Vous reviez d'un doux plateau garni de fromages variés, français, suisses et
+          hollandais, quand on vient vous réveiller sans ménagement, vous assurant que votre
+          bon roi vous demande de toute urgence dans la salle du trône. Quelque peu ronchon
+          vous vous levez néanmoins, lissant vos moustaches à gauche, puis à droite, d'un
+          geste assuré.^^";
+          KeyCharPrimitive();
+          ClearScreen();
+          rtrue;
+        ],
         w_to trou_trone,
   has   scenery light;
 
@@ -1495,11 +1505,7 @@ Object  lampe "petite lampe pour bicyclette" kay_chambre
   lookmode = 2;
   ChangePlayer(heros);
   location = trou_dortoirs;
-  "Vous reviez d'un doux plateau garni de fromages variés, français, suisses et
-  hollandais, quand on vient vous réveiller sans ménagement, vous assurant que votre
-  bon roi vous demande de toute urgence dans la salle du trône. Quelque peu ronchon
-  vous vous levez néanmoins, lissant vos moustaches à gauche, puis à droite, d'un
-  geste assuré.^^";
+  print "Si vous jouez pour la première fois à une fiction interactive, tapez "; style underline; print "aide.^^";
 ];
 
 [ PrintTaskName task_number;
@@ -1542,10 +1548,14 @@ Object  lampe "petite lampe pour bicyclette" kay_chambre
   d'un lieu qui apparaît lorsque l'on s'y rend, tapez "; style underline; print
   "regarder"; style roman; print " lorsque vous vous y trouvez.^Pour lister vos
   acquisitions, tapez "; style underline; print "inventaire"; style roman; print " et
-  enfin pour savoir votre progression, utilisez "; style underline; print "score"; style
-  roman; print " ou "; style underline; print "fullscore"; style roman; print ".^^
+  enfin en rapport avec votre progression, utilisez "; style underline; print "score"; style
+  roman; print " ou "; style underline; print "fullscore"; style roman; print " pour en avoir
+  connaissance, ainsi que les commandes "; style underline; print "sauvegarder, charger";
+  style roman; print " et "; style underline; print "recommencer"; style roman; print ".^^
   Pour plus d'informations, les commandes "; style underline; print "licence"; style roman;
-  print " et "; style underline; print "auteur"; style roman; print " sont disponibles.^";
+  print " et "; style underline; print "auteur"; style roman; print " sont disponibles,
+  et le site "; style underline; print "http://ifiction.free.fr"; style roman; print " est
+  à votre disposition.^";
 ];
 
 [ AuthorSub;
