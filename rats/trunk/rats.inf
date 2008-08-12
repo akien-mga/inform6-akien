@@ -45,8 +45,6 @@ Constant Headline
             "^Une fiction interactive de Rémi Verschelde (Akien).^^";
 Release 1;  Serial "100808";
 
-Constant SACK_OBJECT = hotte;
-
 Constant TASKS_PROVIDED;
 Constant NUMBER_TASKS = 4;
 Constant MAX_SCORE = 30;
@@ -71,21 +69,34 @@ Object  trou_dortoirs "Dortoirs du palais"
             dernière ait la particularité d'être nouée à l'aide de poils longs de
             Choupinette, dont la conquête est l'exploit qui à fait votre renommée et
             vous a valu d'être Chevalier du roi.",
+        visite 0,
         initial [;
-          print "^^Vous reviez d'un doux plateau garni de fromages variés, français, suisses et
-          hollandais, quand on vient vous réveiller sans ménagement, vous assurant que votre
-          bon roi vous demande de toute urgence dans la salle du trône. Quelque peu ronchon
-          vous vous levez néanmoins, lissant vos moustaches à gauche, puis à droite, d'un
-          geste assuré.^^";
-          KeyCharPrimitive();
-          ClearScreen();
-          rtrue;
+          if (self.visite == 0) {
+            print "^^Vous rêvez d'un doux plateau garni de fromages variés, français, suisses
+            et hollandais, quand on vient vous réveiller sans ménagement, vous assurant que
+            votre bon roi vous demande de toute urgence dans la salle du trône. Quelque peu
+            ronchon vous vous levez néanmoins, lissant vos moustaches à gauche, puis à droite,
+            d'un geste assuré, et vous installez votre hotte jaune sur vos épaules.^^";
+            self.visite = 1;
+            KeyCharPrimitive();
+            ClearScreen();
+            rtrue;
+          }
+        ],
+        before [;
+          Sleep:
+            if (trou_trone has visited) "Le devoir vous appelle, et le repos en journée y
+              serait un manquement.";
+            else "Mieux vaut ne pas faire attendre le roi.";
+          Listen: "La salle du trône à l'ouest semble plutôt animée.";
+          Smell: "Le manque d'aération fait régner ici une odeur amère perpétuelle.";
         ],
         w_to trou_trone,
   has   scenery light;
 
 Object  heros "vous" trou_dortoirs
-  with  etat 0,
+  with  name 'hotte' 'sac' 'heros' 'protagoniste',
+        etat 0,
         peint 0,
         task0 0,
         task1 0,
@@ -96,15 +107,15 @@ Object  heros "vous" trou_dortoirs
           if (foulard hasnt worn && heros.peint == 1 && (papier_toilette hasnt worn ||
             papier_toilette notin player)) {
             "Vous êtes noir de la tête aux pattes grâce à votre plongeon dans le pot de
-            peinture noire."; }
+            peinture noire, même votre hotte est peinte."; }
           else if (foulard has worn && heros.peint == 0 && (papier_toilette hasnt worn ||
             papier_toilette notin player)) {
             "Ce foulard noir que vous portez noué devant la bouche vous donne un air de
-            gangster."; }
+            gangster, bien que la hotte jaune pétant pêche un peu."; }
           else if (foulard has worn && heros.peint == 1 && (papier_toilette hasnt worn ||
             papier_toilette notin player)) {
-            "Votre corps peint associé au foulard noir noué devant votre bouche, vous
-            ressemblez vraiment à un gangster ou un agent secret."; }
+            "Votre corps et votre hotte peints associés au foulard noir noué devant votre
+            bouche, vous ressemblez vraiment à un gangster ou un agent secret."; }
           else if (papier_toilette has worn && papier_toilette in player && (foulard hasnt
             worn || heros.peint == 0)) {
             "Vous êtes entièrement recouvert de papier toilette et parfaitement ridicule
@@ -116,7 +127,10 @@ Object  heros "vous" trou_dortoirs
           else {
             "C'est bien vous, Chevalier du roi Mice VII, qui servez sous ses ordres
             depuis son ascension au trône puisque vous avez toujours été de grands
-            amis."; }
+            amis. Vous portez sur le dos une hotte de plastique jaune. Un jouet sur lequel
+            vous êtes tombé dans l'une de vos escapades, probablement associé jadis à une
+            figurine de père Noël, toujours est-il que sa forme est parfaitement adaptée aux
+            objets que vous pourriez transporter."; }
         ],
         each_turn [;
           if (foulard has worn && heros.peint == 0 && (papier_toilette hasnt worn ||
@@ -180,8 +194,31 @@ Object  trou_trone "Palais du roi Mice"
             'eclats' 0 "Vous parcourez de votre patte le rebord d'un de ces éclats et,
             sans surprise, vous entaillez légèrement la patte, gratifiant d'un léger
             boitement votre démarche.",
+        initial [;
+          if (trou_trone hasnt visited) {
+            move parchemin to player;
+            "~Te voilà enfin, mon cher Chevalier. Je t'ai fait quérir car je dois te
+            faire part d'une requête importante...~^^
+            Le roi s'arrête un instant, refoulant un éternuement, et poursuit son
+            discours, non sans bégayer.^^
+            ~Peut-être l'as-tu remarqué, le blason de la famille royale nous a été volé.
+            La bande de Kay, les rats qui vivent dans la cave de la maison, a déjà
+            revendiqué le crime, bien que j'aie toujours du mal à concevoir comment ils
+            ont procédé, étant trop grands pour pénétrer notre palais.^
+            Toujours est-il que...~^^
+            Le roi s'interrompt à nouveau, toussant violemment si bien que vous n'avez
+            d'autre recours que d'aller lui tapoter gentillement le dos de votre patte
+            agile jusqu'à ce qu'il retrouve une respiration correcte.^^
+            ~Hu... Excuse-moi... Bref, je disais que j'ai besoin de toi pour récupérer
+            cet artefact de valeur inestimable, rongé dans une plaque de PVC par mon
+            arrière grand oncle, et gravé par sa soeur et deux jeunes vierges.^
+            Voici tes ordres de mission. J'ai confiance en toi, mon meilleur Chevalier.
+            Je sais que tu ne me décevras pas. Maintenant, va !";
+          }
+        ],ss
         e_to trou_dortoirs,
-        n_to buffet_dessous;
+        n_to buffet_dessous,
+        out_to [; <<Go n_obj>>; ];
 
 Object  buffet_dessous "Sous le vieux buffet"
   with  description "Vous êtes devant l'entrée du palais royal, contre le mur sud du
@@ -303,6 +340,16 @@ Object  ordinateur "Sous le bureau de l'ordinateur"
             s'ouvre toujours un espace vide et étrangement silencieux et à l'est se
             trouve l'entrée d'un couloir.";
         ],
+        before [;
+          Listen: 
+            if (noun == fils) rfalse;
+            else {
+              style underline; print "Clic, clic, clic. ";
+              style roman; print "Le cri d'agonie de votre congénère mécanique torturée vous
+              fait frémir.^"; rtrue;
+            }
+          Smell: "L'odeur de poussière chaude vient chatouiller votre museau.";
+        ],
         w_to buffet_dessous,
         e_to couloir_salon,
         nw_to [; SalonChoupinette(); ];
@@ -312,7 +359,14 @@ Object  couloir_salon "Couloir vers la cuisine"
         description "L'unique couloir de la maison qui joint la cuisine au nord aux
             chambres au sud. A l'est se trouvent la salle de bain et les toilettes,
             mais les deux portes sont fermees.",
-        w_to ordinateur,
+        scenic_look 'porte' 'portes' 'toilettes' 'toilette' 'salle' 'bain' 'd^eau' 0 "La porte
+            des toilettes à droite, celle de la salle d'eau à gauche, toutes deux manifestement
+            fermées.",
+        before [;
+          Listen: "Le cri de la souris d'ordinateur se mêle au décompte régulier du robinet de
+            la cuisine.";
+        ],
+        w_to ordinateur, 
         s_to couloir_chambres,
         n_to cuisine,
         e_to [;
@@ -330,10 +384,14 @@ Object  toilettes "Dans les toilettes"
         w_to couloir_salon;
 
 Object  couloir_chambres "Couloir vers les chambres"
-  with  name 'couloir' 'corridor' 'porte',
+  with  name 'couloir' 'corridor',
         description "Le couloir qui joint la cuisine aux chambres, du nord au sud, donne
             ici sur trois chambres : celle du fils à l'ouest, de la fille au sud et des
             parents à l'est, cette dernière étant la seule porte ouverte par ailleurs.",
+        scenic_look 'porte' 'portes' 'chambre' 'chambres' 0 "Seule la porte de la chambre des
+            parents, à l'est, est ouverte. Celle du fils arbore une énorme affiche de
+            publicité pour le dernier jeu de tir subjectif qu'il a acquérit, tandis que celle
+            de la demoiselle compte plusieurs photographies de cette dernière et de poneys.",
         w_to "La porte est fermée.",
         e_to chambre_parents,
         s_to "La porte est fermée.",
@@ -354,7 +412,7 @@ Object  chambre_parents "Chambre des parents"
         count 0,
         each_turn [;
           self.count = self.count + 1;
-          if (self.count == 3) {
+          if (self.count == 4) {
             print "^Un cri de stupeur retentit lorsque la femme se détourne de la
             fenêtre, sa cigarette consummée, et vous comprenez que vous en êtes le
             motif. Affolée, elle court vers le couloir et vous écrase au passage.";
@@ -365,7 +423,7 @@ Object  chambre_parents "Chambre des parents"
 
 Object  cuisine "La cuisine"
   with  description [;
-            print "La cuisine, relativement exiguë, est relativement calme, les enfants
+            print "Relativement exiguë, la cuisine est plutôt calme, les enfants
             étant plongés dans leurs activités numériques tandis que la mère se trouve
             dans sa chambre. Du robinet au dessus de l'évier goutte à intervalle
             régulier une petite note d'eau qui vient résonner de son "; style underline;
@@ -384,14 +442,19 @@ Object  cuisine "La cuisine"
             move pere to chambre_parents;
             "^La porte s'ouvre brusquement sur le maître de maison, rentrant du jardin
             où il cultivait son potager. Il se dirige vers la cave, ouvrant la porte,
-            s'y déleste de son matériel de jardinage et pars retrouver sa femme, laissant
+            s'y déleste de son matériel de jardinage et part retrouver sa femme, laissant
             la porte grande ouverte à l'ouest.";
           }
+        ],
+        before [;
+          Listen: "Le claquement strident de l'eau sur l'évier, inlassable, régulier, emplit
+            vos oreilles.";
         ],
         s_to couloir_salon,
         e_to "Sortir de ce lieu signifierait probablement la mort, et si vous surviviez,
             le reniement de toutes les valeurs monarchiques en lesquelles vous croyez et
             une injure à votre roi.",
+        out_to [; <<Go e_obj>>; ],
         w_to [;
           if (self.count >= 5) { PlayerTo(cave); rtrue; }
           else { "La porte est malheureusement fermée."; }
@@ -530,7 +593,7 @@ Object  kay_hall "Hall du repaire de Kay"
           if (heros.etat == 3) {
             if (lampe in player && lampe has light) {
               print "La lumière de votre lampe vous trahit.";
-              deadflag = 5;
+              deadflag = 5; rtrue;
             }
             else {
               print "Toujours aussi discret, vous vous faufilez à l'extérieur.^";
@@ -756,7 +819,7 @@ Object  salle_reunion "Antichambre de la salle de réunion"
                 subtilisez le blason du roi.^^À peine sorti de la salle, vous entendez les
                 pas lourds de Kay qui vous poursuit, et vous vous dites qu'il vaudrait
                 mieux ne pas traîner.^";
-                move blason to hotte;
+                move blason to player;
                 heros.task1 = 1;
                 score = score + 5;
                 Achieved(1);
@@ -778,7 +841,7 @@ Object  salle_reunion "Antichambre de la salle de réunion"
               jusqu'à l'antichambre quand Kay sort de sa torpeur :^^
               ~Quel est ce type ridicule recouvert de papier toilette ?~^^
               Et ne trouvant aucun écho à sa question, Kay se lance à votre poursuite.^";
-              move blason to hotte;
+              move blason to player;
               heros.task1 = 1;
               Achieved(1);
               StartTimer(self,3);
@@ -792,27 +855,7 @@ Object  salle_reunion "Antichambre de la salle de réunion"
           }
         ];
 
-Object  blason "blason de la famille royale"
-  with  name 'blason' 'ecu' 'bouclier' 'armes' 'armoiries' 'ecusson' 'heraldique' 'royal'
-            'royale',
-        article "le",
-        description "L'objet qui vous aura vallu cette quête dont vous vous seriez bien
-            passé. En son centre est gravé un gruyère sans trous.",
-        before [;
-          Drop,ThrowAt,ThrowDir:
-            "Maintenant que vous l'avez, vous ne le lâchez plus, sauf au roi.";
-        ];
-
 !=======================================================================================
-
-Object  hotte "hotte en plastique jaune" trou_dortoirs
-  with  name 'hotte' 'sac' 'dos' 'conteneur',
-        article "une",
-        description "Un jouet sur lequel vous êtes tombé dans l'une de vos escapades,
-            probablement associé jadis à une figurine de père Noël, toujours est-il que
-            sa forme est parfaitement adaptée aux objets que vous pourriez transporter.",
-        capacity 3,
-  has   container open openable female;
 
 Object  _paille "paille de plastique" trou_dortoirs
   with  name 'paille' 'pailles',
@@ -834,7 +877,7 @@ Object  _paille "paille de plastique" trou_dortoirs
               congénères, aussi préférez-vous vous en tenir à une seule paille.";
             }
         ],
-  has   scenery female;
+  has   scenery concealed female;
 
 Object  paille "paille de plastique"
   with  name 'paille' 'pailles',
@@ -859,10 +902,12 @@ Object  _sujets "sujets de la cour" trou_trone
             chercher l'écu royal, ou pour les plus sérieux à remettre en place les
             miroirs, qui doivent exprimer une disymétrie si parfaite, pour la
             satisfaction du roi, qu'elle en est presque mathématique.",
-  has   scenery animate pluralname;
+  has   animate pluralname concealed;
 
 Object  roi "roi Mice VII" trou_trone
-  with  name 'roi' 'sire' 'mice' 'vii' 'seigneur' 'suzerain' 'souverain' 'monarque',
+  with  name 'roi' 'sire' 'mice' 'vii' 'seigneur' 'suzerain' 'souverain' 'monarque' 'moustache'
+            'bedaine' 'pattes',
+        article "le",
         description "Le roi Mice VII est la plus énorme des souris que vous ayez eu
             l'occasion de rencontrer, sa bedaine frottant régulièrement le polystyrène
             vieilli du trône en un crissement désagréable. Ses deux grosses pattes avant
@@ -871,29 +916,7 @@ Object  roi "roi Mice VII" trou_trone
             roides et horizontales, sur plusieurs centimètres, si bien que quand le roi
             ne passe pas une porte du fait de sa corpulence, ses moustaches l'en
             avertissent avant d'être coincé dans l'embrasure.",
-        quete_donnee 0,
-        initial [;
-          if (self.quete_donnee == 0) {
-            self.quete_donnee = 1;
-            move parchemin to player;
-            "~Te voilà enfin, mon cher Chevalier. Je t'ai fait quérir car je dois te
-            faire part d'une requête importante...~^^
-            Le roi s'arrête un instant, refoulant un éternuement, et poursuit son
-            discours, non sans bégayer.^^
-            ~Peut-être l'as-tu remarqué, le blason de la famille royale nous a été volé.
-            La bande de Kay, les rats qui vivent dans la cave de la maison, a déjà
-            revendiqué le crime, bien que j'aie toujours du mal à concevoir comment ils
-            ont procédé, étant trop grands pour pénétrer notre palais.^
-            Toujours est-il que...~^^
-            Le roi s'interrompt à nouveau, toussant violemment si bien que vous n'avez
-            d'autre recours que d'aller lui tapoter gentillement le dos de votre patte
-            agile jusqu'à ce qu'il retrouve une respiration correcte.^^
-            ~Hu... Excuse-moi... Bref, je disais que j'ai besoin de toi pour récupérer
-            cet artefact de valeur inestimable, rongé dans une plaque de PVC par mon
-            arrière grand oncle, et gravé par sa soeur et deux jeunes vierges.^
-            Voici tes ordres de mission. J'ai confiance en toi, mon meilleur Chevalier.
-            Je sais que tu ne me décevras pas. Maintenant, vas !";
-          }
+        each_turn [;
           if (heros.task0 == 1 && heros.task1 == 1) {
             if (heros.task3 == 1) {
               print "À votre entrée dans la salle du trône, tous les regards se tournent
@@ -912,7 +935,7 @@ Object  roi "roi Mice VII" trou_trone
               trouvé ce matin.~^^
               Vous tendez le blason au roi qui le réaccroche au dessus de son trône, et
               les réjouissances commencent.";
-              heros.task2 == 1;
+              heros.task2 = 1;
               Achieved(2);
               deadflag = 2;
             }
@@ -933,16 +956,19 @@ Object  roi "roi Mice VII" trou_trone
               trouvé ce matin.~^^
               Vous tendez le blason au roi qui le réaccroche au dessus de son trône, et
               les réjouissances commencent.";
-              heros.task2 == 1;
+              heros.task2 = 1;
               Achieved(2);
               deadflag = 2;
             }
           }
         ],
-  has   animate male proper;
+        life [;
+          Tell,Ask,Answer: "Vous obtenez pour seule réponse : ~Va, cours, vole et me venge !~.";
+        ],
+  has   animate male;
 
 Object  parchemin "parchemin royal"
-  with  name 'parchemin' 'royal' 'ordre' 'ordres' 'mission' 'document',
+  with  name 'parchemin' 'royal' 'ordre' 'ordres' 'mission' 'document' 'objectifs' 'sceau',
         description [;
             style underline;
             print "^Jour 23 de l'année du Reblochon.^^
@@ -998,7 +1024,9 @@ Object  _ordinateur "ordinateur" ordinateur
             'bouton' 'power' 'reset',
         description "L'énorme machine et son ronronnement monstrueux vous rappellent
             que vous avez failli mourir jadis étouffé par la poussière qui le garnit,
-            d'une épaisseur résultant d'un amoncellement séculaire.",
+            d'une épaisseur résultant d'un amoncellement séculaire. Les cablages n'en
+            sont pas moins négligés et branlant sous l'effet d'un courant d'air, derrière
+            l'unité centrale.",
         eteint 0,
         before [;
           Touch,SwitchOff:
@@ -1227,12 +1255,14 @@ Object  conserve "boîte de conserve vide" prison
   with  name 'boite' 'conserve' 'vide' 'metal',
         description "Une boîte de métal de tout petit format, qui reste tout de même
             imposante à votre échelle, mais probablement transportable.",
+        jete 0,
         before [;
           ThrowDir:
             if (second == w_obj && location == couloir_entrepots) {
-              if (clef_entrepot notin player) {
+              if (self.jete == 0) {
                 move conserve to couloir_prisons;
                 move clef_entrepot to couloir_entrepots;
+                self.jete = 1;
                 score = score + 5;
                 "Vous lancez la conserve de toutes vos forces vers les prisons et vous
                 glissez dans une zone d'ombre. Le fracas que sa chute provoque réveille
@@ -1305,7 +1335,7 @@ Object  gruyere "gruyère à trous" _caisses
         before [;
           Touch,Take:
             if (_caisses.gruyere_la == 1) {
-              move gruyere to hotte;
+              move gruyere to player;
                _caisses.gruyere_la = 0;
               "Vous saisissez le gruyère avec promptitude, qui bien qu'il affiche un
               aspect plutôt rebutant et percé de mille trous, conserve toujours une
@@ -1327,17 +1357,18 @@ Object  fromage "morceaux de fromage" _caisses
         before [;
           Touch,Take:
             if (fromage notin player && _caisses.gruyere_la == 0) {
-              move fromage to hotte;
+              move fromage to player;
               "Ne trouvant plus de gruyère dans les caisses, vous y prenez un fromage
               quelconque.";
             }
             else if (_caisses.gruyere_la == 1) {
-              move gruyere to hotte;
+              move gruyere to player;
               _caisses.gruyere_la = 0;
               "Vous saisissez le gruyère avec promptitude, qui bien qu'il affiche un
               aspect plutôt rebutant et percé de mille trous, conserve toujours une
               odeur qui chatouille vos narines.";
             }
+            else { "Vous avez déjà assez de fromage."; }
           Taste,Eat:
             if (fromage in player) {
               move fromage to _caisses;
@@ -1424,7 +1455,7 @@ Object  _manivelle "manivelle" kay_chambre
             comme un jongleur avec ses balles, en jaillant, tandis que vous découvrez à
             l'intérieur de la boîte un carnet usé, qui se révèle être le journal de Kay.
             Vous vous en saisissez et refermez le couvercle de la boîte.^";
-            move journal_kay to hotte;
+            move journal_kay to player;
             rtrue;
         ],
   has   scenery female;
@@ -1483,7 +1514,7 @@ Object  lampe "petite lampe pour bicyclette" kay_chambre
           Take:
             if (self has scenery) {
               give self ~scenery;
-              move lampe to hotte;
+              move lampe to player;
               "Vous vous dressez sur le bout de vos pattes et détachez la lampe du plafond
               de terre pour vous en emparer.";
             }
@@ -1499,13 +1530,26 @@ Object  lampe "petite lampe pour bicyclette" kay_chambre
         ],
   has   scenery female;
 
+
+Object  blason "blason de la famille royale"
+  with  name 'blason' 'ecu' 'bouclier' 'armes' 'armoiries' 'ecusson' 'heraldique' 'royal'
+            'royale',
+        article "le",
+        description "L'objet qui vous aura vallu cette quête dont vous vous seriez bien
+            passé. En son centre est gravé un gruyère sans trous.",
+        before [;
+          Drop,ThrowAt,ThrowDir:
+            "Maintenant que vous l'avez, vous ne le lâchez plus, sauf au roi.";
+        ];
+
 !=======================================================================================
 
 [ Initialise;
   lookmode = 2;
   ChangePlayer(heros);
   location = trou_dortoirs;
-  print "Si vous jouez pour la première fois à une fiction interactive, tapez "; style underline; print "aide.^^";
+  print "Si vous jouez pour la première fois à une fiction interactive, tapez "; style
+  underline; print "aide.^^";
 ];
 
 [ PrintTaskName task_number;
@@ -1535,8 +1579,8 @@ Object  lampe "petite lampe pour bicyclette" kay_chambre
   "fiction interactive"; style roman; print " et se base donc sur un dialogue entre
   le joueur, vous, et sa machine. Ainsi vous pouvez interagir avec le milieu
   environnant à travers des ordres à l'impératif ou à l'infinitif, tels que ceux-ci :^";
-  print " > prendre la hotte^ > manger le gruyere^ > regarder le roi^^
-  Il peut arriver (voir assez souvent pour un joueur néophyte) que vos instructions ne
+  print " > prendre la boite^ > manger le gruyere^ > regarder le roi^^
+  Il peut arriver (voire assez souvent pour un joueur néophyte) que vos instructions ne
   soient pas comprises, vous pouvez alors réessayer en reformulant d'une manière plus
   claire et simple (l'association "; style underline; print "verbe"; style roman; print
   " + "; style underline; print "complément"; style roman; print " est la plus
@@ -1632,7 +1676,8 @@ Include "scenic5sens";
 
 Include "FrenchG";
 
-! Version 2.2 des bibliothèques francophones
+! Version 2.3devI6+I7 bibliothèques francophones, révision 130 du dépôt subversion
+! d'informfr sur tuxfamily.
 
 Verb "help" "aide" "manuel" "info" "information"
     *               -> Help;
@@ -1647,6 +1692,9 @@ Verb "voler" "subtiliser" "vole" "subtilise" "derober" "derobe" "piquer" "pique"
     * noun                                                    -> StealNoun
     * noun creature                                           -> Steal
     * noun 'a'/'à'/'au'/'aux'/'de'/'du'/'des' creature        -> Steal;
+
+Verb "grignoter"
+    * noun                                                    -> Eat;
 
 Extend "prendre" last
     * noun creature                                           -> Steal
