@@ -47,10 +47,18 @@ Release 1;  Serial "100808";
 
 Constant TASKS_PROVIDED;
 Constant NUMBER_TASKS = 4;
-Constant MAX_SCORE = 30;
+Constant MAX_SCORE = 40;
 Array task_scores -> 8 5 2 5;
 
 Include "Parser";
+
+Object  LibraryMessages         ! Pour remplacer certains messages standard
+  with  before [;
+          Miscellany:
+            if (lm_n == 39)
+                 "Cela n'a pas la moindre importance.";
+         ];
+
 Include "VerbLib";
 
 !=======================================================================================
@@ -229,7 +237,8 @@ Object  buffet_dessous "Sous le vieux buffet"
             vieux buffet en acajou paraît impressionnant, surtout à cause de la
             hauteur de plafond dont il vous gratifie qui n'excède pas dix à douze
             centimètres. Dans l'angle sud-ouest se trouve un trou assez large pour s'y
-            faufiler, mais il faudrait une perche ou une planchette pour y grimper.",
+            faufiler, mais il faudrait une perche ou une planchette pour y grimper, car
+            vous n'êtes manifestement pas assez grand.",
         s_to trou_trone,
         w_to televiseur,
         e_to ordinateur,
@@ -253,10 +262,15 @@ Object  buffet_interieur "Dans le vieux buffet"
             du trou par lequel vous êtes arrivé et des pourtours des portes de bois.
             Le sol poussiéreux est marqué de traces de pattes de souris vers un angle.
             La sortie est vers le bas.",
+        scenic_look 'traces' 'pattes' 'souris' 'trace' 'pas' 0 "Des traces de pas qui
+            indiquent qu'une souris est passée par là dernièrement.",
         d_to [;
           print "Vous glissez avec précaution le long de la paille.^";
           PlayerTo(buffet_dessous);
           rtrue;
+        ],
+        before [;
+          Smell: "La poussière vous fait éternuer.";
         ];
 
 Object  televiseur "Près du poste de télévision"
@@ -274,6 +288,13 @@ Object  televiseur "Près du poste de télévision"
             et une jeune fille y est avachie, s'abrutissant au devant d'énormités
             commerciales télévisées, à savoir une publicité pour un fromage de chèvre,
             qui étrangement vous fait envie.",
+        before [;
+          Smell: "Ici se mêlent l'odeur trop prononcée du parfum de la demoiselle à la
+            répugnante odeur féline de Choupinette, que se prélasse souvent sur les cuisses
+            de la jeune fille avachie.";
+          Listen: "Le bruit des ondes du téléviseur, ponctué parfois de ~Non, Stecy ne quitte
+            pas Brandon, sinon il te trompera avec Vanessa !~";
+        ],
         e_to buffet_dessous,
         ne_to [; SalonChoupinette(); rtrue; ],
         n_to balcon;
@@ -289,24 +310,22 @@ Object  balcon "Sur le balcon"
         scenic_look 'bicyclette' 'bicyclettes' 'velo' 'vtt' 0 "Ces engins à roues vous
             fascinent toujours autant, bien que ceux-ci soient manifestement viellis et
             rouillés par des averses fréquentes dans la région."
-            'pot' 'pots' 'peinture' 0 "Des pots de peinture noire, bleue et blanche, qui
-            ont été utilisés récemment pour refaire la peinture du balcon sur lequel vous
-            vous trouvez, et que l'homme de la maison n'a pas encore eu le courage de
-            descendre au garage. Divers pinceaux de formes variées encombrent le sol."
             'pinceau' 'pinceaux' 'brosse' 'brosses' 0 "Des pinceaux et brosses dont les
             poils se sont solidifiés avec la peinture qui y a séché.",
         scenic_look2 'balconiere' 'balconieres' 'fleur' 'fleurs' 'tige' 'tiges'
             'feuille' 'feuilles' 0 "Des fleurs de multiples couleurs poussent là dans ces
             bacs spécifiquement prévus pour la culture horticole, surplombant des pots
             de peinture. Un arbuste a même une de ses feuilles qui plonge dans la
-            peinture noire tandis qu'une branche descend jusqu'à vos pieds."
-            'arbuste' 'branche' 0 "Vous pourriez presque monter jusqu'à cet arbuste en
-            grimpant le long de sa branche qui vient mourir à vos pieds.",
+            peinture noire tandis qu'une branche descend jusqu'à vos pieds.",
+        scenic_smell 'balconiere' 'balconieres' 'fleur' 'fleurs' 'tige' 'tiges'
+            'feuille' 'feuilles' 0 "De délicates fragrances horticoles viennent chatouiller
+            votre museau, et vous vous surprenez a les humer avec entrain.",
+        scenic_taste 'peinture' 'pot' 'pots' 0 "Sans façons.",
         s_to televiseur,
         e_to [; SalonChoupinette(); rtrue; ],
         u_to arbuste,
         before [;
-          Climb: PlayerTo(arbuste);
+          Climb: <<Climb _arbuste>>;
         ];
 
 Object  arbuste "Au sommet de l'arbuste"
@@ -324,6 +343,7 @@ Object  arbuste "Au sommet de l'arbuste"
               en ressortez tout peint en grimpant le long de la feuille, désormais
               invisible dans l'obscurité.^";
               heros.peint = 1;
+              score = score + 4;
               rtrue;
             }
             else { "Un seul bain vous suffit."; }
@@ -340,6 +360,9 @@ Object  ordinateur "Sous le bureau de l'ordinateur"
             s'ouvre toujours un espace vide et étrangement silencieux et à l'est se
             trouve l'entrée d'un couloir.";
         ],
+        scenic_look 'ecran' 'cathodique' 'plasma' 'tubes' 'tube' 'plat' 'lcd' 0 "Un écran LCD
+            toute dernière génération, qui reluit des postillons du jeune homme qui se déchaîne,
+            seul, devant lui.",
         before [;
           Listen: 
             if (noun == fils) rfalse;
@@ -381,7 +404,8 @@ Object  toilettes "Dans les toilettes"
             celle du trône du roi Mice VII. À côté de vous se trouve une brosse sur le
             manche de laquelle sont enfilés plusieurs rouleaux de papier toilette blanc
             immaculé. À l'ouest vous retournez dans le couloir.",
-        w_to couloir_salon;
+        w_to couloir_salon,
+        out_to couloir_salon;
 
 Object  couloir_chambres "Couloir vers les chambres"
   with  name 'couloir' 'corridor',
@@ -399,10 +423,21 @@ Object  couloir_chambres "Couloir vers les chambres"
 
 Object  chambre_parents "Chambre des parents"
   with  name 'chambre' 'porte' 'habitation',
-        description "La chambre des propriétaires de la maison est des plus sommaires,
-            contenant un lit deux places, un bureau, une commode et une armoire
-            entrouverte. Une fenêtre, fermée, donne sur le jardin et la mère y est
-            accoudée, épuisant une cigarette.",
+        description [;
+            if (pere notin self) {
+              "La chambre des propriétaires de la maison est des plus sommaires,
+              contenant un lit deux places, un bureau, une commode et une armoire
+              entrouverte. Une fenêtre, fermée, donne sur le jardin et la mère y est
+              accoudée, épuisant une cigarette.";
+            }
+            else {
+              "La chambre des propriétaires de la maison est des plus sommaires,
+              contenant un lit deux places, un bureau, une commode et une armoire
+              entrouverte. Une fenêtre, fermée, donne sur le jardin et la mère y est
+              accoudée, épuisant une cigarette, tandis que son mari lui caresse délicatement
+              la nuque.";
+            }
+        ],
         scenic_look 'meuble' 'meubles' 'lit' 'bureau' 'commode' 'armoire' 0 "Les meubles
             de cette pièces sont tous en noyer, et ont sûrement été achetés au même
             endroit et en même temps."
@@ -412,14 +447,15 @@ Object  chambre_parents "Chambre des parents"
         count 0,
         each_turn [;
           self.count = self.count + 1;
-          if (self.count == 4) {
+          if (self.count == 5) {
             print "^Un cri de stupeur retentit lorsque la femme se détourne de la
-            fenêtre, sa cigarette consummée, et vous comprenez que vous en êtes le
+            fenêtre, sa cigarette consumée, et vous comprenez que vous en êtes le
             motif. Affolée, elle court vers le couloir et vous écrase au passage.";
-            deadflag = 4;
+            deadflag = 4; rtrue;
           }
         ],
-        w_to couloir_chambres;
+        w_to couloir_chambres,
+        out_to couloir_chambres;
 
 Object  cuisine "La cuisine"
   with  description [;
@@ -434,7 +470,10 @@ Object  cuisine "La cuisine"
         ],
         scenic_look 'evier' 'robinet' 'lavabo' 'goutte' 'eau' 0 "Matériel désormais
             déprécié, au profit du lave-vaisselle, l'évier trône fièrement avec comme
-            seule ambition les plats trop grands et la poubelle qu'il couve.",
+            seule ambition les plats trop grands et la poubelle qu'il couve."
+            'poubelle' 'bin' 'corbeille' 0 "La poubelle gît sous l'évier, vous le savez depuis
+            que le corps sans vie de votre fiancée y a été inhumé, suite à un acte barbare
+            de Choupinette.",
         count 0,
         each_turn [;
           self.count = self.count + 1;
@@ -466,14 +505,16 @@ Object  cave "Au plus profond de la cave"
             est quasi totale puisque seul un soupirail vient éclairer le lieu, mais vous
             repérez néanmoins l'entrée du repaire de Kay sur le mur nord. L'escalier
             remonte à la cuisine à l'est.",
-        scenic_look 'soupirail' 'lumiere' 'fenetre' 0 "Une portion de cercle en fonte
-            réhaussée de verre gris de crasse, on peut appeler ça un soupirail, avec de
-            l'imagination."
+        scenic_look 'soupirail' 'lumiere' 'fenetre' 'cercle' 'fonte' 'verre' 0 "Une portion de
+            cercle en fonte réhaussée de verre gris de crasse, on peut appeler ça un soupirail,
+            avec de l'imagination."
             'vin' 'bouteille' 'bouteilles' 'pinard' 'alcool' 'boisson' 'outils' 'vetements'
             'jardin' 'pantalon' 'pelle' 'cotes' 'rhone' 'caisse' 'caisses' 'etabli' 0
             "Des bouteilles de Côtes du Rhône bon marché sont stockées là dans des caisses,
             jouxtant un établi sur lequel reposent un vieux pantalon et divers outils de
             jardinage, dont une pelle à ce que vous parvenez à en voir depuis le sol.",
+        scenic_look2 'entree' 'trou' 'kay' 'gang' 'repaire' 'mur' 'nord' 0 "Sombre, l'entrée du
+            repaire de Kay semble s'enfoncer dans les profondeurs, et est bien gardée.",
         passe 0,
         n_to [;
           if (heros.task1 == 1) {
@@ -554,6 +595,9 @@ Object  cave "Au plus profond de la cave"
             rtrue;
           }
         ],
+        in_to [;
+          <<Go n_obj>>;
+        ],
         e_to cuisine;
 
 Object  kay_hall "Hall du repaire de Kay"
@@ -569,10 +613,9 @@ Object  kay_hall "Hall du repaire de Kay"
             sud, la lumière, et la sortie.",
         scenic_look 'pancarte' 'panneau' 'bois' 'miteux' 0 "Trois pancartes de bois miteux
             sur les murs nord, est et ouest."
-            'velo' 'dynamo' 'vieux' 'rat' 'aveugle' 0 "Un moment il vous semble que le
-            vieux rat vous contemple... Peut-être un aveugle a-t-il plus de facilités à
-            vous repérer dans l'obscurité qu'un autre rat. Mais il détourne son regard
-            torve et inexpressif."
+            'vieux' 'rat' 'aveugle' 0 "Un moment il vous semble que le vieux rat vous
+            contemple... Peut-être un aveugle a-t-il plus de facilités à vous repérer dans
+            l'obscurité qu'un autre rat. Mais il détourne son regard torve et inexpressif."
             'diodes' 'diode' 'lampe' 'lampes' 'lumiere' 'lumieres' 0 "Des diodes
             électroluminescentes rouges et vertes, qui pulsent parfois sous l'action
             irrégulière du vieux rat.",
@@ -608,7 +651,10 @@ Object  kay_hall "Hall du repaire de Kay"
               autant ne pas prendre de risques inutiles.";
         ],
         e_to couloir_prisons,
-        w_to couloir_dortoirs;
+        w_to couloir_dortoirs,
+        out_to [;
+          <<Go s_obj>>;
+        ];
 
 Object  couloir_prisons "Couloir des prisons"
   with  name 'prison' 'couloir' 'corridor' 'prisons' 'geole' 'geoles' 'trou' 'taule'
@@ -635,14 +681,14 @@ Object  prison "Dans une geôle vide"
   with  name 'prison' 'geole' 'geoles' 'trou' 'taule' 'oubliette' 'cellule' 'mur' 'murs'
             'griffes',
         description "Des murs griffés par les générations de prisonniers qui s'y sont
-            succédés, cette geôle vous apparaît lugubre, dans sa sinistre robe grisâtre.
-            Des barreaux verticaux, serrés et raides, forme la façade sud dans laquelle
+            succédées, cette geôle vous apparaît lugubre, dans sa sinistre robe grisâtre.
+            Des barreaux verticaux, serrés et raides, forment la façade sud dans laquelle
             s'ouvre la porte, de barreaux elle aussi, par laquelle vous êtes entré.",
         temps 0,
         scenic_look 'porte' 'barreaux' 'barreau' 'facade' 0 "Ces barreaux sont faits de
             piques à brochette de métal solidement ancrés dans le béton.",
         initial [;
-            "Vous avez la désagréable impression que ce lieu sera pour longtemps votre
+            " Vous avez la désagréable impression que ce lieu sera pour longtemps votre
             résidence et songez à sortir.";
         ],
         each_turn [;
@@ -653,7 +699,8 @@ Object  prison "Dans une geôle vide"
             deadflag = 5;
           }
         ],
-        s_to couloir_prisons;
+        s_to couloir_prisons,
+        out_to couloir_prisons;
 
 Object  couloir_entrepots "Couloir de l'entrepôt"
   with  name 'couloir' 'corridor' 'entrepot' 'entrepots',
@@ -684,7 +731,8 @@ Object  entrepot "Entrepôt du gang de Kay"
             "Les délicieuses fragrances de mets mélangés viennent chatouiller vos
             narines.";
         ],
-        w_to porte_entrepot;
+        w_to porte_entrepot,
+        out_to porte_entrepot;
 
 Object  couloir_dortoirs "Couloir des dortoirs"
   with  name 'couloir' 'corridor' 'dortoir' 'dortoirs' 'quartiers' 'membres' 'gang',
@@ -697,12 +745,14 @@ Object  couloir_dortoirs "Couloir des dortoirs"
             écussons scouts de la fille des propriétaires du lieu, devenus inutiles
             lorsque le téléviseur prit la place de ses instincts de guide. Tachés de sang,
             vous n'osez imaginer l'usage que l'on a pu en faire.",
+        souvenir 0,
         initial [;
-          if (_poignard.trouve == 1) {
-            style underline; print "Stanley..."; style roman; print "Qu'est-ce que Stanley
+          if (_poignard.trouve == 1 && self.souvenir == 0) {
+            self.souvenir = 1;
+            style underline; print "Stanley..."; style roman; print " Qu'est-ce que Stanley
             avait à voir avec cette intrigue ? Pourquoi est-ce que son poignard se trouve
             dans le repaire de Kay ?^^
-            Stanley est un de vos amis d'enfance. Le roi actuel, lui et vous formiez un
+            Stanley était un de vos amis d'enfance. Le roi actuel, lui et vous formiez un
             trio inséparable, mais il y a peu Stanley a disparu sans laisser de nouvelles.
             Serait-ce possible que... que Stanley soit véritablement le voleur ?^^";
           }
@@ -717,31 +767,31 @@ Object  couloir_dortoirs "Couloir des dortoirs"
         n_to [;
           print "Vous jetez un oeil du côté du dortoir nord et repérez trois soldats en
           train de jouer aux dés en riant grassement et en écoutant la "; style underline;
-          print "Lettre à Élise"; style roman; print " sur une vieille autoradio qui prend
-          la moitié de la salle à elle seule. La lumière y abonde et vous doutez que votre
+          print "Lettre à Élise"; style roman; print " sur un vieil autoradio qui prend
+          la moitié de la salle à lui seul. La lumière y abonde et vous doutez que votre
           déguisement y soit du meilleur effet, de plus, un cure-dent métallique taillé en
-          pointe reluit au côté de l'un des rats."; rtrue;
+          pointe reluit au côté de l'un des rats.^"; rtrue;
         ],
         e_to kay_hall,
         s_to kay_dortoir;
 
 Object  kay_dortoir "Dortoir sud"
-  with  name 'dortoir' 'quartiers' 'membres' 'gang' 'sud',
-        description "D'une configuration semblable au dortoir du nord, celui-ci semble plus
-            austère, et un calme plat y règne. La lumière y est aussi importante, mais
-            personne ne semble là pour vous y identifier. Des lits superposés taillés dans
-            de vieux tiroirs de bois sont alignés sur deux rangées, et quelques boîtes
-            d'allumettes viennent jouer le rôle de coffres personnels.",
+  with  name 'dortoir' 'quartiers' 'membres' 'gang' 'sud' 'dortoirs',
+        description "Ce dortoir est austère, et un calme plat y règne. La lumière y est aussi
+            importante, mais personne ne semble là pour vous y identifier. Des lits superposés
+            taillés dans de vieux tiroirs de bois sont alignés sur deux rangées, et quelques
+            boîtes d'allumettes viennent jouer le rôle de coffres personnels.",
         scenic_look 'lit' 'lits' 'superpose' 'superposes' 'tiroir' 'tiroirs' 0 "D'un bois
             peu solide, on sent néanmoins que les rats ont le sens de la récupération plus
-            fin que les souris qui se content de polystyrène quand elles pourraient ronger
+            fin que les souris qui se contentent de polystyrène quand elles pourraient ronger
             du hêtre."
             'coffre' 'personnel' 'coffres' 'personnels' 'cassette' 'caisse' 'malle' 'boite'
             'boites' 'allumette' 'allumettes' 0 "Une boîte de 240 allumettes attire votre
             attention car elle est entrouverte et un objet fin y reluit. En vous
             approchant vous découvrez un fin poignard d'acier trempé dont la garde dépasse
             de la boîte.",
-        n_to couloir_dortoirs;
+        n_to couloir_dortoirs,
+        out_to couloir_dortoirs;
 
 Object  couloir_reunion "Couloir vers la salle de réunion"
   with  name 'couloir' 'corridor' 'reunion' 'salle' 'hall',
@@ -753,7 +803,7 @@ Object  couloir_reunion "Couloir vers la salle de réunion"
         w_to kay_chambre,
         n_to [;
           if (salle_reunion has visited) {
-            print "~Tu veux d'jà r'passer ? D'accord...~";
+            print "~Tu veux d'jà r'passer ? D'accord...~^";
             PlayerTo(salle_reunion);
             rtrue;
           }
@@ -783,12 +833,15 @@ Object  kay_chambre "Chambre de Kay"
             choisis qu'il serait déplacé de détailler, étant des propos qui dépassent notre
             conception de l'intelligence pour rejoindre les sphères éthérées du génie :
             la vulgarité dans toute sa splendeur, pour parler clairement.",
-        e_to couloir_reunion;
+        e_to couloir_reunion,
+        out_to couloir_reunion;
 
 Object  salle_reunion "Antichambre de la salle de réunion"
   with  description "Vous vous trouvez dans une petite antichambre juste avant la salle de
-            réunion au nord où se trouve probablement Kay actuellement. La hall se trouve
+            réunion au nord où se trouve probablement Kay actuellement. Le hall se trouve
             au sud.",
+        scenic_look 'porte' 'portail' 0 "Une porte faite d'un couvercle de boîte de conserve
+            de forte contenance, vu le diamètre.",
         vu 0,
         time_left,
         time_out [;
@@ -799,6 +852,7 @@ Object  salle_reunion "Antichambre de la salle de réunion"
           }
         ],
         s_to couloir_reunion,
+        out_to couloir_reunion,
         n_to [;
           if (self.vu == 0) {
             self.vu = 1;
@@ -807,7 +861,7 @@ Object  salle_reunion "Antichambre de la salle de réunion"
             nombreux éclats de miroir constellent les parois de la salle et lui donnent une
             allure étrange. Le blason est au milieu d'eux, sur la table.^^
             Vous revenez dans l'antichambre afin de vous assurer une dernière fois que vous
-            avez une idée de comment vous emparer du blason.^";
+            avez une idée de comment vous emparer du blason.";
           }
           else if (self.vu == 1) {
             if (lampe in player && lampe has light) {
@@ -816,9 +870,10 @@ Object  salle_reunion "Antichambre de la salle de réunion"
                 la salle de réunion. Jouant des reflets sur les miroirs tout en vous
                 protégeant avec le foulard, vous éblouissez les trois rats et tandis
                 qu'ils se couvrent les yeux de leurs pattes poisseuses, vous vous ruez et
-                subtilisez le blason du roi.^^À peine sorti de la salle, vous entendez les
-                pas lourds de Kay qui vous poursuit, et vous vous dites qu'il vaudrait
-                mieux ne pas traîner.^";
+                subtilisez le blason du roi. Vous lâchez la lampe dans la précipitation.
+                ^^À peine sorti de la salle, vous entendez les pas lourds de Kay qui vous
+                poursuit, et vous vous dites qu'il vaudrait mieux ne pas traîner.^";
+                move lampe to salle_reunion;
                 move blason to player;
                 heros.task1 = 1;
                 score = score + 5;
@@ -881,17 +936,16 @@ Object  _paille "paille de plastique" trou_dortoirs
 
 Object  paille "paille de plastique"
   with  name 'paille' 'pailles',
-        description "Les pailles de plastique jonchent le sol de la cuisine tous les
-            matins, et vos amis n'ont pas eu beaucoup de mal à s'en approprier
-            suffisament pour confectionner ces couchettes.",
+        description "Une paille de plastique verte, déjà usagée mais qui pourtant garde une
+            certaine rigidité qui ne manque pas de vous surprendre.",
         before [;
           Touch,Take:
             if (buffet_interieur has visited) {
               "Vous n'en aurez sûrement plus intérêt, autant la laisser là pour de
               futures intrusions dans le buffet.";
             }
-            else { rfalse; }
-         ],
+          Wear: "Ce serait un accoutrement idiot.";
+        ],
   has   female;
 
 Object  _sujets "sujets de la cour" trou_trone
@@ -998,6 +1052,9 @@ Object  foulard "foulard noir" buffet_interieur
               "Ne vaudrait-il pas mieux enlever cet accoutrement ridicule de fantôme et
               rester invisible dans l'ombre ?";
             }
+          Take:
+            score = score + 1;
+            rfalse;
         ],
   has   clothing;
 
@@ -1007,17 +1064,43 @@ Object  fille "fille" televiseur
         article "la",
         description "La demoiselle que vous avez l'occasion de contempler dans toute sa
             magnificence de loque avachie est la fille des propriétaires du lieu, qui
-            semble vous affectionner et dépose parfois quelques pop-corn devant le sofa,
-            que vos semblables se font une joie de récupérer pour festoyer au
-            palais.",
+            semble vous affectionner et dépose parfois quelques pop-corn devant le sofa...
+            Vos semblables se font une joie de les récupérer pour festoyer au palais.",
         before [;
           Smell: "Un trop plein de parfum vient embrumer votre esprit. La jeune
-            demoiselle pourrait avoir un certain charme si elle éviter de vider son
+            demoiselle pourrait avoir un certain charme si elle évitait de vider son
             flacon dans son cou, pensez-vous.";
           Listen: "Un silence captivé, ponctué parfois de ~Non, Stecy ne quitte pas
             Brandon, sinon il te trompera avec Vanessa !~";
+          Search: "Elle est un peu grande pour que vous puissiez la fouiller.";
+        ],
+        life [;
+          Answer,Ask,AskFor,Tell: "Si encore vous saviez parler, je ne suis pas sûr que ce
+            serait du meilleur effet. Pendant sa série en plus...";
         ],
   has   animate female;
+
+Object  _arbuste "arbuste" balcon
+  with  name 'arbuste' 'arbre' 'plante' 'branche',
+        description "Vous pourriez presque monter jusqu'à cet arbuste en grimpant le long de sa
+            branche qui vient mourir à vos pieds.",
+        before [;
+          Climb: PlayerTo(arbuste); rtrue;
+        ],
+  has   scenery concealed;
+
+Object  _pot "pot de peinture" balcon
+  with  name 'pot' 'pots' 'peinture',
+        description "Des pots de peinture noire, bleue et blanche, qui ont été utilisés
+            récemment pour refaire la peinture du balcon sur lequel vous vous trouvez, et que
+            l'homme de la maison n'a pas encore eu le courage de descendre au garage. Divers
+            pinceaux de formes variées encombrent le sol.",
+        before [;
+          Enter,Go: "Vous ne pouvez pas entrer dans un pot, mais vous remarquez un arbuste dont
+            une des branches vient à vos pieds et une des feuilles dans un des pots.";
+          Smell: "Une odeur acre de peinture.";
+        ],
+  has   scenery concealed;
 
 Object  _ordinateur "ordinateur" ordinateur
   with  name 'ordinateur' 'ordi' 'bureau' 'computer' 'pc' 'machine' 'fixe' 'engin'
@@ -1039,6 +1122,7 @@ Object  _ordinateur "ordinateur" ordinateur
               quand son sang lui monte au cerveau alors qu'il est penché pour
               rebrancher le cable, et ressortir grisâtre, poussiéreux.";
               self.eteint = 1;
+              score = score + 1;
               "^^Forcé de s'arrêter par le rédémarrage de l'ordinateur, le jeune homme en
               profite pour s'éclipser aux toilettes, dont il laisse la porte
               entrouverte en sortant.";
@@ -1055,12 +1139,18 @@ Object  fils "fils" ordinateur
         article "le",
         description "Le jeune no-life, mal rasé et cheveux gras, passe le plus clair de
             son temps devant l'engin effroyable, du moins vous ne l'avez jamais vu s'en
-            éloigner, à tuer virtuellement d'autres accros à distance.",
+            éloigner, à tuer virtuellement d'autres accros à distance. Il se trémousse
+            néanmoins comme quelqu'un qui a besoin d'aller aux toilettes, mais il est
+            absorbé par son jeu.",
         before [;
           Smell: "Des relents de sueur mêlés à diverses odeurs nauséabondes, un
             adolescent, un vrai !";
           Listen: "~Gn... Prends-ça ! Headshot... Yes ! Rah le noob... Ghh...~^^
             Force est d'avouer que sa conversation est passionnante.";
+        ],
+        life [;
+          Answer,Ask,AskFor,Tell: "Si encore vous saviez parler, je ne suis pas sûr que ce
+            serait du meilleur effet. Pendant sa partie en plus...";
         ],
   has   animate male;
 
@@ -1072,6 +1162,7 @@ Object  _papier_toilette "feuilles de papier toilette" toilettes
         before [;
           Touch,Take,Push,Pull:
             move papier_toilette to player;
+            score = score + 2;
             "Vous poussez de votre patte l'un des rouleaux, ce qui à pour effet de faire
             balloter le manche de la brosse tant et si bien que le rouleau situé tout en
             haut finit par vous tomber dessus, et en vous en extirpant vous vous
@@ -1106,6 +1197,10 @@ Object  mere "mère" chambre_parents
         article "la",
         description "Tirant sur sa cigarette sans filtre à intervalles réguliers, cette
             femme d'une quarantaine d'années semble plongée dans ses rêves.",
+        life [;
+          Answer,Ask,AskFor,Tell: "Si encore vous saviez parler, je ne suis pas sûr que ce
+            serait du meilleur effet. Pendant sa cigarette en plus...";
+        ],
   has   animate female;
 
 Object  pere "père"
@@ -1113,6 +1208,10 @@ Object  pere "père"
         article "le",
         description "Le maître de maison est un homme de haute taille au regard fier et
             intelligent, pour lequel vous avez un grand respect.",
+        life [;
+          Answer,Ask,AskFor,Tell: "Si encore vous saviez parler, je ne suis pas sûr que ce
+            serait du meilleur effet. Pendant qu'il câline sa femme en plus...";
+        ],
   has   animate male;
 
 Object  garde_entrepot "gardien endormi" couloir_entrepots
@@ -1136,6 +1235,9 @@ Object  garde_entrepot "gardien endormi" couloir_entrepots
             }
           Search: "Vous repérez une clef dorée dans la poche intérieure de la veste du
             gardien. Peut-être pourriez-vous la subtiliser si vous êtes assez discret.";
+        ],
+        life [;
+          Answer,Ask,AskFor,Tell: "Il dort. Le réveiller ainsi vous dévoilerait.";
         ],
   has   animate male transparent;
 
@@ -1220,7 +1322,8 @@ Object  poignard "poignard d'acier trempé"
           Touch:
             "Un ouvrage délicat, mais assez aiguisé pour trancher à vif une patte de rat,
             sans aucun doute.";
-        ];
+        ],
+  has   clothing;
 
 Object  clef_entrepot "clef de l'entrepôt" garde_entrepot
   with  name 'clef' 'cle' 'passe' 'doree',
@@ -1285,6 +1388,7 @@ Object  conserve "boîte de conserve vide" prison
             réveillant alors le gardien qui lève lentement son nez sur vous et donne
             l'alerte.";
             deadflag = 5; rtrue;
+          Search: "Elle est vide depuis bien longtemps.";
         ],
   has   female;
 
@@ -1313,7 +1417,7 @@ Object  porte_entrepot "porte de l'entrepôt"
   has   scenery door openable lockable locked female;
 
 Object  _caisses "caisses" entrepot
-  with  name 'boites' 'boite' 'carton' 'vivres' 'pain' 'rassis',
+  with  name 'boites' 'boite' 'carton' 'vivres' 'pain' 'rassis' 'caisse' 'caisses',
         description "Les boîtes emplies de fromage vous intéressent tout particulièrement
             : vous y repérez reblochon fondant, camembert bien fait et fromage de chèvre,
             mais surtout, et c'est à déplorer, un gruyère... avec trous.",
@@ -1324,11 +1428,13 @@ Object  _caisses "caisses" entrepot
             narines.";
           Taste,Eat:
             "Mieux vaut s'emparer d'un met plutôt que dévorer la caisse qui le contient.";
+          Search:
+            <<Take fromage>>;
         ],
   has   scenery pluralname transparent;
 
 Object  gruyere "gruyère à trous" _caisses
-  with  name 'gruyere' 'à trou' 'à trous' 'troue' 'emmental' 'moisissure' 'bleue',
+  with  name 'gruyere' 'à trou' 'à trous' 'troue' 'emmental' 'moisissure' 'bleue' 'fromage',
         description "Un vrai gruyère suisse, bien que percé par un commercial dans l'ère du
             temps, que les trous dénaturent et sur lequel apparaît une fine couche de
             moisissure bleue.",
@@ -1345,11 +1451,13 @@ Object  gruyere "gruyère à trous" _caisses
             move gruyere to thedark;
             "Vous plantez vos dents dans le morceau alléchant et le dévorez sous peu, y
             trouvant tout de même un arrière-goût désagréable.";
+          Show,Give:
+            "Trop précieux pour être donné à quiconque, gardez-le pour vous.";
         ],
   has   edible;
 
 Object  fromage "morceaux de fromage" _caisses
-  with  name 'fromage' 'quelconque' 'morceaux',
+  with  name 'fromage' 'quelconque' 'morceaux' 'reblochon' 'chevre' 'camembert',
         article "des",
         description "Des morceaux de fromage que vous ne prenez même pas la peine
             d'identifier, tout juste bons pour un rat vu leur aspect et leur odeur.",
@@ -1361,12 +1469,11 @@ Object  fromage "morceaux de fromage" _caisses
               "Ne trouvant plus de gruyère dans les caisses, vous y prenez un fromage
               quelconque.";
             }
-            else if (_caisses.gruyere_la == 1) {
-              move gruyere to player;
-              _caisses.gruyere_la = 0;
-              "Vous saisissez le gruyère avec promptitude, qui bien qu'il affiche un
-              aspect plutôt rebutant et percé de mille trous, conserve toujours une
-              odeur qui chatouille vos narines.";
+            else if (fromage notin player && _caisses.gruyere_la == 1) {
+              move fromage to player;
+              "Vous saisissez un morceau de fromage commun, que vous ne pouvez même pas
+              identifier tellement il semble vieux, laissant de côté le gruyère plus
+              alléchant.";
             }
             else { "Vous avez déjà assez de fromage."; }
           Taste,Eat:
@@ -1411,7 +1518,7 @@ Object  fromage "morceaux de fromage" _caisses
               ~Vois-tu, noble ami, j'ai été mandé d'apporter ce met délicieux à notre
               cher patron, Kay. Ce pourquoi j'aimerais passer.~^^
               ~Euh, c'est du poison ?~^^
-              Voyons, mon ami le garde de l'entrepôt ne m'aurais pas donné un fromage
+              ~Voyons, mon ami le garde de l'entrepôt ne m'aurait pas donné un fromage
               empoisonné pour notre chef. Mais je peux le goûter devant toi si tu veux.~
               Vous avalez un morceau de fromage au goût affreux. Oubliant la prétendue
               raison de votre venue, l'autre s'enquit :^^
@@ -1425,11 +1532,31 @@ Object  fromage "morceaux de fromage" _caisses
         ],
   has   edible pluralname;
 
+Object  dynamo "dynamo" kay_hall
+  with  name 'dynamo' 'energie' 'electricite' 'machine' 'engin' 'velo',
+        description "Un vieux rat aveugle pédale ici sur un engin proche d'un vélo, mais adapté
+            à sa taille, qui actionne une dynamo et produit l'électricité nécessaire pour
+            alimenter la plupart du repaire.",
+        eteinte 0,
+        before [;
+          Attack,Cut,SwitchOff:
+            score = score + 5;
+            self.eteinte = 1;
+            "Vous glissant derrière le rat aveugle avec force précaution, vous lui assénez un
+            coup violent et l'assomez. Vous entreprenez ensuite de briser la dynamo et le
+            repaire est soudain plongé dans des ténèbres étrangement rassurantes pour vous.
+            Vous distinguez tout de même les objets, car quelques diodes fonctionnent toujours.
+            Il doit y avoir une autre source d'énergie, mais c'est toujours ça de gagné.";
+        ];
+
 Object  garde_idiot "garde idiot" couloir_reunion
   with  name 'garde' 'gardien' 'soldat' 'militaire' 'idiot' 'imbecile' 'bete' 'beat',
         description "Un peu grassouillet, il semble avoir découvert récemment qu'il pouvait
             loucher et faire des bulles avec sa salive simultanément. Cependant il garde
             la porte avec fermeté, et passer ne sera pas aussi facile qu'il est idiot.",
+        life [;
+          Answer,Ask,AskFor,Tell: "~On m'a dit de garde la porte, pas de parler aux gens.~";
+        ],
   has   animate male;
 
 Object  _boite_musique "boîte à musique" kay_chambre
@@ -1462,7 +1589,7 @@ Object  _manivelle "manivelle" kay_chambre
 
 Object  journal_kay "journal de Kay" _manivelle
   with  name 'journal' 'intime' 'log' 'carnet' 'use',
-        article 'le',
+        article "le",
         read 0,
         description [;
           if (self.read == 0) {
@@ -1474,12 +1601,13 @@ Object  journal_kay "journal de Kay" _manivelle
             avide de vengeance, m'a apporté le blason de la famille royale sans que je
             n'aie besoin de rien lui demander. Il s'est par cet acte offert une place
             parmi nous, bien que je continue de le surveiller.^
-            Vu la valeur de l'artefact, je vais le placer au dessus de la porte de la
-            salle de réunion, ainsi je l'aurais toujours en vue.^^"; style roman; print
+            Vue la valeur de l'artefact, je vais le placer au dessus de la porte de la
+            salle de réunion, ainsi je l'aurai toujours en vue, dès que j'aurais fait planter
+            un clou.^^"; style roman; print
             "Voilà donc l'information qu'à la fois vous attendiez et redoutiez. Le voleur
             est bien Stan, qui faisait partie du trio que vous formiez avec le roi et qui
             vous semblait, alors jeunes souriceaux, inébranlable. Mais voilà plusieurs
-            lunes que Stanley a quitté le palais suite à une altercation avec son ancien
+            lunes que Stanley avait quitté le palais suite à une altercation avec son ancien
             ami le roi Mice VII, et vous êtiez jusqu'à aujourd'hui sans nouvelles.^";
             Achieved(3);
             heros.task3 = 1;
@@ -1670,6 +1798,13 @@ Object  blason "blason de la famille royale"
 !=======================================================================================
 
 Global ScenicFlag = 4;
+
+Constant ScenicErrorOther = "Vous n'y voyez aucune utilité.";
+Constant ScenicErrorLook = NULL; ! utiliser le message par défaut Miscellany 39
+Constant ScenicErrorSmell = NULL; ! utiliser le message par défaut pour "Smell"
+Constant ScenicErrorListen = NULL; ! utiliser le message par défaut pour "Listen"
+Constant ScenicErrorTouch = "Vous n'y voyez aucune utilité.";
+Constant ScenicErrorTaste = NULL; ! utiliser le message par défaut pour "Taste"
 Include "scenic5sens";
 
 ! Version 1.0
