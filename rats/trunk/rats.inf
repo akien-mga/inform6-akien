@@ -632,9 +632,13 @@ Object  kay_hall "Hall du repaire de Kay"
             'vieux' 'rat' 'aveugle' 0 "Un moment il vous semble que le vieux rat vous
             contemple... Peut-être un aveugle a-t-il plus de facilités à vous repérer dans
             l'obscurité qu'un autre rat. Mais il détourne son regard torve et inexpressif."
-            'diodes' 'diode' 'lampe' 'lampes' 'lumiere' 'lumieres' 0 "Des diodes
-            électroluminescentes rouges et vertes, qui pulsent parfois sous l'action
-            irrégulière du vieux rat.",
+            'diodes' 'diode' 'lampe' 'lampes' 'lumiere' 'lumieres' 0 [;
+              if (dynamo.cassee == 0) {
+              "Des diodes électroluminescentes rouges et vertes, qui pulsent parfois sous
+              l'action irrégulière du vieux rat.";
+              }
+              else { "Certaines brillent encore, la plupart sont néanmoins éteintes."; }
+            ],
         before [;
           Smell: "Plusieurs rats en décomposition doivent se trouver non loin, vu l'odeur
             nauséabonde qui règne en ce lieux.";
@@ -1632,9 +1636,14 @@ Object  fromage "morceaux de fromage" _caisses
 
 Object  dynamo "dynamo" kay_hall
   with  name 'dynamo' 'energie' 'electricite' 'machine' 'engin' 'velo',
-        description "Un vieux rat aveugle pédale ici sur un engin proche d'un vélo, mais adapté
+        description [;
+          if (self.cassee == 0) {
+            "Un vieux rat aveugle pédale ici sur un engin proche d'un vélo, mais adapté
             à sa taille, qui actionne une dynamo et produit l'électricité nécessaire pour
-            alimenter la plupart du repaire.",
+            alimenter la plupart du repaire.";
+          }
+          else "L'engin brisé fûme encore...";
+        ],
         cassee 0,
         before [;
           Attack,Cut,SwitchOff:
