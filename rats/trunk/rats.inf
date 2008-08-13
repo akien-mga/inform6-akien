@@ -48,7 +48,7 @@ Release 1;  Serial "100808";
 Constant TASKS_PROVIDED;
 Constant NUMBER_TASKS = 4;
 Constant MAX_SCORE = 40;
-Array task_scores -> 8 5 2 5;
+Array task_scores -> 8 5 3 5;
 
 Include "Parser";
 
@@ -110,7 +110,7 @@ Object  heros "vous" trou_dortoirs
         task1 0,
         task2 0,
         task3 0,
-        capacity 3,
+        capacity 8,
         description [;
           if (foulard hasnt worn && heros.peint == 1 && (papier_toilette hasnt worn ||
             papier_toilette notin player)) {
@@ -134,7 +134,7 @@ Object  heros "vous" trou_dortoirs
             vous serez alors entièrement noir, foulard et peinture aidant."; }
           else {
             "C'est bien vous, Chevalier du roi Mice VII, qui servez sous ses ordres
-            depuis son ascension au trône puisque vous avez toujours été de grands
+            depuis son accession au trône puisque vous avez toujours été de grands
             amis. Vous portez sur le dos une hotte de plastique jaune. Un jouet sur lequel
             vous êtes tombé dans l'une de vos escapades, probablement associé jadis à une
             figurine de père Noël, toujours est-il que sa forme est parfaitement adaptée aux
@@ -170,7 +170,7 @@ Object  trou_trone "Palais du roi Mice"
             accueille en principe les armes de la famille royale, mais qui est vide
             aujourd'hui. Le roi, confortablement lové au creux de son siège, promène un
             regard bienveillant sur ses sujets affairés autour de lui, tandis qu'il
-            grignotte un morceau de fromage en plastique rigide. De l'entrée en arcade
+            grignote un morceau de fromage en plastique rigide. De l'entrée en arcade
             du palais provient une faible lumière qui est ingénieusement répartie dans
             la salle à l'aide de bris d'un miroir. La porte est au nord, tandis qu'à
             l'est s'étendent les dortoirs.",
@@ -215,7 +215,7 @@ Object  trou_trone "Palais du roi Mice"
             ont procédé, étant trop grands pour pénétrer notre palais.^
             Toujours est-il que...~^^
             Le roi s'interrompt à nouveau, toussant violemment si bien que vous n'avez
-            d'autre recours que d'aller lui tapoter gentillement le dos de votre patte
+            d'autre recours que d'aller lui tapoter gentiment le dos de votre patte
             agile jusqu'à ce qu'il retrouve une respiration correcte.^^
             ~Hu... Excuse-moi... Bref, je disais que j'ai besoin de toi pour récupérer
             cet artefact de valeur inestimable, rongé dans une plaque de PVC par mon
@@ -223,7 +223,7 @@ Object  trou_trone "Palais du roi Mice"
             Voici tes ordres de mission. J'ai confiance en toi, mon meilleur Chevalier.
             Je sais que tu ne me décevras pas. Maintenant, va !";
           }
-        ],ss
+        ],
         e_to trou_dortoirs,
         n_to buffet_dessous,
         out_to [; <<Go n_obj>>; ];
@@ -340,10 +340,11 @@ Object  arbuste "Au sommet de l'arbuste"
             if (heros.peint == 0) {
               print "Pris soudain d'une envie irrépressible, vous bouchez vos narines à
               l'aide d'une de vos pattes et plongez dans le pot de peinture noire. Vous
-              en ressortez tout peint en grimpant le long de la feuille, désormais
-              invisible dans l'obscurité.^";
+              en ressortez tout peint en grimpant le long de la feuille et sautez sur le
+              sol du balcon, désormais invisible dans l'obscurité.^";
               heros.peint = 1;
-              score = score + 4;
+              score = score + 3;
+              PlayerTo(balcon);
               rtrue;
             }
             else { "Un seul bain vous suffit."; }
@@ -601,7 +602,20 @@ Object  cave "Au plus profond de la cave"
         e_to cuisine;
 
 Object  kay_hall "Hall du repaire de Kay"
-  with  description "L'entrée de l'antre de Kay s'enfonce de plusieurs centimètres et
+  with  description [;
+          if (dynamo.cassee == 1) {
+            "L'entrée de l'antre de Kay s'enfonce de plusieurs centimètres et
+            passe sous le mur de la maison. Les relents de rats crevés qui parviennent
+            jusqu'à vous vous donnent d'imaginer ce qu'il pourrait advenir de vous s'il
+            vous mettaient la patte dessus. Les diodes installées sur les murs sont pour
+            la plupart éteintes, depuis que vous avez détruit la dynamo qu'actionnait le
+            vieux rat aveugle, qui depuis tente de la réparer en vain. À l'ouest
+            sont les quartiers des membres du gang, à l'est les prisons et l'entrepôt,
+            et au nord la salle de réunion où se tient probablement le rat Kay lui-même. Au
+            sud, la lumière, et la sortie.";
+          }
+          else {
+            "L'entrée de l'antre de Kay s'enfonce de plusieurs centimètres et
             passe sous le mur de la maison. Les relents de rats crevés qui parviennent
             jusqu'à vous vous donnent d'imaginer ce qu'il pourrait advenir de vous s'il
             vous mettaient la patte dessus. Sur les murs sont installées des diodes de
@@ -610,7 +624,9 @@ Object  kay_hall "Hall du repaire de Kay"
             préférez analyser froidement la situation : selon les pancartes, à l'ouest
             seraient les quartiers des membres du gang, à l'est les prisons et l'entrepôt,
             et au nord la salle de réunion où se tient probablement le rat Kay lui-même. Au
-            sud, la lumière, et la sortie.",
+            sud, la lumière, et la sortie.";
+          }
+        ],
         scenic_look 'pancarte' 'panneau' 'bois' 'miteux' 0 "Trois pancartes de bois miteux
             sur les murs nord, est et ouest."
             'vieux' 'rat' 'aveugle' 0 "Un moment il vous semble que le vieux rat vous
@@ -754,7 +770,7 @@ Object  couloir_dortoirs "Couloir des dortoirs"
             dans le repaire de Kay ?^^
             Stanley était un de vos amis d'enfance. Le roi actuel, lui et vous formiez un
             trio inséparable, mais il y a peu Stanley a disparu sans laisser de nouvelles.
-            Serait-ce possible que... que Stanley soit véritablement le voleur ?^^";
+            Serait-ce possible que... que Stanley soit véritablement le voleur ?^";
           }
         ],
         before [;
@@ -780,7 +796,7 @@ Object  kay_dortoir "Dortoir sud"
         description "Ce dortoir est austère, et un calme plat y règne. La lumière y est aussi
             importante, mais personne ne semble là pour vous y identifier. Des lits superposés
             taillés dans de vieux tiroirs de bois sont alignés sur deux rangées, et quelques
-            boîtes d'allumettes viennent jouer le rôle de coffres personnels.",
+            boîtes d'allumettes vides viennent jouer le rôle de coffres personnels.",
         scenic_look 'lit' 'lits' 'superpose' 'superposes' 'tiroir' 'tiroirs' 0 "D'un bois
             peu solide, on sent néanmoins que les rats ont le sens de la récupération plus
             fin que les souris qui se contentent de polystyrène quand elles pourraient ronger
@@ -812,19 +828,30 @@ Object  couloir_reunion "Couloir vers la salle de réunion"
 
 Object  kay_chambre "Chambre de Kay"
   with  name 'kay' 'chambre' 'quartier' 'appartement' 'maison' 'chef' 'gang',
-        description "La chambre de Kay, chef du gang de rats mal intentionnés qui sévit
+        description [;
+          if (lampe has on && (lampe in location || lampe in player)) {
+            "La chambre de Kay, chef du gang de rats mal intentionnés qui sévit
             dans la maison, volant nourriture, biens et même parfois jeunes femelles, est
             à l'image du personnage : les murs de terre sèche, car en creusant les rats
             sont sortis des fondations de la maison, sont décorés de traces de pattes à la
             peinture rouge, ou au sang peut-être, mais mieux vaut ne pas y songer. Des
             crânes d'oisillons tombés du nid trônent sur une boîte à musique reconvertie
             en bureau, qui joue un hymne effrayant si l'on en tourne la manivelle.^
-            Une lampe de vélo fait ici office de lumière d'éclairage, de forme circulaire
-            et relativement plate, qui s'allume en y excerçant une impulsion.^
             Le lit en est un vrai : un jouet de fillette initialement conçu pour une poupée
             sur lequel chaque rat du gang semble avoir écrit un message incongru ou
             dessiné quelque obscénité. Le bon goût de Kay n'est plus à remettre en
-            question. La sortie est à l'est.",
+            question. La sortie est à l'est.";
+          }
+          else if (lampe hasnt on && lampe in location && lampe notin player) {
+            "Vous ne voyez pas grand chose, excepté une lampe de vélo qui fait ici office de
+            lumière d'éclairage, de forme circulaire et relativement plate, et qui s'allume en y
+            excerçant une impulsion.";
+          }
+          else if (lampe hasnt on && lampe in player) {
+            "Peut-être pourriez-vous allumer la lampe pour y voir plus clair ?";
+          }
+        ],
+        voir 0,
         scenic_look 'murs' 'mur' 'terre' 'seche' 'traces' 'trace' 'pattes' 'patte'
             'peinture' 'rouge' 'sang' 0 "Ces peintures donnent un aspect tribal à la
             chambre de Kay."
@@ -833,6 +860,10 @@ Object  kay_chambre "Chambre de Kay"
             choisis qu'il serait déplacé de détailler, étant des propos qui dépassent notre
             conception de l'intelligence pour rejoindre les sphères éthérées du génie :
             la vulgarité dans toute sa splendeur, pour parler clairement.",
+        before [;
+          Look,Take,Touch,Open,Close,Examine:
+            if (self.voir == 0) { "Vous n'y voyez strictement rien."; }
+        ],
         e_to couloir_reunion,
         out_to couloir_reunion;
 
@@ -864,9 +895,10 @@ Object  salle_reunion "Antichambre de la salle de réunion"
             avez une idée de comment vous emparer du blason.";
           }
           else if (self.vu == 1) {
+            self.vu = 2;
             if (lampe in player && lampe has light) {
               if (foulard has worn) {
-                print "La lampe allumée à la main, vous faites brusquement irruption dans
+                print "La lampe allumée à la patte, vous faites brusquement irruption dans
                 la salle de réunion. Jouant des reflets sur les miroirs tout en vous
                 protégeant avec le foulard, vous éblouissez les trois rats et tandis
                 qu'ils se couvrent les yeux de leurs pattes poisseuses, vous vous ruez et
@@ -876,20 +908,20 @@ Object  salle_reunion "Antichambre de la salle de réunion"
                 move lampe to salle_reunion;
                 move blason to player;
                 heros.task1 = 1;
-                score = score + 5;
+                score = score + 3;
                 Achieved(1);
                 StartTimer(self,3);
                 rtrue;
               }
               else {
-                print "La lampe allumée à la main, vous faites brusquement irruption dans
+                print "La lampe allumée à la patte, vous faites brusquement irruption dans
                 la salle de réunion. Jouant des reflets sur les miroirs, vous vous
                 éblouissez vous même autant que les trois rats et chancellez, si bien que
-                Kay pose sa main sur votre épaule...^";
+                Kay pose sa patte sur votre épaule...^";
                 deadflag = 5; rtrue;
               }
             }
-            else if (heros.etat == 4 || heros.etat == 5) {
+            else if ((heros.etat == 4 || heros.etat == 5) && dynamo.cassee == 0) {
               print "Vous pénétrez tout pataud dans la salle de réunion tandis que les
               trois rats vous fixent, pétrifiés par la stupeur. Tant et si bien que vous
               parvenez à avancer jusqu'à eux, à saisir le tableau, et à faire demi-tour
@@ -902,12 +934,25 @@ Object  salle_reunion "Antichambre de la salle de réunion"
               StartTimer(self,3);
               rtrue;
             }
+            else if (dynamo.cassee == 1) {
+              print "Profitant de la pénombre dans laquelle la destruction de la dynamo à plongé
+              la salle, vous vous faufilez discrètement, et vous emparez du blason. L'un des
+              acolytes de Kay vous remarque finalement et ce dernier se lance à votre poursuite.
+              En courant vite vous pouvez encore le semer.^";
+              move blason to player;
+              heros.task1 = 1;
+              score = score + 1;
+              Achieved(1);
+              StartTimer(self,3);
+              rtrue;
+            }
             else {
               print "Vous faites trois pas dans la salle de réunion, et êtes démasqué à la
               lumière blâfarde du lieu.";
               deadflag = 5; rtrue;
             }
           }
+          else if (self.vu == 2) { "Il faut se dépêcher de s'enfuir !"; }
         ];
 
 !=======================================================================================
@@ -924,7 +969,7 @@ Object  _paille "paille de plastique" trou_dortoirs
               self.prise = 1;
               move paille to player;
               "Vous sélectionnez délicatement une des pailles les plus rigides dans une
-              couchette (pas dans la votre bien évidemment, vous tenez à votre confort),
+              couchette (pas dans la vôtre bien évidemment, vous tenez à votre confort),
               et vous en emparez d'un geste.";
             }
             else {
@@ -971,9 +1016,35 @@ Object  roi "roi Mice VII" trou_trone
             ne passe pas une porte du fait de sa corpulence, ses moustaches l'en
             avertissent avant d'être coincé dans l'embrasure.",
         each_turn [;
-          if (heros.task0 == 1 && heros.task1 == 1) {
-            if (heros.task3 == 1) {
-              print "À votre entrée dans la salle du trône, tous les regards se tournent
+          if (heros.task1 == 0 && poignard in player && journal_kay in player) {
+            move poignard to roi;
+            move journal_kay to roi;
+            print "^Vous approchez du trône et tendez le journal au roi ainsi que le poignard de
+            Stanley que vous aviez trouvé. Le roi, interpelé par le nom gravé sur le couteau,
+            commence sa lecture à partir de la page que vous lui avez indiquée. Son visage
+            devient rapidement blême, et il rugit :^^
+            ~Stan ? Nous l'avons traîté comme un frère et il nous trahit ! Maudit soit-il !^
+            Rapporte-moi le blason, et nous reparlons de ce félon plus tard.^";
+            score = score + 2;
+            heros.task3 = 1;
+            Achieved(3);
+            rtrue;
+          }
+          else if (heros.task1 == 0 && journal_kay in player && poignard notin player) {
+            move journal_kay to roi;
+            print "^Vous approchez du trône et tendez le journal au roi. Ce dernier commence sa
+            lecture à partir de la page que vous lui avez indiquée. Son visage devient
+            rapidement blême, et il rugit :^^
+            ~Stan ? Nous l'avons traîté comme un frère et il nous trahit ! Maudit soit-il !^
+            Rapporte-moi le blason, et nous reparlons de ce félon plus tard.^";
+            heros.task3 = 1;
+            Achieved(3);
+            rtrue;
+          }
+          if (heros.task1 == 1) {
+            if (heros.task3 == 0 && journal_kay in player) {
+              heros.task3 = 1;
+              print "^À votre entrée dans la salle du trône, tous les regards se tournent
               sur vous et le blason que vous portez au bras. Les chuchotements vont bon
               train et peu à peu une clameur s'élève, jusqu'à ce que le roi se rende
               compte de la situation.^^
@@ -990,11 +1061,13 @@ Object  roi "roi Mice VII" trou_trone
               Vous tendez le blason au roi qui le réaccroche au dessus de son trône, et
               les réjouissances commencent.";
               heros.task2 = 1;
+              heros.task3 = 1;
               Achieved(2);
+              Achieved(3);
               deadflag = 2;
             }
             else {
-              print "À votre entrée dans la salle du trône, tous les regards se tournent
+              print "^À votre entrée dans la salle du trône, tous les regards se tournent
               sur vous et le blason que vous portez au bras. Les chuchotements vont bon
               train et peu à peu une clameur s'élève, jusqu'à ce que le roi se rende
               compte de la situation.^^
@@ -1034,7 +1107,7 @@ Object  parchemin "parchemin royal"
             3) Ramener l'artefact au palais royal et le remettre au roi.^
             X) Objectif facultatif : identifier le voleur.^^";
             style roman;
-            "Le document est signé de la main du roi et son sceau y est apposé,
+            "Le document est signé de la patte du roi et son sceau y est apposé,
             représentant un gruyère sans trous.";
         ];
 
@@ -1042,6 +1115,7 @@ Object  foulard "foulard noir" buffet_interieur
   with  name 'foulard' 'noir' 'cagoule' 'bandit',
         description "Un foulard noir qui donne un vrai air de bandit au plus candide des
             souriceaux en recouvrant le museau.",
+        pris 0,
         before [;
           Disrobe:
             if (heros.etat == 3 && cave.passe == 1) {
@@ -1053,8 +1127,12 @@ Object  foulard "foulard noir" buffet_interieur
               rester invisible dans l'ombre ?";
             }
           Take:
-            score = score + 1;
-            rfalse;
+            if (self.pris == 0) {
+              self.pris = 1;
+              score = score + 1;
+              rfalse;
+            }
+            else { rfalse; }
         ],
   has   clothing;
 
@@ -1159,15 +1237,20 @@ Object  _papier_toilette "feuilles de papier toilette" toilettes
             'feuilles' 'blanc' 'pq' 'brosse' 'manche',
         description "Des feuilles à double épaisseur, vous pourriez en emporter pour
             améliorer votre couchette au dortoir.",
+        pris 0,
         before [;
           Touch,Take,Push,Pull:
-            move papier_toilette to player;
-            score = score + 2;
-            "Vous poussez de votre patte l'un des rouleaux, ce qui à pour effet de faire
-            balloter le manche de la brosse tant et si bien que le rouleau situé tout en
-            haut finit par vous tomber dessus, et en vous en extirpant vous vous
-            empêtrez dans les feuilles de papier qui vous recouvrent presque
-            entièrement.";
+            if (self.pris == 0) {
+              move papier_toilette to player;
+              self.pris = 1;
+              score = score + 2;
+              "Vous poussez de votre patte l'un des rouleaux, ce qui à pour effet de faire
+              balloter le manche de la brosse tant et si bien que le rouleau situé tout en
+              haut finit par vous tomber dessus, et en vous en extirpant vous vous
+              empêtrez dans les feuilles de papier qui vous recouvrent presque
+              entièrement.";
+            }
+            else { rfalse; }
         ],
   has   scenery pluralname female;
 
@@ -1215,7 +1298,7 @@ Object  pere "père"
   has   animate male;
 
 Object  garde_entrepot "gardien endormi" couloir_entrepots
-  with  name 'garde' 'gardien' 'soldat' 'militaire' 'rat',
+  with  name 'garde' 'gardien' 'soldat' 'militaire' 'rat' 'vieux',
         article "le",
         description "Un vieux rat de constitution imposante, qui vous domine de toute sa
             grandeur. Il semble profondément endormi, mais vous préférez rester prudent.",
@@ -1242,7 +1325,7 @@ Object  garde_entrepot "gardien endormi" couloir_entrepots
   has   animate male transparent;
 
 Object  garde_entrepot_mort "cadavre du gardien de l'entrepôt"
-  with  name 'garde' 'gardien' 'soldat' 'militaire' 'rat' 'mort' 'cadavre' 'corps',
+  with  name 'garde' 'gardien' 'soldat' 'militaire' 'rat' 'mort' 'cadavre' 'corps' 'vieux',
         article "le",
         description "La charogne git là, à vos pieds, et vous rappelle votre geste lâche et
             sanguinaire. Peut-être ne valez-vous pas mieux que Kay finalement...",
@@ -1334,14 +1417,14 @@ Object  clef_entrepot "clef de l'entrepôt" garde_entrepot
           Steal:
             if (self in garde_entrepot) {
               if (heros.etat == 4 || heros.etat == 5) {
-                print "Vous approchez du garde et tendez votre main, mais en frôlant ses
+                print "Vous approchez du garde et tendez votre patte, mais en frôlant ses
                 moustaches, vous éveillez le rat qui, lorsque son regard nauséeux croise
                 votre accoutrement immaculé et ridicule, se remet rapidement sur pied et
                 sonne l'alarme.";
                 deadflag = 5; rtrue;
               }
               if (heros.etat == 3) {
-                print "Vous approchez du garde et tendez votre main, mais en frolant ses
+                print "Vous approchez du garde et tendez votre patte, mais en frolant ses
                 moustaches, vous éveillez le rat qui, tout estourbi, ne vous voit pas
                 grâce à votre teinture noire, et se rendort. Vous subtilisez la clef de
                 l'entrepot au garde endormi.^";
@@ -1357,11 +1440,13 @@ Object  clef_entrepot "clef de l'entrepôt" garde_entrepot
 Object  conserve "boîte de conserve vide" prison
   with  name 'boite' 'conserve' 'vide' 'metal',
         description "Une boîte de métal de tout petit format, qui reste tout de même
-            imposante à votre échelle, mais probablement transportable.",
+            imposante à votre échelle, mais probablement transportable. Lancée, elle devrait
+            faire du bruit.",
         jete 0,
         before [;
           ThrowDir:
-            if (second == w_obj && location == couloir_entrepots) {
+            if (second == w_obj && location == couloir_entrepots && garde_entrepot in
+            location) {
               if (self.jete == 0) {
                 move conserve to couloir_prisons;
                 move clef_entrepot to couloir_entrepots;
@@ -1376,6 +1461,7 @@ Object  conserve "boîte de conserve vide" prison
                 prisons, et se rendort aussitôt à son poste.";
               }
               else {
+                move conserve to couloir_prisons;
                 "Vous lancez la conserve de toutes vos forces vers les prisons et vous
                 glissez dans une zone d'ombre. Le fracas que sa chute provoque réveille
                 brusquement le gardien, qui, étonné, s'en va observer la cause du trouble.
@@ -1383,11 +1469,23 @@ Object  conserve "boîte de conserve vide" prison
                 prisons, et se rendort aussitôt à son poste.";
               }
             }
+            else if (second == w_obj && location == couloir_entrepots && garde_entrepot notin
+            location) {
+              move conserve to couloir_prisons;
+              "Vous lancez la conserve de toutes vos forces vers les prisons, qui s'abat dans
+              un fracas monstrueux, mais personne ne vient admirer le cadavre à vos pieds.";
+            }
           Drop:
-            print "Vous jetez la conserve qui s'écrase au sol dans un bruit assourdissant,
-            réveillant alors le gardien qui lève lentement son nez sur vous et donne
-            l'alerte.";
-            deadflag = 5; rtrue;
+            if (garde_entrepot in location) {
+              print "Vous jetez la conserve qui s'écrase au sol dans un bruit assourdissant,
+              réveillant alors le gardien qui lève lentement son nez sur vous et donne
+              l'alerte.";
+              deadflag = 5; rtrue;
+            }
+            else {
+              move conserve to location;
+              "Vous jetez la conserve qui s'écrase au sol dans un bruit assourdissant.";
+            }
           Search: "Elle est vide depuis bien longtemps.";
         ],
   has   female;
@@ -1406,7 +1504,7 @@ Object  porte_entrepot "porte de l'entrepôt"
         ],
         before [;
           Open,Unlock:
-            if (clef_entrepot in player) {
+            if (clef_entrepot in player && self has locked) {
               give self open;
               give self ~locked;
               "Vous déverrouillez la porte à l'aide de la clef de l'entrepôt et l'ouvrez.";
@@ -1457,7 +1555,7 @@ Object  gruyere "gruyère à trous" _caisses
   has   edible;
 
 Object  fromage "morceaux de fromage" _caisses
-  with  name 'fromage' 'quelconque' 'morceaux' 'reblochon' 'chevre' 'camembert',
+  with  name 'fromage' 'quelconque' 'morceau' 'morceaux' 'reblochon' 'chevre' 'camembert',
         article "des",
         description "Des morceaux de fromage que vous ne prenez même pas la peine
             d'identifier, tout juste bons pour un rat vu leur aspect et leur odeur.",
@@ -1537,20 +1635,21 @@ Object  dynamo "dynamo" kay_hall
         description "Un vieux rat aveugle pédale ici sur un engin proche d'un vélo, mais adapté
             à sa taille, qui actionne une dynamo et produit l'électricité nécessaire pour
             alimenter la plupart du repaire.",
-        eteinte 0,
+        cassee 0,
         before [;
           Attack,Cut,SwitchOff:
-            score = score + 5;
-            self.eteinte = 1;
+            score = score + 2;
+            self.cassee = 1;
             "Vous glissant derrière le rat aveugle avec force précaution, vous lui assénez un
             coup violent et l'assomez. Vous entreprenez ensuite de briser la dynamo et le
             repaire est soudain plongé dans des ténèbres étrangement rassurantes pour vous.
             Vous distinguez tout de même les objets, car quelques diodes fonctionnent toujours.
             Il doit y avoir une autre source d'énergie, mais c'est toujours ça de gagné.";
-        ];
+        ],
+  has   scenery concealed female;
 
 Object  garde_idiot "garde idiot" couloir_reunion
-  with  name 'garde' 'gardien' 'soldat' 'militaire' 'idiot' 'imbecile' 'bete' 'beat',
+  with  name 'garde' 'gardien' 'soldat' 'militaire' 'idiot' 'imbecile' 'bete' 'beat' 'rat',
         description "Un peu grassouillet, il semble avoir découvert récemment qu'il pouvait
             loucher et faire des bulles avec sa salive simultanément. Cependant il garde
             la porte avec fermeté, et passer ne sera pas aussi facile qu'il est idiot.",
@@ -1609,8 +1708,6 @@ Object  journal_kay "journal de Kay" _manivelle
             vous semblait, alors jeunes souriceaux, inébranlable. Mais voilà plusieurs
             lunes que Stanley avait quitté le palais suite à une altercation avec son ancien
             ami le roi Mice VII, et vous êtiez jusqu'à aujourd'hui sans nouvelles.^";
-            Achieved(3);
-            heros.task3 = 1;
             rtrue;
           }
           else { "Le journal de Kay témoigne de l'implication directe de votre ancien ami
@@ -1629,14 +1726,18 @@ Object  lampe "petite lampe pour bicyclette" kay_chambre
         before [;
           SwitchOn:
             if (self.allume == 20) { "Plus d'énergie..."; }
-            else {
+            else if (self hasnt on) {
               give self light;
+              give self on;
+              kay_chambre.voir = 1;
               "Vous allumez la lampe qui éclaire brillament le lieu.";
             }
           SwitchOff:
             if (self.allume == 20) { "Pourquoi éteindre ce qui l'est déjà ?"; }
-            else { 
+            else if (self has on) { 
               give self ~light;
+              give self ~on;
+              kay_chambre.voir = 0;
               "Vous éteignez la lampe.";
             }
           Take:
@@ -1646,18 +1747,21 @@ Object  lampe "petite lampe pour bicyclette" kay_chambre
               "Vous vous dressez sur le bout de vos pattes et détachez la lampe du plafond
               de terre pour vous en emparer.";
             }
+           Wear:
+             "Vous la prenez dans votre patte.";
         ],
         each_turn [;
           if (self has light) {
             self.allume = self.allume + 1;
             if (self.allume == 20) {
               give self ~light;
+              give self ~on;
+              kay_chambre.voir = 0;
               "La lampe s'éteint : il n'y a plus d'énergie.";
             }
           }
         ],
-  has   scenery female;
-
+  has   scenery female switchable ~on;
 
 Object  blason "blason de la famille royale"
   with  name 'blason' 'ecu' 'bouclier' 'armes' 'armoiries' 'ecusson' 'heraldique' 'royal'
@@ -1792,7 +1896,7 @@ Object  blason "blason de la famille royale"
 ];
 
 [ ThrowDirSub;
-  "Tenez vos mains !";
+  "Tenez vos pattes !";
 ];
 
 !=======================================================================================
@@ -1811,7 +1915,7 @@ Include "scenic5sens";
 
 Include "FrenchG";
 
-! Version 2.3devI6+I7 bibliothèques francophones, révision 130 du dépôt subversion
+! Version 2.3devI6+I7 bibliothèques francophones, révision 132 du dépôt subversion
 ! d'informfr sur tuxfamily.
 
 Verb "help" "aide" "manuel" "info" "information"
