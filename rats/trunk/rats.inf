@@ -43,7 +43,7 @@
 Constant Story "Rats";
 Constant Headline
             "^Une fiction interactive de Rémi Verschelde (Akien).^^";
-Release 1;  Serial "100808";
+Release 0;
 
 Constant TASKS_PROVIDED;
 Constant NUMBER_TASKS = 4;
@@ -64,7 +64,7 @@ Include "VerbLib";
 !=======================================================================================
 
 Object  trou_dortoirs "Dortoirs du palais"
-  with  name 'dortoirs' 'palais',
+  with  name 'dortoirs' 'dortoir' 'trou' 'palais',
         description "Les dortoirs du palais du roi Mice s'étendent d'est en ouest, tout
             en longueur, et peuvent facilement accueillir plus d'une dizaine des plus
             proches de la couronne. Vous en faites partie, et votre couche est tout au
@@ -73,10 +73,10 @@ Object  trou_dortoirs "Dortoirs du palais"
             assoiffé de votre sang, qui rode dans les alentours du palais. La salle du
             trône est à l'ouest.",
         scenic_look 'couche' 'couches' 'lit' 'lits' 'couchette' 'couchettes'
-            'couchettes' 0 "Toutes plus ou moins identiques à la votre, bien que cette
-            dernière ait la particularité d'être nouée à l'aide de poils longs de
-            Choupinette, dont la conquête est l'exploit qui à fait votre renommée et
-            vous a valu d'être Chevalier du roi.",
+            'couchettes' 'matelas' 'poil' 'poils' 'choupinette' 0 "Toutes plus ou moins
+            identiques à la votre, bien que cette dernière ait la particularité d'être nouée
+            à l'aide de poils longs de Choupinette, dont la conquête est l'exploit qui a fait
+            votre renommée et vous a valu d'être Chevalier du roi.",
         visite 0,
         initial [;
           if (self.visite == 0) {
@@ -162,9 +162,9 @@ Object  heros "vous" trou_dortoirs
   has   concealed animate proper transparent light;
 
 Object  trou_trone "Palais du roi Mice"
-  with  name 'salle' 'palais',
+  with  name 'salle' 'palais' 'cavite' 'beton',
         description "Vous êtes devant le trône de votre roi, Mice VII, dressé dans une
-            cavité creusée dans le béton par les pattes de vos ancêtres, sous le vieux
+            cavité creusée dans le béton par les pattes de vos ancêtres, derrière le vieux
             buffet du salon. Le trône, somptueux, est taillé dans un bloc de
             polystyrène dans lequel deux pieux, ou cure-dents, tiennent lieu
             d'accoudoirs. Au dessus du trône se trouve un emplacement circulaire qui
@@ -175,25 +175,26 @@ Object  trou_trone "Palais du roi Mice"
             du palais provient une faible lumière qui est ingénieusement répartie dans
             la salle à l'aide de bris d'un miroir. La porte est au nord, tandis qu'à
             l'est s'étendent les dortoirs.",
-        scenic_look 'trone' 'siege' 'fauteuil' 'chaise' 'somptueux' 'polystyrene'
-            'pieux' 'accoudoirs' 'pieu' 'accoudoir' 'cure-dents' 0 "Le trône royal est
-            une perle de l'artisanat de la couronne, conçu par l'un de vos plus proches
-            amis lorsque le trône séculaire en bouchons de liège s'effrita."
+        scenic_look 'trone' 'somptueux' 'siege' 'fauteuil' 'chaise' 'somptueux' 'polystyrene'
+            'pieux' 'accoudoirs' 'pieu' 'accoudoir' 'cure-dents' 'cure' 'dent' 0 "Le trône
+            royal est une perle de l'artisanat de la couronne, conçu par l'un de vos plus
+            proches amis lorsque le trône séculaire en bouchons de liège s'effrita."
             'fromage' 'plastique' 'rigide' 0 "Un jouet qui a eu le malheur de s'échouer
             à l'entrée du palais alors que le roi tentait une escapade diurne. Son
             Altesse s'est alors prise d'affection pour cette illusion de gruyère qui lui
             rappelle chaque jour les récits de sa mère sur les caves d'une fromagerie
             suisse."
-            'miroir' 'bris' 'debris' 'morceaux' 'morceau' 'glace' 'eclat' 'eclats' 0
+            'miroir' 'miroirs' 'bris' 'debris' 'morceaux' 'morceau' 'glace' 'eclat' 'eclats' 0
             "Des éclats d'un beau miroir que les anciens ont récolté durant leurs
             aventures et qui conduisent la lumière de la porte jusqu'au trône qui,
             sans eux, serait plongé dans d'obscures ténèbres.",
         scenic_look2 'arcade' 'entree' 'porte' 0 "Un simple trou dans le mur dont le
             style architectural est des plus classiques : une arcade en demi-ovale
             permettant de faire passer deux sujets de front."
-            'embleme' 'armes' 'armoiries' 'sceau' 'blason' 'ecu' 'bouclier' 'symbole' 0
-            "L'emplacement qui contient habituellement le blason décoré du gruyère sans
-            trous, emblême de la famille royale, est désespérément vide.",
+            'embleme' 'armes' 'armoiries' 'sceau' 'blason' 'ecu' 'bouclier' 'symbole'
+            'emplacement' 'circulaire' 'cercle' 'trou' 0 "L'emplacement qui contient
+            habituellement le blason décoré du gruyère sans trous, emblême de la famille
+            royale, est désespérément vide.",
         scenic_touch 'trone' 'siege' 'fauteuil' 'chaise' 'somptueux' 'polystyrene'
             'pieux' 'accoudoirs' 'pieu' 'accoudoir' 'cure-dents' 0 "Poser ne serait-ce
             que l'ombre d'une de vos pattes sur le trône royal vous vaudrait probablement
@@ -212,8 +213,8 @@ Object  trou_trone "Palais du roi Mice"
             discours, non sans bégayer.^^
             ~Peut-être l'as-tu remarqué, le blason de la famille royale nous a été volé.
             La bande de Kay, les rats qui vivent dans la cave de la maison, a déjà
-            revendiqué le crime, bien que j'aie toujours du mal à concevoir comment ils
-            ont procédé, étant trop grands pour pénétrer notre palais.^
+            revendiqué le crime, bien que j'aie toujours du mal à imaginer comment ils
+            ont pu procéder, étant trop grands pour pénétrer notre palais.^
             Toujours est-il que...~^^
             Le roi s'interrompt à nouveau, toussant violemment si bien que vous n'avez
             d'autre recours que d'aller lui tapoter gentiment le dos de votre patte
@@ -230,22 +231,26 @@ Object  trou_trone "Palais du roi Mice"
         out_to [; <<Go n_obj>>; ];
 
 Object  buffet_dessous "Sous le vieux buffet"
-  with  description "Vous êtes devant l'entrée du palais royal, contre le mur sud du
+  with  description "Vous voilà devant l'entrée du palais royal, contre le mur sud du
             salon, sous le vieux buffet qui siège entre l'ordinateur à l'est et le
             téléviseur à l'ouest. Au nord vous êtes au beau milieu de la pièce, à
             découvert, et à la merci de Choupinette.",
-        scenic_look 'buffet' 'meuble' 'vieux' 'acajou' 'trou' 0 "Vu du dessous, le
-            vieux buffet en acajou paraît impressionnant, surtout à cause de la
-            hauteur de plafond dont il vous gratifie qui n'excède pas dix à douze
-            centimètres. Dans l'angle sud-ouest se trouve un trou assez large pour s'y
-            faufiler, mais il faudrait une perche ou une planchette pour y grimper, car
-            vous n'êtes manifestement pas assez grand.",
+        scenic_look 'arcade' 'entree' 'porte' 'palais' 'chateau' 0 "Un simple trou dans le
+            mur dont le style architectural est des plus classiques : une arcade en demi-ovale
+            permettant de faire passer deux sujets de front."
+            'ordi' 'ordinateur' 'pc' 'tele' 'tv' 'televesion' 'televiseur' 0 "Le televiseur est
+            à l'ouest tandis que l'ordinateur est à l'est.",
+        before [;
+          Climb:
+            <<Go u_obj>>;
+        ],
         s_to trou_trone,
         w_to televiseur,
         e_to ordinateur,
+        in_to trou_trone,
         n_to [; SalonChoupinette(); rtrue; ],
         u_to [;
-          if (paille in player || buffet_interieur) {
+          if (paille in player || paille in buffet_dessous) {
             if (buffet_interieur has visited) { return buffet_interieur; }
             else {
               move paille to buffet_dessous;
@@ -259,18 +264,34 @@ Object  buffet_dessous "Sous le vieux buffet"
             à la seule force de vos maigres bras.";
         ];
 
+Object  _buffet "buffet en acajou" buffet_dessous
+  with  name 'buffet' 'meuble' 'vieux' 'acajou' 'trou',
+        description "Vu du dessous, le vieux buffet en acajou paraît impressionnant, surtout
+            à cause de la hauteur de plafond dont il vous gratifie qui n'excède pas dix à
+            douze centimètres. Dans l'angle sud-ouest se trouve un trou assez large pour s'y
+            faufiler, mais il faudrait une perche ou une planchette pour y grimper, car
+            vous n'êtes manifestement pas assez grand.",
+        before [;
+          Climb,Enter:
+            <<Go u_obj>>;
+        ],
+  has   scenery concealed;
+
 Object  buffet_interieur "Dans le vieux buffet"
   with  name 'vieux' 'buffet' 'meuble' 'placard' 'commode' 'acajou',
         description "À l'intérieur du buffet en acajou, la seule lumière qui filtre provient
             du trou par lequel vous êtes arrivé et des pourtours des portes de bois.
             Le sol poussiéreux est marqué de traces de pattes de souris vers un angle.
             La sortie est vers le bas.",
-        scenic_look 'traces' 'pattes' 'souris' 'trace' 'pas' 0 "Des traces de pas qui
+        scenic_look 'angle' 'traces' 'pattes' 'souris' 'trace' 'pas' 0 "Des traces de pas qui
             indiquent qu'une souris est passée par là dernièrement."
-            'poussiere' 'salete' 'crasse' 0 "Un amas considérable de poussière qui n'est
-            troublé que par des traces de pas."
-            'porte' 'portes' 'battants' 'battant' 'placard' 0 "Les portes du buffet sont
-            verrouillées depuis l'extérieur, et semblent du même bois que le meuble.",
+            'poussiere' 'salete' 'crasse' 'sol' 'poussiereux' 0 "Un amas considérable de poussière
+            qui n'est troublé que par des traces de pas."
+            'porte' 'portes' 'battants' 'battant' 'placard' 'pourtour' 'pourtours' 0 "Les
+            portes du buffet sont verrouillées depuis l'extérieur, et semblent du même bois
+            que le meuble."
+            'lumiere' 'filtre' 'eclairage' 0 "C'est vraiment diffus, mais vous voyez assez bien.",
+        scenic_look2 'sortie' 'trou' 0 "Vous pouvez glisser le long de la paille.",
         d_to [;
           print "Vous glissez avec précaution le long de la paille.^";
           PlayerTo(buffet_dessous);
@@ -295,7 +316,9 @@ Object  televiseur "Près du poste de télévision"
             "Le volumineux sofa de cuir est orienté vers le sud, en face du téléviseur,
             et une jeune fille y est avachie, s'abrutissant au devant d'énormités
             commerciales télévisées, à savoir une publicité pour un fromage de chèvre,
-            qui étrangement vous fait envie.",
+            qui étrangement vous fait envie."
+            'buffet' 'acajou' 'palais' 'entree' 0 "Le buffet et l'entrée du palais sont à l'est."
+            'ecran' 'cathodique' 0 "Un gros écran, impressionnant au vu de votre petite taille.",
         before [;
           Smell:
             if (noun == fille) { rfalse; }
@@ -1018,10 +1041,11 @@ Object  salle_reunion "Antichambre de la salle de réunion"
 !=======================================================================================
 
 Object  _paille "paille de plastique" trou_dortoirs
-  with  name 'paille' 'pailles',
+  with  name 'paille' 'pailles' 'plastique',
         description "Les pailles de plastique jonchent le sol de la cuisine tous les
             matins, et vos amis n'ont pas eu beaucoup de mal à s'en approprier
-            suffisament pour confectionner ces couchettes.",
+            suffisament pour confectionner ces couchettes. Elle sont surprenament rigides,
+            et peuvent supporter le poids d'une souris comme vous, svelte et agile.",
         prise 0,
         before [;
           Touch,Take:
@@ -1757,7 +1781,7 @@ Object  conserve "boîte de conserve vide" prison
                 move conserve to couloir_prisons;
                 move clef_entrepot to couloir_entrepots;
                 self.jete = 1;
-                score = score + 5;
+                score = score + 4;
                 "Vous lancez la conserve de toutes vos forces vers les prisons et vous
                 glissez dans une zone d'ombre. Le fracas que sa chute provoque réveille
                 brusquement le gardien, qui, étonné, s'en va observer la cause du trouble.
@@ -1941,23 +1965,36 @@ Object  _boite_musique "boîte à musique" kay_chambre
             sur le couvercle de la boîte, presque contre le mur.",
         before [;
           Take: "Cela n'a visiblement aucun intérêt.";
-          Open: <<Turn _manivelle>>;
+          Open,Close,Search: <<Turn _manivelle>>;
         ],
-  has   scenery female;
+  has   scenery female openable container ~open;
 
 Object  _manivelle "manivelle" kay_chambre
   with  name 'manivelle' 'manette',
         description "Une manivelle de bois noir, comme la boîte à musique.",
         before [;
           Turn:
-            print "Vous tournez la manivelle non sans difficulté, et le capot se soulève
-            lentement, faisant rouler les crânes encore plus contre le mur dans un bruit
-            étouffé. Une musique effrayante, jouant des basses et des gammes mineures
-            comme un jongleur avec ses balles, en jaillant, tandis que vous découvrez à
-            l'intérieur de la boîte un carnet usé, qui se révèle être le journal de Kay.
-            Vous vous en saisissez et refermez le couvercle de la boîte.^";
-            move journal_kay to player;
-            rtrue;
+            if (journal_kay notin player) {
+              print "Vous tournez la manivelle non sans difficulté, et le capot se soulève
+              lentement, faisant rouler les crânes encore plus contre le mur dans un bruit
+              étouffé. Une musique effrayante, jouant des basses et des gammes mineures
+              comme un jongleur avec ses balles, en jaillant, tandis que vous découvrez à
+              l'intérieur de la boîte un carnet usé, qui se révèle être le journal de Kay.
+              Vous vous en saisissez et refermez le couvercle de la boîte.^";
+              move journal_kay to player;
+              give _boite_musique open;
+              rtrue;
+            }
+            else if (_boite_musique hasnt open) {
+              give _boite_musique open;
+              "Vous tournez la manivelle et le capot se soulève à nouveau, relançant le morceau depuis
+              la mesure où il s'était arrêté.";
+            }
+            else {
+              give _boite_musique ~open;
+              "Vous tournez encore la manivelle et le capot se referme, coupant l'air terrifiant sans
+              cérémonie.";
+            }
         ],
   has   scenery female;
 
@@ -2086,7 +2123,7 @@ Object  blason "blason de la famille royale"
   print "Ce programme est un jeu d'aventure textuel, ou "; style underline; print
   "fiction interactive"; style roman; print " et se base donc sur un dialogue entre
   le joueur, vous, et sa machine. Ainsi vous pouvez interagir avec le milieu
-  environnant à travers des ordres à l'impératif ou à l'infinitif, tels que ceux-ci :^";
+  environnant à travers des ordres à l'infinitif, tels que ceux-ci :^";
   print " > prendre la boite^ > manger le fromage^ > regarder le roi^^
   Il peut arriver (voire assez souvent pour un joueur néophyte) que vos instructions ne
   soient pas comprises, vous pouvez alors réessayer en reformulant d'une manière plus
@@ -2105,9 +2142,9 @@ Object  blason "blason de la famille royale"
   connaissance, ainsi que les commandes "; style underline; print "sauvegarder, charger";
   style roman; print " et "; style underline; print "recommencer"; style roman; print ".^^
   Pour plus d'informations, les commandes "; style underline; print "licence"; style roman;
-  print " et "; style underline; print "auteur"; style roman; print " sont disponibles,
-  et le site "; style underline; print "http://ifiction.free.fr"; style roman; print " est
-  à votre disposition.^";
+  print ", "; style underline; print "remerciements"; style roman; print " et "; style underline;
+  print "auteur"; style roman; print " sont disponibles, et le site "; style underline; print
+  "http://ifiction.free.fr"; style roman; print " est à votre disposition.^";
 ];
 
 [ AuthorSub;
@@ -2123,6 +2160,22 @@ Object  blason "blason de la famille royale"
   de même que l'auteur de ce jeu, également joignable par courriel à l'adresse suivante :^^
   rverschelde "; style bold; print "CHEZ"; style roman; print " gmail "; style
   bold; print "POINT"; style roman; print " com.^";
+];
+
+[ ThanksSub;
+  print "Un grand merci tout d'abord à Graham Nelson pour la création du langage Inform
+  ainsi que la rédaction du manuel de référence DM4 ("; style underline; print "The Inform Designer's
+  Manual - Fourth Edition 2001"; style roman; print "), et à Roger Firth et Sonja Kasserich pour la
+  rédaction de l'"; style underline; print "Inform Beginner's Guide"; style roman; print ", qui est une
+  entrée en matière facile, ludique et passionnante.^^
+  Merci aussi à toute la communauté francophone de fiction interactive ("; style underline; print 
+  "http://ifiction.free.fr"; style roman; print "), et principalement aux bêta-testeurs qui ont permis
+  d'améliorer grandement ce petit jeu : Samuel Verschelde (Stormi), Eric Forgeot (Otto Grimwald), Benjamin
+  Roux (Yoruk).^^
+  Merci ensuite à Eric Forgeot pour la conception de la jaquette du jeu, et à Matthieu Aubry pour la
+  photographie que l'on peut retrouver à l'adresse suivante : "; style underline; print
+  "http://flickr.com/photos/matthieu-aubry/440634859/"; style roman; print ".^^
+  Un dernier merci aux joueurs, car il n'est pas de jeu sans joueurs.^";
 ];
 
 [ LicenseSub;
@@ -2202,17 +2255,23 @@ Verb "auteur" "credits"
 Verb "licence" "license" "droits"
     *               -> License;
 
+Verb "remerciements" "testeurs" "merci"
+    *               -> Thanks;
+
 Verb "voler" "subtiliser" "vole" "subtilise" "derober" "derobe" "piquer" "pique"
     * noun                                                    -> StealNoun
     * noun creature                                           -> Steal
     * noun 'a'/'à'/'au'/'aux'/'de'/'du'/'des' creature        -> Steal;
 
-Verb "grignoter"
+Verb "grignoter" "ronger"
     * noun                                                    -> Eat;
 
 Extend "prendre" last
     * noun creature                                           -> Steal
     * noun 'a'/'à'/'au'/'aux'/'de'/'du'/'des' creature        -> Steal;
+
+Extend "grimper" last
+    * 'dans' noun                                             -> Climb;
 
 Extend "jeter" last
     * noun 'a'/'à'/'au'/'vers' noun=ADirection                -> ThrowDir;
