@@ -70,7 +70,7 @@ Object  trou_dortoirs "Dortoirs du palais"
             proches de la couronne. Vous en faites partie, et votre couche est tout au
             fond de la salle, consistant en un amas de pailles de plastique usagées
             liées avec des poils de la terrifiante Choupinette, monstre sanguinaire
-            assoiffé de votre sang, qui rode dans les alentours du palais. La salle du
+            assoiffé de votre sang, qui rôde dans les alentours du palais. La salle du
             trône est à l'ouest.",
         scenic_look 'couche' 'couches' 'lit' 'lits' 'couchette' 'couchettes'
             'couchettes' 'matelas' 'poil' 'poils' 'choupinette' 0 "Toutes plus ou moins
@@ -115,8 +115,8 @@ Object  heros "vous" trou_dortoirs
         description [;
           if (foulard hasnt worn && heros.peint == 1 && (papier_toilette hasnt worn ||
             papier_toilette notin player)) {
-            "Vous êtes noir de la tête aux pattes grâce à votre plongeon dans le pot de
-            peinture noire, même votre hotte est peinte."; }
+            "Vous êtes noir de la tête aux pattes - dents exceptées - grâce à votre plongeon
+            dans le pot de peinture noire, même votre hotte est peinte."; }
           else if (foulard has worn && heros.peint == 0 && (papier_toilette hasnt worn ||
             papier_toilette notin player)) {
             "Ce foulard noir que vous portez noué devant la bouche vous donne un air de
@@ -167,7 +167,7 @@ Object  trou_trone "Palais du roi Mice"
             cavité creusée dans le béton par les pattes de vos ancêtres, derrière le vieux
             buffet du salon. Le trône, somptueux, est taillé dans un bloc de
             polystyrène dans lequel deux pieux, ou cure-dents, tiennent lieu
-            d'accoudoirs. Au dessus du trône se trouve un emplacement circulaire qui
+            d'accoudoirs. Au-dessus du trône se trouve un emplacement circulaire qui
             accueille en principe les armes de la famille royale, mais qui est vide
             aujourd'hui. Le roi, confortablement lové au creux de son siège, promène un
             regard bienveillant sur ses sujets affairés autour de lui, tandis qu'il
@@ -188,9 +188,9 @@ Object  trou_trone "Palais du roi Mice"
             "Des éclats d'un beau miroir que les anciens ont récolté durant leurs
             aventures et qui conduisent la lumière de la porte jusqu'au trône qui,
             sans eux, serait plongé dans d'obscures ténèbres.",
-        scenic_look2 'arcade' 'entree' 'porte' 0 "Un simple trou dans le mur dont le
+        scenic_look2 'arcade' 'entree' 'porte' 'buffet' 0 "Un simple trou dans le mur dont le
             style architectural est des plus classiques : une arcade en demi-ovale
-            permettant de faire passer deux sujets de front."
+            permettant de faire passer deux sujets de front, vers le buffet.."
             'embleme' 'armes' 'armoiries' 'sceau' 'blason' 'ecu' 'bouclier' 'symbole'
             'emplacement' 'circulaire' 'cercle' 'trou' 0 "L'emplacement qui contient
             habituellement le blason décoré du gruyère sans trous, emblême de la famille
@@ -221,9 +221,9 @@ Object  trou_trone "Palais du roi Mice"
             agile jusqu'à ce qu'il retrouve une respiration correcte.^^
             ~Hu... Excuse-moi... Bref, je disais que j'ai besoin de toi pour récupérer
             cet artefact de valeur inestimable, rongé dans une plaque de PVC par mon
-            arrière grand oncle, et gravé par sa soeur et deux jeunes vierges.^
+            arrière-grand-oncle, et gravé par sa soeur et deux jeunes vierges.^
             Voici tes ordres de mission. J'ai confiance en toi, mon meilleur Chevalier.
-            Je sais que tu ne me décevras pas. Maintenant, va !";
+            Je sais que tu ne me décevras pas. Maintenant, va !~";
           }
         ],
         e_to trou_dortoirs,
@@ -343,14 +343,14 @@ Object  balcon "Sur le balcon"
         description "La porte du balcon entrouverte vous permet de vous y faufiler, et
             une légère brise vient caresser vos moustaches frémissantes. Ce lieu semble
             être une annexe du garage pour les propriétaires du lieu tant il est encombré
-            de bicylettes, de pots de peinture et balconières garnies de fleurs. Au sud
+            de bicyclettes, de pots de peinture et balconières garnies de fleurs. Au sud
             vous retrouvez le canapé ainsi que le téléviseur tandis qu'à l'est vous
             traversez le salon à découvert.",
         scenic_look 'bicyclette' 'bicyclettes' 'velo' 'vtt' 0 "Ces engins à roues vous
             fascinent toujours autant, bien que ceux-ci soient manifestement viellis et
             rouillés par des averses fréquentes dans la région."
-            'pinceau' 'pinceaux' 'brosse' 'brosses' 0 "Des pinceaux et brosses dont les
-            poils se sont solidifiés avec la peinture qui y a séché.",
+            'pinceau' 'pinceaux' 'brosse' 'brosses' 'poil' 'poils' 0 "Des pinceaux et brosses
+            dont les poils se sont solidifiés avec la peinture qui y a séché.",
         scenic_look2 'balconiere' 'balconieres' 'fleur' 'fleurs' 'tige' 'tiges'
             'feuille' 'feuilles' 0 "Des fleurs de multiples couleurs poussent là dans ces
             bacs spécifiquement prévus pour la culture horticole, surplombant des pots
@@ -364,7 +364,7 @@ Object  balcon "Sur le balcon"
         e_to [; SalonChoupinette(); rtrue; ],
         u_to arbuste,
         before [;
-          Climb: <<Climb _arbuste>>;
+          Climb: if (noun == 0) { PlayerTo(arbuste); rtrue; }
           Smell: "L'odeur âcre de la peinture se mêle aux fragrances horticoles.";
         ];
 
@@ -374,9 +374,7 @@ Object  arbuste "Au sommet de l'arbuste"
             noire dans lequel se jette une de ses longues feuilles pendantes, et vous
             pouvez redescendre sur le balcon par une de ses branches qui chemine vers
             le sol.",
-        scenic_look 'peinture' 'pot' 'pots' 0 "L'un des pots, rempli de peinture noire,
-            se trouve juste en dessous de vous."
-            'bicyclette' 'bicyclettes' 'velo' 'vtt' 0 "Ces engins à roues vous
+        scenic_look 'bicyclette' 'bicyclettes' 'velo' 'vtt' 0 "Ces engins à roues vous
             fascinent toujours autant, bien que ceux-ci soient manifestement viellis et
             rouillés par des averses fréquentes dans la région."
             'pinceau' 'pinceaux' 'brosse' 'brosses' 0 "Des pinceaux et brosses dont les
@@ -385,8 +383,6 @@ Object  arbuste "Au sommet de l'arbuste"
             'feuille' 'feuilles' 0 "Des fleurs de multiples couleurs poussent là dans ces
             bacs spécifiquement prévus pour la culture horticole, surplombant des pots
             de peinture.",
-        scenic_smell 'peinture' 'pot' 'pots' 0 "La peinture noire semble presque inodore,
-            étrangement.",
         d_to balcon,
         before [;
           Jump,Swim:
@@ -411,13 +407,15 @@ Object  ordinateur "Sous le bureau de l'ordinateur"
             underline; print "clics"; style roman; " sous l'action effrénée du fils de la
             maison, scotché devant un écran d'une taille démesurée, casque sur les
             oreilles, et gesticulant visiblement aux prises avec des terroristes
-            virtuels. A l'ouest vous retrouvez le calme de votre buffet, au nord-ouest
-            s'ouvre toujours un espace vide et étrangement silencieux et à l'est se
-            trouve l'entrée d'un couloir.";
+            virtuels. A l'ouest vous retrouvez le calme de votre buffet, le televiseur et
+            plus loin le balcon, au nord-ouest s'ouvre toujours un espace vide et étrangement
+            silencieux et à l'est se trouve l'entrée d'un couloir.";
         ],
         scenic_look 'ecran' 'cathodique' 'plasma' 'tubes' 'tube' 'plat' 'lcd' 0 "Un écran LCD
             toute dernière génération, qui reluit des postillons du jeune homme qui se déchaîne,
             seul, devant lui."
+            'casque' 'audio' 'ecouteur' 'ecouteurs' 'micro' 'oreillette' 'oreillettes' 0 "Deux
+            oreillettes et un micro, parfait pour insulter les personnages virtuels que l'on tue."
             'toilettes' 'porte' 'portes' 'toilette' 0 "La porte des toilettes donne sur le couloir
             à l'est.",
         before [;
@@ -438,8 +436,8 @@ Object  ordinateur "Sous le bureau de l'ordinateur"
 
 Object  couloir_salon "Couloir vers la cuisine"
   with  name 'couloir' 'corridor',
-        description "L'unique couloir de la maison qui joint la cuisine au nord aux
-            chambres au sud. A l'est se trouvent la salle de bain et les toilettes,
+        description "L'unique couloir de la maison qui joint, du nord au sud, la cuisine
+            et les chambres. A l'est se trouvent la salle de bain et les toilettes,
             mais les deux portes sont fermees.",
         scenic_listen 'souris' 0 "Ses crissements sous le doigt du jeune homme vous font
             l'effet d'une agonie."
@@ -465,7 +463,7 @@ Object  toilettes "Dans les toilettes"
 
 Object  couloir_chambres "Couloir vers les chambres"
   with  name 'couloir' 'corridor',
-        description "Le couloir qui joint la cuisine aux chambres, du nord au sud, donne
+        description "Le couloir qui rejoint la cuisine et le salon au nord, donne
             ici sur trois chambres : celle du fils à l'ouest, de la fille au sud et des
             parents à l'est, cette dernière étant la seule porte ouverte par ailleurs.",
         scenic_look 'affiche' 'pub' 'publicite' 'jeu' 'fps' 'tir' 'subjectif' 0 "Une promotion
@@ -568,7 +566,7 @@ Object  cuisine "La cuisine"
 
 Object  cave "Au plus profond de la cave"
   with  description "La cave de la maison est extrêmement petite, et ne sert qu'à
-            entreposer le vin et les outils et vêtements de jardin du père. L'obscurité
+            entreposer le vin, les outils et vêtements de jardin du père. L'obscurité
             est quasi totale puisque seul un soupirail vient éclairer le lieu, mais vous
             voyez néanmoins l'entrée du repaire de Kay sur le mur nord. L'escalier
             remonte à la cuisine à l'est.",
@@ -671,8 +669,8 @@ Object  kay_hall "Hall du repaire de Kay"
   with  description [;
           if (dynamo.cassee == 1) {
             "L'entrée de l'antre de Kay s'enfonce de plusieurs centimètres et
-            passe sous le mur de la maison. Les relents de rats crevés qui parviennent
-            jusqu'à vous vous donnent d'imaginer ce qu'il pourrait advenir de vous s'il
+            passe sous le mur de la maison. Les relents de rats crevés qui stagnent dans
+            l'air vous donnent d'imaginer ce qu'il pourrait advenir de vous s'ils
             vous mettaient la patte dessus. Les diodes installées sur les murs sont pour
             la plupart éteintes, depuis que vous avez détruit la dynamo qu'actionnait le
             vieux rat aveugle, qui depuis tente de la réparer en vain. À l'ouest
@@ -682,11 +680,11 @@ Object  kay_hall "Hall du repaire de Kay"
           }
           else {
             "L'entrée de l'antre de Kay s'enfonce de plusieurs centimètres et
-            passe sous le mur de la maison. Les relents de rats crevés qui parviennent
-            jusqu'à vous vous donnent d'imaginer ce qu'il pourrait advenir de vous s'il
+            passe sous le mur de la maison. Les relents de rats crevés qui stagnent dans
+            l'air vous donnent d'imaginer ce qu'il pourrait advenir de vous s'il
             vous mettaient la patte dessus. Sur les murs sont installées des diodes de
-            récupération branchées à une dynamo au moins grosse comme vous qu'actionne un
-            jeune rat difforme, et aveugle semble-t-il. Mais loin d'être pessimiste vous
+            récupération branchées à une dynamo, au moins grosse comme vous, qu'actionne un
+            vieux rat difforme, et aveugle semble-t-il. Mais loin d'être pessimiste vous
             préférez analyser froidement la situation : selon les pancartes, à l'ouest
             seraient les quartiers des membres du gang, à l'est les prisons et l'entrepôt,
             et au nord la salle de réunion où se tient probablement le rat Kay lui-même. Au
@@ -830,6 +828,8 @@ Object  couloir_dortoirs "Couloir des dortoirs"
             écussons scouts de la fille des propriétaires du lieu, devenus inutiles
             lorsque le téléviseur prit la place de ses instincts de guide. Tachés de sang,
             vous n'osez imaginer l'usage que l'on a pu en faire.",
+        scenic_allactions 'soldats' 'soldat' 'cure-dent' 'autoradio' 'metallique' 0 "Ce serait
+            prendre des risques inutiles.",
         initial [;
           if (poignard in player && heros.stan == 0) {
             heros.stan = 1;
@@ -854,7 +854,8 @@ Object  couloir_dortoirs "Couloir des dortoirs"
           print "Lettre à Élise"; style roman; print " sur un vieil autoradio qui prend
           la moitié de la salle à lui seul. La lumière y abonde et vous doutez que votre
           déguisement y soit du meilleur effet, de plus, un cure-dent métallique taillé en
-          pointe reluit au côté de l'un des rats.^"; rtrue;
+          pointe reluit au côté de l'un des rats.^^
+          Vous préférez donc ne pas rentrer.^"; rtrue;
         ],
         e_to kay_hall,
         s_to kay_dortoir;
@@ -1083,7 +1084,7 @@ Object  _sujets "sujets de la cour" trou_trone
             'courtisane' 'courtisanes' 'cour',
         description "Vos congénères sont ici affairés à converser gaiement, à feindre de
             chercher l'écu royal, ou pour les plus sérieux à remettre en place les
-            miroirs, qui doivent exprimer une disymétrie si parfaite, pour la
+            miroirs, qui doivent exprimer une dissymétrie si parfaite, pour la
             satisfaction du roi, qu'elle en est presque mathématique.",
         life [;
           Tell,Ask,Answer,ParlerSansPrecision: "Malgré le respect qu'ils ont pour votre personne,
@@ -1366,16 +1367,34 @@ Object  _arbuste "arbuste" balcon
         ],
   has   scenery concealed;
 
-Object  _pot "pot de peinture" balcon
-  with  name 'pot' 'pots' 'peinture',
-        description "Des pots de peinture noire, bleue et blanche, qui ont été utilisés
-            récemment pour refaire la peinture du balcon sur lequel vous vous trouvez, et que
-            l'homme de la maison n'a pas encore eu le courage de descendre au garage. Divers
-            pinceaux de formes variées encombrent le sol.",
+Object  _pot "pot de peinture"
+  with  name 'pot' 'pots' 'peinture' 'eau' 'noire' 'liquide',
+        description [;
+          if (location == balcon) { "Des pots de peinture noire, bleue et blanche, qui ont été
+            utilisés récemment pour refaire la peinture du balcon sur lequel vous vous trouvez,
+            et que l'homme de la maison n'a pas encore eu le courage de descendre au garage.
+            Divers pinceaux de formes variées encombrent le sol."; }
+          else { "L'un des pots, rempli de peinture noire, se trouve juste en dessous de vous."; }
+        ],
+        found_in balcon arbuste,
         before [;
           Enter,Go: "Vous ne pouvez pas entrer dans un pot, mais vous remarquez un arbuste dont
             une des branches vient à vos pieds et une des feuilles dans un des pots.";
-          Smell: "Une odeur âcre de peinture.";
+          Smell: 
+            if (location == balcon) { "Une odeur âcre de peinture."; }
+            else { "La peinture noire semble presque inodore, étrangement."; }
+          JumpIn:
+            if (heros.peint == 0) {
+              print "Pris soudain d'une envie irrépressible, vous bouchez vos narines à
+              l'aide d'une de vos pattes et plongez dans le pot de peinture noire. Vous
+              en ressortez tout peint en grimpant le long de la feuille et sautez sur le
+              sol du balcon, désormais invisible dans l'obscurité.^";
+              heros.peint = 1;
+              score = score + 3;
+              PlayerTo(balcon);
+              rtrue;
+            }
+            else { "Un seul bain vous suffit."; }
         ],
   has   scenery concealed;
 
@@ -1610,6 +1629,7 @@ Object  garde_entrepot "gardien endormi" couloir_entrepots
             if (poignard in player) {
               move garde_entrepot to thedark;
               move garde_entrepot_mort to couloir_entrepots;
+              move clef_entrepot to garde_entrepot_mort;
               score = score - 5;
               "Vous posez un regard sur votre poignard et exprimez une moue de dégout...
               Cependant, saisissant fermement l'arme blanche, vous effectuez votre sale
@@ -1646,7 +1666,7 @@ Object  garde_entrepot_mort "cadavre du gardien de l'entrepôt"
               prenez la clef de l'entrepôt.";
             }
           ],
-  has   static;
+  has   static transparent;
 
 Object  _poignard "poignard d'acier trempé" kay_dortoir
   with  name 'poignard' 'couteau' 'lame' 'acier' 'trempe' 'dague' 'epee',
@@ -1672,21 +1692,21 @@ Object  _poignard "poignard d'acier trempé" kay_dortoir
               if (heros.etat == 4) { "Vous vous dépétrez non sans mal de l'amas de feuilles
               de papier qui vous recouvre tandis que le visage du rat s'éclaire.^^
               ~Un moment j'ai eu un doute mais je vois que c'est bien toi Stan !~ Et
-              l'autre de s'ésclaffer bêtement. ~C'est vrai que des petiots comme toi y'en
+              l'autre de s'esclaffer bêtement. ~C'est vrai que des petiots comme toi y'en
               a pas des masses. Fallait bien ça pour le blason, hein ?~^
               Le rat vous tapote l'épaule et repart, rieur."; }
               else if (heros.etat == 5) { "Vous vous dépétrez non sans mal de l'amas de
               feuilles de papier qui vous recouvre et retirez le foulard noir qui vous
               masque le museau, tandis que le visage du rat s'éclaire.^^
               ~Un moment j'ai eu un doute mais je vois que c'est bien toi Stan !~ Et
-              l'autre de s'ésclaffer bêtement. ~C'est vrai que des petiots comme toi y'en
+              l'autre de s'esclaffer bêtement. ~C'est vrai que des petiots comme toi y'en
               a pas des masses. Fallait bien ça pour le blason, hein ?~^
               Le rat vous tapote l'épaule et repart, rieur."; }
               else if (heros.etat == 3) { "Vous dénouez le foulard noir qui vous masque le
               museau et affichez un sourire gauche, tandis que le visage du rat
               s'éclaire.^^
               ~Un moment j'ai eu un doute mais je vois que c'est bien toi Stan !~ Et
-              l'autre de s'ésclaffer bêtement. ~C'est vrai que des petiots comme toi y'en
+              l'autre de s'esclaffer bêtement. ~C'est vrai que des petiots comme toi y'en
               a pas des masses. Fallait bien ça pour le blason, hein ?~^
               Le rat vous tapote l'épaule et repart, rieur."; }
             }
@@ -1739,7 +1759,7 @@ Object  porte_prison "porte de la prison"
   has   open door openable scenery female lockable;
 
 Object  clef_entrepot "clef de l'entrepôt" garde_entrepot
-  with  name 'clef' 'cle' 'passe' 'doree',
+  with  name 'clef' 'cle' 'clé' 'passe' 'doree',
         article "la",
         description "Une petite clef dorée qui ouvre la porte de l'entrepôt.",
         before [;
@@ -1764,6 +1784,14 @@ Object  clef_entrepot "clef de l'entrepôt" garde_entrepot
               else "Veuillez signaler au concepteur que vous êtes parvenus à vous balader
                 dans le repaire de Kay sans ressembler à un fantôme ou être tout noir.";
             }
+          Take:
+            if (self in garde_entrepot_mort) {
+              <<Search garde_entrepot_mort>>;
+            }
+            else if (self in garde_entrepot) {
+              <<Steal self>>;
+            }
+            else rfalse;
         ],
   has   female;
 
@@ -1887,7 +1915,7 @@ Object  fromage "morceaux de fromage" _caisses
             }
             rtrue;
           Show,Give:
-            if (self in player && second == garde_idiot) {
+            if (self in player && second == garde_idiot && garde_idiot.from == 0) {
               if (heros.etat == 4) {
                 print "Une idée folle traverse votre esprit. Vous enlevez le
                 papier-toilette qui vous recouvre et approchez du garde en arborant un
@@ -1917,9 +1945,14 @@ Object  fromage "morceaux de fromage" _caisses
               ~Et je peux goûter aussi ?~^^
               Lui donnant les morceaux restants, vous passez la porte pendant qu'il
               dévore l'amas de moisissure, tout en rééquipant votre accoutrement.^";
-              move fromage to thedark;
+              garde_idiot.from = 1;
+              move fromage to _caisses;
               PlayerTo(salle_reunion);
               rtrue;
+            }
+            else if (self in player && second == garde_idiot && garde_idiot.from == 1) {
+              move fromage to _caisses;
+              "~Encore du fromage ? Merci, monsieur.~";
             }
         ],
   has   edible pluralname;
@@ -1952,6 +1985,7 @@ Object  garde_idiot "garde idiot" couloir_reunion
         description "Un peu grassouillet, il semble avoir découvert récemment qu'il pouvait
             loucher et faire des bulles avec sa salive simultanément. Cependant il garde
             la porte avec fermeté, et passer ne sera pas aussi facile qu'il est idiot.",
+        from 0,
         life [;
           Answer,Ask,AskFor,Tell: "~On m'a dit de garde la porte, pas de parler aux gens.~";
         ],
@@ -2152,8 +2186,8 @@ Object  blason "blason de la famille royale"
   réalisée du 4 août 2008 au 10 août 2008 pour sa première version. Le but de cette
   création était principalement d'entraîner son auteur au langage de programmation ";
   style underline; print "Inform"; style roman; print " en le confrontant directement aux
-  difficultés, ce pourquoi vous pouvez peut-être estimer que le scénario est simple,
-  manque de clarté ou d'intérêt, n'étant pas son intérêt premier.^^
+  difficultés, ce pourquoi vous pouvez peut-être estimer que le scénario est trop simple
+  ou manque de clarté, n'étant pas son intérêt premier.^^
   Le site de la communauté francophone de fiction interactive ("; style underline; print 
   "http://ifiction.free.fr"; style roman; print ") offre de nombreuses autres réalisations
   d'auteurs francophones talentueux, et vous pourrez en retrouver beaucoup sur son forum,
@@ -2228,6 +2262,14 @@ Object  blason "blason de la famille royale"
   "Tenez vos pattes !";
 ];
 
+[ JumpInSub;
+  "Vous n'y voyez pas la moindre utilité.";
+];
+
+[ DisrobeHotteSub;
+  "Vous la gardez toujours sur votre dos.";
+];
+
 !=======================================================================================
 
 Global ScenicFlag = 4;
@@ -2275,5 +2317,22 @@ Extend "grimper" last
 
 Extend "jeter" last
     * noun 'a'/'à'/'au'/'vers' noun=ADirection                -> ThrowDir;
+
+Extend "nager" last
+    * noun                                                    -> JumpIn
+    * 'dans' noun                                             -> JumpIn;
+
+Extend "sauter" last
+    * noun                                                    -> JumpIn
+    * 'dans' noun                                             -> JumpIn;
+
+Extend "enlever" first
+    * 'hotte'                                                 -> DisrobeHotte;
+
+Extend "laisser" first
+    * 'hotte'                                                 -> DisrobeHotte;
+
+Extend "jeter" first
+    * 'hotte'                                                 -> DisrobeHotte;
 
 !=======================================================================================
