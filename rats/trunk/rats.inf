@@ -333,6 +333,8 @@ Object  televiseur "Près du poste de télévision"
               "Le bruit des ondes du téléviseur, ponctué parfois de ~Non, Stecy ne quitte
               pas Brandon, sinon il te trompera avec Vanessa !~";
             }
+          SwitchOff:
+            "Vous appréciez trop la demoiselle pour lui faire l'affront d'éteindre le téléviseur.";
         ],
         e_to buffet_dessous,
         ne_to [; SalonChoupinette(); rtrue; ],
@@ -436,12 +438,21 @@ Object  ordinateur "Sous le bureau de l'ordinateur"
 
 Object  couloir_salon "Couloir vers la cuisine"
   with  name 'couloir' 'corridor',
-        description "L'unique couloir de la maison qui joint, du nord au sud, la cuisine
+        description [;
+          if (porte_toilettes has open) {
+            "L'unique couloir de la maison qui joint, du nord au sud, la cuisine
+            et les chambres. A l'est se trouvent la salle de bain dont la porte est fermée,
+            et les toilettes, dont l'accès vous est désormais possible.";
+          }
+          else {
+            "L'unique couloir de la maison qui joint, du nord au sud, la cuisine
             et les chambres. A l'est se trouvent la salle de bain et les toilettes,
-            mais les deux portes sont fermees.",
+            mais les deux portes sont fermées.";
+          }
+        ],
         scenic_listen 'souris' 0 "Ses crissements sous le doigt du jeune homme vous font
             l'effet d'une agonie."
-            'eau' 'robinet' 'goutte' 0 "Inlassable, le robinet goutte.",            
+            'eau' 'robinet' 'goutte' 0 "Inlassable, le robinet goutte.",
         before [;
           Listen: "Le cri de la souris d'ordinateur se mêle au décompte régulier du robinet de
             la cuisine.";
@@ -474,16 +485,6 @@ Object  couloir_chambres "Couloir vers les chambres"
             'photo' 'photos' 'photographie' 'photographies' 0 "Des photographies de la jeune fille en
             compagnie de ses amies, grimaçant atrocement sur une banquette d'autocar pour tenir à trois
             dans le champ de l'objectif tenu à bout de bras.",
-        initial [;
-          if (papier in player && heros.stan == 0) {
-            heros.stan = 1;
-            style underline; print "Stanley..."; style roman; print " Qu'est-ce que Stanley
-            a à voir avec cette intrigue ? Dans quelle mesure ces mots impliquent-ils Stan ?^^
-            Stanley était un de vos amis d'enfance. Le roi actuel, lui et vous formiez un
-            trio inséparable, mais il y a peu Stanley a disparu sans laisser de nouvelles.
-            Serait-ce possible que... que Stanley soit véritablement le voleur ?^";
-          }
-        ],
         w_to _porte_fils,
         e_to porte_parents,
         s_to _porte_fille,
@@ -526,7 +527,7 @@ Object  cuisine "La cuisine"
   with  description [;
             print "Relativement exiguë, la cuisine est plutôt calme, les enfants
             étant plongés dans leurs activités numériques tandis que la mère se trouve
-            dans sa chambre. Du robinet au dessus de l'évier goutte à intervalle
+            dans sa chambre. Du robinet au-dessus de l'évier goutte à intervalle
             régulier une petite note d'eau qui vient résonner de son "; style underline;
             print "ploc"; style roman; " dans l'atmosphère moite de la pièce. Au sud se
             trouve le couloir menant au salon et aux chambres, tandis qu'à l'ouest un
@@ -600,7 +601,7 @@ Object  cave "Au plus profond de la cave"
             rtrue;
           }
           if (heros.etat == 3 && self.passe == 0) {
-            self.passe = 1;
+            self.passe = 2;
             print "Avançant précautionneusement dans l'ombre, vous vous faufilez
             entre les gardes et pénétrez dans l'enceinte du repaire du gang du rat
             Kay, grâce à votre apparence complètement noire qui vous rend invisible dans
@@ -616,13 +617,38 @@ Object  cave "Au plus profond de la cave"
             PlayerTo(kay_hall);
             rtrue;
           }
-          if (heros.etat == 3 && self.passe == 1) {
+          if ((heros.etat == 4 || heros.etat == 5) && self.passe == 2) {
+            print "Gauche et veule, vous avancez néanmoins au devant des gardes du trou
+            qui sont saisis d'effroi à la vue de votre accoutrement.^^
+            ~Un fantôme ! Un fantôme !~ s'écrie le premier, terrifié, tandis que le
+            second se terre dans un angle.^^
+            Amusé, vous pénétrez dans l'enceinte du repaire du gang du rat Kay.^";
+            self.passe = 1;
+            PlayerTo(kay_hall);
+            rtrue;
+          }
+          if (heros.etat == 3 && self.passe == 2) {
             if (lampe in player && lampe has light) {
               print "La lumière de votre lampe vous trahit.";
               deadflag = 5; rtrue;
             }
             else {
               print "Toujours aussi discret, vous vous faufilez à l'intérieur.^";
+              PlayerTo(kay_hall);
+              rtrue;
+            }
+          }
+          if (heros.etat == 3 && self.passe == 1) {
+            if (lampe in player && lampe has light) {
+              print "La lumière de votre lampe vous trahit.";
+              deadflag = 5; rtrue;
+            }
+            else {
+              print "Avançant précautionneusement dans l'ombre, vous vous faufilez
+              entre les gardes et pénétrez dans l'enceinte du repaire du gang du rat
+              Kay, grâce à votre apparence complètement noire qui vous rend invisible dans
+              l'ombre.^";
+              self.passe = 2;
               PlayerTo(kay_hall);
               rtrue;
             }
@@ -705,25 +731,44 @@ Object  kay_hall "Hall du repaire de Kay"
             ],
         before [;
           Smell: "Plusieurs rats en décomposition doivent se trouver non loin, vu l'odeur
-            nauséabonde qui règne en ce lieux.";
+            nauséabonde qui règne en ces lieux.";
           Listen: "Seuls le crépitement de diodes usagées et le grincement du vélo sur
             lequel pédale le vieux rat chargé de produire l'électricité viennent perturber
             le silence de mort qui règne ici.";
         ],
         s_to [;
-          if (heros.etat == 4 || heros.etat == 5) {
+          if (heros.etat == 4 || heros.etat == 5 && cave.passe == 1) {
             print "Vous faites une nouvelle apparition fantasque dans votre accoutrement et
             manquez de tuer le garde en l'effrayant à nouveau.^";
             PlayerTo(cave);
             rtrue;
           }
-          if (heros.etat == 3) {
+          if (heros.etat == 4 || heros.etat == 5 && cave.passe == 2) {
+            print "Vous vous élancez hors de l'ombre, dans votre accoutrement somptueux,
+            et sortez sous des yeux médusés, ébahis, terrifiés.^";
+            cave.passe = 1;
+            PlayerTo(cave);
+            rtrue;
+          }
+          if (heros.etat == 3 && cave.passe == 2) {
             if (lampe in player && lampe has light) {
               print "La lumière de votre lampe vous trahit.";
               deadflag = 5; rtrue;
             }
             else {
               print "Toujours aussi discret, vous vous faufilez à l'extérieur.^";
+              PlayerTo(cave);
+              rtrue;
+            }
+          }
+          if (heros.etat == 3 && cave.passe == 1) {
+            if (lampe in player && lampe has light) {
+              print "La lumière de votre lampe vous trahit.";
+              deadflag = 5; rtrue;
+            }
+            else {
+              print "Noir de patte en cap, vous vous faufilez dans l'ombre et sortez du repaire
+              de Kay.^";
               PlayerTo(cave);
               rtrue;
             }
@@ -777,7 +822,7 @@ Object  prison "Dans une geôle vide"
         each_turn [;
           self.temps++;
           if (self.temps == 5) {
-            print "C'est alors qu'un rat passant par hasard dans le couloir vous apperçoit
+            print "C'est alors qu'un rat passant par hasard dans le couloir vous aperçoit
             dans la lumière d'une diode et aussitôt, referme la porte de la cellule.";
             deadflag = 5;
           }
@@ -929,7 +974,7 @@ Object  kay_chambre "Chambre de Kay"
           else if (lampe hasnt on && lampe in location && lampe notin player) {
             "Vous ne voyez pas grand chose, excepté une lampe de vélo qui fait ici office de
             lumière d'éclairage, de forme circulaire et relativement plate, et qui s'allume en y
-            excerçant une impulsion.";
+            exerçant une impulsion.";
           }
           else if (lampe hasnt on && lampe in player) {
             "Peut-être pourriez-vous allumer la lampe pour y voir plus clair ?";
@@ -1159,13 +1204,14 @@ Object  roi "roi Mice VII" trou_trone
             rtrue;
           }
           if (heros.task1 == 1) {
-            if (heros.task3 == 0 && journal_kay in player) {
+            if (heros.task3 == 0 && journal_kay in player && poignard notin player && papier
+            notin player) {
               heros.task3 = 1;
               print "^À votre entrée dans la salle du trône, tous les regards se tournent
               sur vous et le blason que vous portez au bras. Les chuchotements vont bon
               train et peu à peu une clameur s'élève, jusqu'à ce que le roi se rende
               compte de la situation.^^
-              ~Ahem...~ commence-t-il, et tous les badauds se taisent et l'observent.
+              ~Ahem...~, commence-t-il, et tous les badauds se taisent et l'observent.
               ~Mon cher ami, je crois voir que ta mission a été un succès...~^^
               Vous hochez de la tête et avancez vers le trône.^^
               ~... et je t'en félicite, tout comme je m'en félicite de t'avoir désigné.
@@ -1176,7 +1222,7 @@ Object  roi "roi Mice VII" trou_trone
               Pour l'heure, festoyons, mes neveux viennent de me rapporter du gruyère ";
               style underline; print "sans trous"; style roman; print " qu'ils ont
               trouvé ce matin.~^^
-              Vous tendez le blason au roi qui l'accroche à nouveau au dessus de son trône, et
+              Vous tendez le blason au roi qui l'accroche à nouveau au-dessus de son trône, et
               les réjouissances commencent.";
               heros.task2 = 1;
               heros.task3 = 1;
@@ -1191,7 +1237,7 @@ Object  roi "roi Mice VII" trou_trone
               sur vous et le blason que vous portez au bras. Les chuchotements vont bon
               train et peu à peu une clameur s'élève, jusqu'à ce que le roi se rende
               compte de la situation.^^
-              ~Ahem...~ commence-t-il, et tous les badauds se taisent et l'observent.
+              ~Ahem...~, commence-t-il, et tous les badauds se taisent et l'observent.
               ~Mon cher ami, je crois voir que ta mission a été un succès...~^^
               Vous hochez de la tête et avancez vers le trône.^^
               ~... et je t'en félicite, tout comme je m'en félicite de t'avoir désigné.
@@ -1202,7 +1248,7 @@ Object  roi "roi Mice VII" trou_trone
               Pour l'heure, festoyons, mes neveux viennent de me rapporter du gruyère ";
               style underline; print "sans trous"; style roman; print " qu'ils ont
               trouvé ce matin.~^^
-              Vous tendez le blason au roi qui l'accroche à nouveau au dessus de son trône, et
+              Vous tendez le blason au roi qui l'accroche à nouveau au-dessus de son trône, et
               les réjouissances commencent.";
               heros.task2 = 1;
               heros.task3 = 1;
@@ -1218,7 +1264,7 @@ Object  roi "roi Mice VII" trou_trone
               sur vous et le blason que vous portez au bras. Les chuchotements vont bon
               train et peu à peu une clameur s'élève, jusqu'à ce que le roi se rende
               compte de la situation.^^
-              ~Ahem...~ commence-t-il, et tous les badauds se taisent et l'observent.
+              ~Ahem...~, commence-t-il, et tous les badauds se taisent et l'observent.
               ~Mon cher ami, je crois voir que ta mission a été un succès...~^^
               Vous hochez de la tête et avancez vers le trône.^^
               ~... et je t'en félicite, tout comme je m'en félicite de t'avoir désigné.
@@ -1229,7 +1275,7 @@ Object  roi "roi Mice VII" trou_trone
               Pour l'heure, festoyons, mes neveux viennent de me rapporter du gruyère ";
               style underline; print "sans trous"; style roman; print " qu'ils ont
               trouvé ce matin.~^^
-              Vous tendez le blason au roi qui l'accroche à nouveau au dessus de son trône, et
+              Vous tendez le blason au roi qui l'accroche à nouveau au-dessus de son trône, et
               les réjouissances commencent.";
               heros.task2 = 1;
               heros.task3 = 1;
@@ -1244,7 +1290,7 @@ Object  roi "roi Mice VII" trou_trone
               sur vous et le blason que vous portez au bras. Les chuchotements vont bon
               train et peu à peu une clameur s'élève, jusqu'à ce que le roi se rende
               compte de la situation.^^
-              ~Ahem...~ commence-t-il, et tous les badauds se taisent et l'observent.
+              ~Ahem...~, commence-t-il, et tous les badauds se taisent et l'observent.
               ~Mon cher ami, je crois voir que ta mission a été un succès...~^^
               Vous hochez de la tête et avancez vers le trône.^^
               ~... et je t'en félicite, tout comme je m'en félicite de t'avoir désigné.
@@ -1256,7 +1302,7 @@ Object  roi "roi Mice VII" trou_trone
               Pour l'heure, festoyons, mes neveux viennent de me rapporter du gruyère ";
               style underline; print "sans trous"; style roman; print " qu'ils ont
               trouvé ce matin.~^^
-              Vous tendez le blason au roi qui l'accroche à nouveau au dessus de son trône, et
+              Vous tendez le blason au roi qui l'accroche à nouveau au-dessus de son trône, et
               les réjouissances commencent.";
               heros.task2 = 1;
               heros.task3 = 1;
@@ -1270,7 +1316,7 @@ Object  roi "roi Mice VII" trou_trone
               sur vous et le blason que vous portez au bras. Les chuchotements vont bon
               train et peu à peu une clameur s'élève, jusqu'à ce que le roi se rende
               compte de la situation.^^
-              ~Ahem...~ commence-t-il, et tous les badauds se taisent et l'observent.
+              ~Ahem...~, commence-t-il, et tous les badauds se taisent et l'observent.
               ~Mon cher ami, je crois voir que ta mission a été un succès...~^^
               Vous hochez de la tête et avancez vers le trône.^^
               ~... et je t'en félicite, tout comme je m'en félicite de t'avoir désigné.
@@ -1280,7 +1326,7 @@ Object  roi "roi Mice VII" trou_trone
               Pour l'heure, festoyons, mes neveux viennent de me rapporter du gruyère ";
               style underline; print "sans trous"; style roman; print " qu'ils ont
               trouvé ce matin.~^^
-              Vous tendez le blason au roi qui l'accroche à nouveau au dessus de son trône, et
+              Vous tendez le blason au roi qui l'accroche à nouveau au-dessus de son trône, et
               les réjouissances commencent.";
               heros.task2 = 1;
               Achieved(2);
@@ -1353,8 +1399,8 @@ Object  fille "fille" televiseur
           Search: "Elle est un peu grande pour que vous puissiez la fouiller.";
         ],
         life [;
-          Answer,Ask,AskFor,Tell: "Si encore vous saviez parler, je ne suis pas sûr que ce
-            serait du meilleur effet. Pendant sa série en plus...";
+          Answer,Ask,AskFor,Tell,ParlerSansPrecision: "Si encore vous saviez parler, je ne suis
+            pas sûr que ce serait du meilleur effet. Pendant sa série en plus...";
         ],
   has   animate female;
 
@@ -1416,11 +1462,11 @@ Object  _ordinateur "ordinateur" ordinateur
               injures. Il lui faut plusieurs minutes pour découvrir la source de la
               coupure, et vous avez l'occasion de voir son visage bouffi s'empourprer
               quand son sang lui monte au cerveau alors qu'il est penché pour
-              rebrancher le cable, et ressortir grisâtre, poussiéreux.";
+              rebrancher le câble, et ressortir grisâtre, poussiéreux.";
               self.eteint = 1;
               score = score + 1;
               give porte_toilettes open;
-              "^^Forcé de s'arrêter par le rédémarrage de l'ordinateur, le jeune homme en
+              "^^Forcé de s'arrêter par le redémarrage de l'ordinateur, le jeune homme en
               profite pour s'éclipser aux toilettes, dont il laisse la porte
               entrouverte en sortant.";
             }
@@ -1429,6 +1475,16 @@ Object  _ordinateur "ordinateur" ordinateur
             respiration pour passer.";
         ],
   has   scenery;
+
+Object  _cables "câbles" ordinateur
+  with  name 'cable' 'cables' 'fil' 'fils' 'cablages',
+        article "les",
+        description "Des fils et câbles entremêlés, entortillés, empêtrés, qui assurent le bon
+            fonctionnement de l'engin.",
+        before [;
+          Push,Pull,Touch,Take,Attack: <<SwitchOff _ordinateur>>;
+        ],
+  has   scenery concealed;
 
 Object  fils "fils" ordinateur
   with  name 'homme' 'jeune' 'garcon' 'fils' 'enfant' 'gamin' 'mome' 'geek' 'nerd'
@@ -1455,8 +1511,8 @@ Object  fils "fils" ordinateur
             Force est d'avouer que sa conversation est passionnante.";
         ],
         life [;
-          Answer,Ask,AskFor,Tell: "Si encore vous saviez parler, je ne suis pas sûr que ce
-            serait du meilleur effet. Pendant sa partie en plus...";
+          Answer,Ask,AskFor,Tell,ParlerSansPrecision: "Si encore vous saviez parler, je ne suis
+            pas sûr que ce serait du meilleur effet. Pendant sa partie en plus...";
         ],
   has   animate male;
 
@@ -1563,34 +1619,55 @@ Object  _armoire "armoire en noyer" chambre_parents
         before [;
           Search:
             if (papier notin player) {
+              score = score + 1;
               move papier to player;
-              "Vous prenez un morceau de parchemin qui y était coincé sous la porte droite.";
+              "Vous prenez un morceau de parchemin qui était coincé sous la porte droite de l'armoire.";
             }
             else rfalse;
         ],
-  has   scenery concealed;
+  has   scenery concealed transparent;
 
-Object  papier "morceau de parchemin"
+Object  papier "morceau de parchemin" _armoire
   with  name 'papier' 'parchemin' 'morceau' 'bout' 'feuille' 'post-it' 'post' 'it' 'brule' 'feu',
         vu 0,
         description [;
-          if (self.vu == 1) {
-            "Un bout de parchemin brûlé qui établit un lien étrange entre votre ami Stanley et
-            le vol du blason.";
+          if (papier in player) {
+            if (self.vu == 1) {
+              "Un bout de parchemin brûlé qui établit un lien étrange entre votre ami Stanley et
+              le vol du blason.";
+            }
+            else if (heros.stan == 0) {
+              self.vu = 1;
+              heros.stan = 1;
+              print "C'est le bas d'une petite feuille de parchemin à échelle de souris, un genre de
+              post-it en fait, qui a été en partie dévoré par le feu. Vous ne pouvez y lire plus
+              que trois mots :^^
+              ~... pour le blason.~^^
+              Et le tout est signé : Stanley.^^";
+              style underline; print "Stanley..."; style roman; print " Qu'est-ce que Stanley
+              a à voir avec cette intrigue ? Dans quelle mesure ces mots impliquent-ils Stan ?^^
+              Stanley était un de vos amis d'enfance. Le roi actuel, lui et vous formiez un
+              trio inséparable, mais il y a peu Stanley a disparu sans laisser de nouvelles.
+              Serait-ce possible que... que Stanley soit véritablement le voleur ?^"; rtrue;
+            }
+            else {
+              self.vu = 1;
+              "C'est le bas d'une petite de parchemin à échelle de souris, un genre de post-it
+              en fait, qui a été en partie dévoré par le feu. Vous ne pouvez y lire plus que trois mots :^^
+              ~pour le blason.~^^
+              Et le tout est signé : Stanley.^^";
+            }
           }
           else {
-            self.vu = 1;
-            "C'est le bas d'une petite de parchemin à échelle de souris, un genre de post-it en fait,
-            qui a été en partie dévoré par le feu. Vous ne pouvez y lire plus que trois mots :^^
-            ~pour le blason.~^^
-            Et le tout est signé : Stanley.";
+            "Un bout de parchemin que vous devriez être en mesure de vous approprier.";
           }
         ],
         before [;
           Take:
             if (papier notin player) {
+              move papier to player;
               score = score + 1;
-              rfalse;
+              "Vous prenez un morceau de parchemin qui était coincé sous la porte droite de l'armoire.";
             }
             else { rfalse; };
           Drop,ThrowAt,ThrowDir:
@@ -1603,8 +1680,8 @@ Object  mere "mère" chambre_parents
         description "Tirant sur sa cigarette sans filtre à intervalles réguliers, cette
             femme d'une quarantaine d'années semble plongée dans ses rêves.",
         life [;
-          Answer,Ask,AskFor,Tell: "Si encore vous saviez parler, je ne suis pas sûr que ce
-            serait du meilleur effet. Pendant sa cigarette en plus...";
+          Answer,Ask,AskFor,Tell,ParlerSansPrecision: "Si encore vous saviez parler, je ne suis pas
+            sûr que ce serait du meilleur effet. Pendant sa cigarette en plus...";
         ],
   has   animate female;
 
@@ -1614,8 +1691,8 @@ Object  pere "père"
         description "Le maître de maison est un homme de haute taille au regard fier et
             intelligent, pour lequel vous avez un grand respect.",
         life [;
-          Answer,Ask,AskFor,Tell: "Si encore vous saviez parler, je ne suis pas sûr que ce
-            serait du meilleur effet. Pendant qu'il câline sa femme en plus...";
+          Answer,Ask,AskFor,Tell,ParlerSansPrecision: "Si encore vous saviez parler, je ne suis pas
+            sûr que ce serait du meilleur effet. Pendant qu'il câline sa femme en plus...";
         ],
   has   animate male;
 
@@ -1643,7 +1720,7 @@ Object  garde_entrepot "gardien endormi" couloir_entrepots
             gardien. Peut-être pourriez-vous la subtiliser si vous êtes assez discret.";
         ],
         life [;
-          Answer,Ask,AskFor,Tell: "Il dort. Le réveiller ainsi vous dévoilerait.";
+          Answer,Ask,AskFor,Tell,ParlerSansPrecision: "Il dort. Le réveiller ainsi vous dévoilerait.";
         ],
   has   animate male transparent;
 
@@ -1759,7 +1836,7 @@ Object  porte_prison "porte de la prison"
   has   open door openable scenery female lockable;
 
 Object  clef_entrepot "clef de l'entrepôt" garde_entrepot
-  with  name 'clef' 'cle' 'clé' 'passe' 'doree',
+  with  name 'clef' 'cle' 'clé' 'clés' 'cles' 'clefs' 'passe' 'doree',
         article "la",
         description "Une petite clef dorée qui ouvre la porte de l'entrepôt.",
         before [;
@@ -1987,7 +2064,8 @@ Object  garde_idiot "garde idiot" couloir_reunion
             la porte avec fermeté, et passer ne sera pas aussi facile qu'il est idiot.",
         from 0,
         life [;
-          Answer,Ask,AskFor,Tell: "~On m'a dit de garde la porte, pas de parler aux gens.~";
+          Answer,Ask,AskFor,Tell,ParlerSansPrecision: "~On m'a dit de garder la porte, pas de
+            parler aux gens.~";
         ],
   has   animate male;
 
@@ -2012,7 +2090,7 @@ Object  _manivelle "manivelle" kay_chambre
               print "Vous tournez la manivelle non sans difficulté, et le capot se soulève
               lentement, faisant rouler les crânes encore plus contre le mur dans un bruit
               étouffé. Une musique effrayante, jouant des basses et des gammes mineures
-              comme un jongleur avec ses balles, en jaillant, tandis que vous découvrez à
+              comme un jongleur avec ses balles, en jaillit, tandis que vous découvrez à
               l'intérieur de la boîte un carnet usé, qui se révèle être le journal de Kay.
               Vous vous en saisissez et refermez le couvercle de la boîte.^";
               move journal_kay to player;
@@ -2047,14 +2125,14 @@ Object  journal_kay "journal de Kay" _manivelle
             avide de vengeance, m'a apporté le blason de la famille royale sans que je
             n'aie besoin de rien lui demander. Il s'est par cet acte offert une place
             parmi nous, bien que je continue de le surveiller.^
-            Vue la valeur de l'artefact, je vais le placer au dessus de la porte de la
+            Vue la valeur de l'artefact, je vais le placer au-dessus de la porte de la
             salle de réunion, ainsi je l'aurai toujours en vue, dès que j'aurais fait planter
             un clou.^^"; style roman; print
             "Voilà donc l'information qu'à la fois vous attendiez et redoutiez. Le voleur
             est bien Stan, qui faisait partie du trio que vous formiez avec le roi et qui
             vous semblait, alors jeunes souriceaux, inébranlable. Mais voilà plusieurs
             lunes que Stanley avait quitté le palais suite à une altercation avec son ancien
-            ami le roi Mice VII, et vous êtiez jusqu'à aujourd'hui sans nouvelles.^";
+            ami le roi Mice VII, et vous étiez jusqu'à aujourd'hui sans nouvelles.^";
             rtrue;
           }
           else { "Le journal de Kay témoigne de l'implication directe de votre ancien ami
@@ -2262,6 +2340,10 @@ Object  blason "blason de la famille royale"
   "Tenez vos pattes !";
 ];
 
+[ ThrowDirTopicSub;
+  "Préférez à un nom l'utilisation d'une direction.";
+];
+
 [ JumpInSub;
   "Vous n'y voyez pas la moindre utilité.";
 ];
@@ -2316,7 +2398,8 @@ Extend "grimper" last
     * 'dans' noun                                             -> Climb;
 
 Extend "jeter" last
-    * noun 'a'/'à'/'au'/'vers' noun=ADirection                -> ThrowDir;
+    * noun 'a'/'à'/'au'/'vers' noun=ADirection                -> ThrowDir
+    * noun 'a'/'à'/'au'/'vers' topic                          -> ThrowDirTopic;
 
 Extend "nager" last
     * noun                                                    -> JumpIn
