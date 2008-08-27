@@ -1716,8 +1716,10 @@ Object  garde_entrepot "gardien endormi" couloir_entrepots
             else {
               "Sans arme c'est du suicide. Et tuer un rat dans son sommeil vous répugne.";
             }
-          Search: "Vous repérez une clef dorée dans la poche intérieure de la veste du
+          Search: "Vous repérez une clef dorée mal acrochée dans la poche intérieure de la veste du
             gardien. Peut-être pourriez-vous la subtiliser si vous êtes assez discret.";
+          WakeOther: "Le réveiller directement vous ferait repérer, mais si vous l'attiriez vers
+            un autre lieu ? La clef est si mal attachée qu'en se déplaçant, il la ferait peut-être tomber.";
         ],
         life [;
           Answer,Ask,AskFor,Tell,ParlerSansPrecision: "Il dort. Le réveiller ainsi vous dévoilerait.";
@@ -1875,7 +1877,7 @@ Object  clef_entrepot "clef de l'entrepôt" garde_entrepot
 Object  conserve "boîte de conserve vide" prison
   with  name 'boite' 'conserve' 'vide' 'metal',
         description "Une boîte de métal de tout petit format, qui reste tout de même
-            imposante à votre échelle, mais probablement transportable. Lancée, elle devrait
+            imposante à votre échelle, mais probablement transportable. Lancée au loin, elle devrait
             faire du bruit.",
         jete 0,
         before [;
@@ -2232,31 +2234,167 @@ Object  blason "blason de la famille royale"
 ];
 
 [ HelpSub;
-  print "Ce programme est un jeu d'aventure textuel, ou "; style underline; print
-  "fiction interactive"; style roman; print " et se base donc sur un dialogue entre
-  le joueur, vous, et sa machine. Ainsi vous pouvez interagir avec le milieu
-  environnant à travers des ordres à l'infinitif, tels que ceux-ci :^";
-  print " > prendre la boite^ > manger le fromage^ > regarder le roi^^
-  Il peut arriver (voire assez souvent pour un joueur néophyte) que vos instructions ne
-  soient pas comprises, vous pouvez alors réessayer en reformulant d'une manière plus
-  claire et simple (l'association "; style underline; print "verbe"; style roman; print
-  " + "; style underline; print "complément"; style roman; print " est la plus
-  courante).^^";
-  print "Pour déplacer votre personnage de lieux en lieux, utilisez les huits points
-  cardinaux ("; style underline; print "nord, nord-est, est, sud-est, sud, sud-ouest,
-  ouest, nord-ouest, nord"; style roman; print ") ainsi qu'"; style underline; print
-  "entrer, sortir, haut, bas"; style roman; print ".^Pour avoir de nouveau la description
-  d'un lieu qui apparaît lorsque l'on s'y rend, tapez "; style underline; print
-  "regarder"; style roman; print " lorsque vous vous y trouvez.^Pour lister vos
-  acquisitions, tapez "; style underline; print "inventaire"; style roman; print " et
-  enfin en rapport avec votre progression, utilisez "; style underline; print "score"; style
-  roman; print " ou "; style underline; print "fullscore"; style roman; print " pour en avoir
-  connaissance, ainsi que les commandes "; style underline; print "sauvegarder, charger";
-  style roman; print " et "; style underline; print "recommencer"; style roman; print ".^^
-  Pour plus d'informations, les commandes "; style underline; print "licence"; style roman;
-  print ", "; style underline; print "remerciements"; style roman; print " et "; style underline;
-  print "auteur"; style roman; print " sont disponibles, et le site "; style underline; print
-  "http://ifiction.free.fr"; style roman; print " est à votre disposition.^";
+  DoMenu("Informations sur le jeu ~Rats~.^
+    ^      Aide
+    ^      Solution
+    ^      Auteur
+    ^      Remerciements
+    ^      Licence
+    ^      Rien, finalement.^",
+    HelpMenu, HelpInfo);
+];
+
+[ HelpMenu;
+  if (menu_item==0) { item_name="Informations";return 6; }
+  if (menu_item==1) { item_name="Aide"; }
+  if (menu_item==2) { item_name="Solution"; }
+  if (menu_item==3) { item_name="Auteur"; }
+  if (menu_item==4) { item_name="Remerciements"; }
+  if (menu_item==5) { item_name="Licence"; }
+  if (menu_item==6) { item_name="Rien, finalement."; }
+];
+
+[ HelpInfo;
+  if (menu_item==1) {
+    print "Ce programme est un jeu d'aventure textuel, ou "; style underline; print
+    "fiction interactive"; style roman; print " et se base donc sur un dialogue entre
+    le joueur, vous, et sa machine. Ainsi vous pouvez interagir avec le milieu
+    environnant à travers des ordres à l'infinitif, tels que ceux-ci :^";
+    print " > prendre la boite^ > manger le fromage^ > regarder le roi^^
+    Il peut arriver (voire assez souvent pour un joueur néophyte) que vos instructions ne
+    soient pas comprises, vous pouvez alors réessayer en reformulant d'une manière plus
+    claire et simple (l'association "; style underline; print "verbe"; style roman; print
+    " + "; style underline; print "complément"; style roman; print " est la plus
+    courante).^^";
+    print "Pour déplacer votre personnage de lieux en lieux, utilisez les huits points
+    cardinaux ("; style underline; print "nord, nord-est, est, sud-est, sud, sud-ouest,
+    ouest, nord-ouest, nord"; style roman; print ") ainsi qu'"; style underline; print
+    "entrer, sortir, haut, bas"; style roman; print ".^Pour avoir de nouveau la description
+    d'un lieu qui apparaît lorsque l'on s'y rend, tapez "; style underline; print
+    "regarder"; style roman; print " lorsque vous vous y trouvez.^Pour lister vos
+    acquisitions, tapez "; style underline; print "inventaire"; style roman; print " et
+    enfin en rapport avec votre progression, utilisez "; style underline; print "score"; style
+    roman; print " ou "; style underline; print "fullscore"; style roman; print " pour en avoir
+    connaissance, ainsi que les commandes "; style underline; print "sauvegarder, charger";
+    style roman; print " et "; style underline; print "recommencer"; style roman; print ".^^
+    Si vous ne savez plus que faire pour progresser dans l'intrigue, la commande "; style underline;
+    print "astuces"; style roman; print " vous fournira une aide appréciable.^^
+    Enfin le site "; style underline; print "http://ifiction.free.fr"; style roman; print " et toute
+    la communauté française de fiction interactive sont à votre disposition.^";
+  }
+  if (menu_item==2) { SoluceSub(); }
+  if (menu_item==3) { AuthorSub(); }
+  if (menu_item==4) { ThanksSub(); }
+  if (menu_item==5) { LicenseSub(); }
+  if (menu_item==6) { return 3; }
+];
+
+
+[ TipsSub;
+  if (trou_trone hasnt visited) {
+    "Votre roi vous attend dans la salle attenante, à l'ouest.";
+  }
+  if (cave hasnt visited) {
+    "Votre premier objectif est de pénétrer dans le repaire de Kay, qui est bien gardé. Pour cela deux
+    possibilités de camouflage s'offrent à vous, afin de déjouer la surveillance des gardes.";
+  }
+  if (entrepot hasnt visited) {
+    "Pour entrer dans l'entrepôt, il n'y a qu'une solution : se procurer la clef du garde endormi.
+    Vous avez pour se faire trois possibilités, mais la plus astucieuse nécessite de réveiller le gardien.";
+  }
+  if (salle_reunion hasnt visited) {
+    "Pour atteindre la salle de réunion où se trouve probablement le blason, il va vous falloir gagner la
+    confiance du rat idiot qui en garde l'entrée. Ses allures de glouton ne trompent pas.";
+  }
+  if (salle_reunion.vu == 0) {
+    "Aller un peu au nord, pour jeter un oeil furtif dans la salle.";
+  }
+  if (salle_reunion.vu == 1) {
+    "Cette fois vous devez subtiliser le blason, soit grâce à un déguisement, soit grâce à un accessoire,
+    soit grâce à un subterfuge.";
+  }
+  if (blason in player) {
+    "Il ne vous reste qu'à courir le plus vite possible auprès du roi !";
+  }
+];
+
+[ SoluceSub;
+  DoMenu("La solution peut enlever de son intérêt au jeu.^
+    ^      Entrer dans le repaire de Kay
+    ^      Obtenir la clef de l'entrepôt
+    ^      Passer le garde idiot
+    ^      Récupérer le blason
+    ^      Quête optionnelle : démasquer le voleur
+    ^      Rien, finalement.^",
+    SoluceMenu, SoluceInfo);
+];
+
+[ SoluceMenu;
+  if (menu_item==0) { item_name="Solution du jeu ~Rats~";return 6; }
+  if (menu_item==1) { item_name="Entrer dans le repaire de Kay"; }
+  if (menu_item==2) { item_name="Obtenir la clef de l'entrepôt"; }
+  if (menu_item==3) { item_name="Passer le garde idiot"; }
+  if (menu_item==4) { item_name="Récupérer le blason"; }
+  if (menu_item==5) { item_name="Quête optionnelle : démasquer le voleur"; }
+  if (menu_item==6) { item_name="Rien, finalement.^"; }
+];
+
+[ SoluceInfo;
+  if (menu_item==1) {
+    print "Pour pénétrer dans le repaire de Kay, deux solutions s'offrent à vous :^^";
+    style bold; print "Solution 1"; style roman; print "^Sur le balcon se trouve un arbuste
+    sur lequel vous pouvez grimper, avant de sauter dans un pot de peinture noire, ce qui
+    aura pour effet de vous peindre entièrement en noir. Le seul défaut de votre camouflage
+    restera vos dents étincelantes. Pour les couvrir, vous trouverez à l'intérieur du buffet
+    un foulard que vous pourrez équiper. Pour grimper dans le buffet, utilisez une paille
+    prise dans une des couchettes du dortoir du palais.^^";
+    style bold; print "Solution 2"; style roman; print "^La seconde possibilité relève du
+    hasard : si vous éteignez l'ordinateur, le jeune homme soucieux de libérer sa vessie
+    ouvrira la porte des toilettes qu'il oubliera de refermer. Dans les toilettes, votre
+    maladresse vous fera recouvrir de papier toilette, vous conférant pour les rats une
+    apparence fantômatique.^";
+  }
+  if (menu_item==2) {
+    print "Encore une fois, plusieurs possibilités permettent de récupérer la clef de
+    l'entrepôt.^^";
+    style bold; print "Solution de l'assassin"; style roman; print "^Vous trouverez dans un
+    coffre des dortoirs du repaire de Kay un poignard, qui vous permettra alors de tuer le
+    gardien de l'entrepôt et de prendre la clef dans son veston maculé de sang.^^";
+    style bold; print "Solution du voleur"; style roman; print "^Si vous êtes peint en noir
+    et que vous portez le foulard, vous pourrez directement subtiliser la clef du garde
+    durant son sommeil, discrètement.^^";
+    style bold; print "Solution musciale"; style roman; print "^Munissez-vous de la boîte de
+    conserve trouvée dans la prison du côté nord, et une fois à côté du gardien endormi,
+    lancez-la à l'ouest. Le vacarme réveillera le garde qui fera tomber la clef en se
+    déplaçant.^";
+  }
+  if (menu_item==3) {
+    "Pour amadouer le garde idiot, donnez-lui un morceau de fromage trouvé dans l'entrepôt.";
+  }
+  if (menu_item==4) {
+    print "À nouveau trois solutions s'offrent à vous :^^";
+    style bold; print "Solution 1"; style roman; print "^Si vous êtes recouvert de papier
+    toilette, faites directement irruption dans la salle. Stupide, Kay ne réagira pas tout
+    de suite et vous aurez le temps de prendre le blason et de commencer à fuir.^^";
+    style bold; print "Solution 2"; style roman; print "^Tout en vous protégeant avec le foulard,
+    munissez-vous de la lampe de la chambre de Kay, allumée, et éblouissez les trois rats
+    en entrant brusquement dans la salle avant de subtiliser le blason et de vous enfuir.^^";
+    style bold; print "Solution 3"; style roman; print "^Enfin, vous pouvez détruire la
+    dynamo dans le hall du repaire et priver ainsi une partie des lieux de lumière. Grâce à
+    ce subterfuge, vous aurez le temps de prendre le blason avant d'être repéré et de fuir.^";
+  }
+  if (menu_item==5) {
+    print "La quête optionnelle vous permet de découvrir que c'est la souris Stanley qui a
+    trahi la couronne, grâce à trois objets :^^";
+    style underline; print "Le journal de Kay"; style roman; print ", qui est la seule vraie preuve
+    et est donc indispensable pour la réussite de la quête, se trouve dans la chambre de Kay.
+    Tournez la manivelle de la boîte à musique après avoir allumé la lampe et vous le trouverez.^^";
+    style underline; print "Le poignard de Stanley"; style roman; print " se trouve dans un coffre des
+    dortoirs du repaire de Kay. C'est un élément à charge supplémentaire.^^";
+    style underline; print "Un morceau de parchemin"; style roman; print " est caché dans l'armoire de
+    la chambre des parents, et nomme lui aussi Stanley.^";
+  }
+  if (menu_item==6) { return 3; }
 ];
 
 [ AuthorSub;
@@ -2370,8 +2508,14 @@ Include "FrenchG";
 
 ! Version 2.3devI6+I7 bibliothèques francophones
 
-Verb "help" "aide" "manuel" "info" "information"
+Verb "help" "aide" "manuel" "manual" "info" "information"
     *               -> Help;
+
+Verb "astuces" "tips" "astuce" "tip"
+    *               -> Tips;
+
+Verb "solution" "soluce"
+    *               -> Soluce;
 
 Verb "auteur" "credits"
     *               -> Author;
