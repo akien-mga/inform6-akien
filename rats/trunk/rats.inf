@@ -43,7 +43,7 @@
 Constant Story "Rats";
 Constant Headline
             "^Une fiction interactive de Rémi Verschelde (Akien).^^";
-Release 0;
+Release 1; Serial "270808";
 
 Constant TASKS_PROVIDED;
 Constant NUMBER_TASKS = 4;
@@ -2399,8 +2399,9 @@ Object  blason "blason de la famille royale"
 
 [ AuthorSub;
   print "Ce jeu est la première réalisation personnelle de Rémi Verschelde (Akien),
-  réalisée du 4 août 2008 au 10 août 2008 pour sa première version. Le but de cette
-  création était principalement d'entraîner son auteur au langage de programmation ";
+  réalisée du 4 août 2008 au 10 août 2008 pour sa première version, puis perfectionné
+  jusqu'à aboutir à la version que vous possédez, dont la date figure au lancement du jeu.
+  Le but de cette création était principalement d'entraîner son auteur au langage de programmation ";
   style underline; print "Inform"; style roman; print " en le confrontant directement aux
   difficultés, ce pourquoi vous pouvez peut-être estimer que le scénario est trop simple
   ou manque de clarté, n'étant pas son intérêt premier.^^
