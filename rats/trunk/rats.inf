@@ -163,7 +163,9 @@ Object  heros "vous" trou_dortoirs
 
 Object  trou_trone "Palais du roi Mice"
   with  name 'salle' 'palais' 'cavite' 'beton',
-        description "Vous êtes devant le trône de votre roi, Mice VII, dressé dans une
+        description [;
+          if (self hasnt visited) {
+            "Vous êtes devant le trône de votre roi, Mice VII, dressé dans une
             cavité creusée dans le béton par les pattes de vos ancêtres, derrière le vieux
             buffet du salon. Le trône, somptueux, est taillé dans un bloc de
             polystyrène dans lequel deux pieux, ou cure-dents, tiennent lieu
@@ -174,7 +176,16 @@ Object  trou_trone "Palais du roi Mice"
             grignote un morceau de fromage en plastique rigide. De l'entrée en arcade
             du palais provient une faible lumière qui est ingénieusement répartie dans
             la salle à l'aide de bris d'un miroir. La porte est au nord, tandis qu'à
-            l'est s'étendent les dortoirs.",
+            l'est s'étendent les dortoirs.";
+          }
+          else {
+            "Vous êtes devant le trône de votre roi, Mice VII, dressé dans une
+            cavité creusée dans le béton par les pattes de vos ancêtres, derrière le vieux
+            buffet du salon. Le roi grignotte un morceau de fromage en plastique sur son
+            trône, d'où il contemple ses sujets affairés dans la pièce.^
+            La porte est au nord, tandis qu'à l'est s'étendent les dortoirs.";
+          }
+        ],
         scenic_look 'trone' 'somptueux' 'siege' 'fauteuil' 'chaise' 'somptueux' 'polystyrene'
             'pieux' 'accoudoirs' 'pieu' 'accoudoir' 'cure-dents' 'cure' 'dent' 0 "Le trône
             royal est une perle de l'artisanat de la couronne, conçu par l'un de vos plus
@@ -304,14 +315,24 @@ Object  buffet_interieur "Dans le vieux buffet"
 
 Object  televiseur "Près du poste de télévision"
   with  name 'poste' 'televiseur' 'tele' 'television' 'tv',
-        description "A l'ouest du buffet où se trouve l'entrée du palais royal siège
+        description [;
+          if (self hasnt visited) {
+            "A l'ouest du buffet où se trouve l'entrée du palais royal siège
             fièrement un énorme téléviseur à écran cathodique, qui a longtemps été votre
             terrain de jeu lorsque vous n'étiez qu'un souriceau et que vous pouviez vous
             y faufiler. Aujourd'hui vous êtes trop grand pour y entrer, et vous n'avez
             plus votre insouciance de jeunesse, préférant désormais éviter tout contact
             avec un matériel électrique. Au nord vous pouvez vous glisser derrière le
             canapé installé devant l'écran et rejoindre le balcon, au nord-est vous
-            êtes au centre du salon et à l'est vous retournez sous le buffet.",
+            êtes au centre du salon et à l'est vous retournez sous le buffet.";
+          }
+          else {
+            "A l'ouest du buffet où se trouve l'entrée du palais royal siège
+            fièrement un énorme téléviseur à écran cathodique. Au nord vous pouvez vous glisser
+            derrière le canapé installé devant l'écran et rejoindre le balcon, au nord-est vous
+            êtes au centre du salon et à l'est vous retournez sous le buffet.";
+          }
+        ],
         scenic_look 'canape' 'sofa' 'divan' 'siege' 'fauteuil' 'chaise' 'banquette' 0
             "Le volumineux sofa de cuir est orienté vers le sud, en face du téléviseur,
             et une jeune fille y est avachie, s'abrutissant au devant d'énormités
@@ -695,16 +716,14 @@ Object  kay_hall "Hall du repaire de Kay"
   with  description [;
           if (dynamo.cassee == 1) {
             "L'entrée de l'antre de Kay s'enfonce de plusieurs centimètres et
-            passe sous le mur de la maison. Les relents de rats crevés qui stagnent dans
-            l'air vous donnent d'imaginer ce qu'il pourrait advenir de vous s'ils
-            vous mettaient la patte dessus. Les diodes installées sur les murs sont pour
+            passe sous le mur de la maison. Les diodes installées sur les murs sont pour
             la plupart éteintes, depuis que vous avez détruit la dynamo qu'actionnait le
             vieux rat aveugle, qui depuis tente de la réparer en vain. À l'ouest
             sont les quartiers des membres du gang, à l'est les prisons et l'entrepôt,
             et au nord la salle de réunion où se tient probablement le rat Kay lui-même. Au
             sud, la lumière, et la sortie.";
           }
-          else {
+          if (self hasnt visited) {
             "L'entrée de l'antre de Kay s'enfonce de plusieurs centimètres et
             passe sous le mur de la maison. Les relents de rats crevés qui stagnent dans
             l'air vous donnent d'imaginer ce qu'il pourrait advenir de vous s'il
@@ -712,6 +731,14 @@ Object  kay_hall "Hall du repaire de Kay"
             récupération branchées à une dynamo, au moins grosse comme vous, qu'actionne un
             vieux rat difforme, et aveugle semble-t-il. Mais loin d'être pessimiste vous
             préférez analyser froidement la situation : selon les pancartes, à l'ouest
+            seraient les quartiers des membres du gang, à l'est les prisons et l'entrepôt,
+            et au nord la salle de réunion où se tient probablement le rat Kay lui-même. Au
+            sud, la lumière, et la sortie.";
+          }
+          else {
+            "L'entrée de l'antre de Kay s'enfonce de plusieurs centimètres et
+            passe sous le mur de la maison. Une dynamo, au moins grosse comme vous, est
+            actionnée par un vieux rat difforme et aveugle. Selon les pancartes, à l'ouest
             seraient les quartiers des membres du gang, à l'est les prisons et l'entrepôt,
             et au nord la salle de réunion où se tient probablement le rat Kay lui-même. Au
             sud, la lumière, et la sortie.";
@@ -959,17 +986,13 @@ Object  kay_chambre "Chambre de Kay"
   with  name 'kay' 'chambre' 'quartier' 'appartement' 'maison' 'chef' 'gang',
         description [;
           if (lampe has on && (lampe in location || lampe in player)) {
-            "La chambre de Kay, chef du gang de rats mal intentionnés qui sévit
-            dans la maison, volant nourriture, biens et même parfois jeunes femelles, est
-            à l'image du personnage : les murs de terre sèche, car en creusant les rats
-            sont sortis des fondations de la maison, sont décorés de traces de pattes à la
-            peinture rouge, ou au sang peut-être, mais mieux vaut ne pas y songer. Des
-            crânes d'oisillons tombés du nid trônent sur une boîte à musique reconvertie
+            "La chambre de Kay est lugubre : les murs de terre sèche sont décorés de traces
+            de pattes à la peinture rouge - ou au sang peut-être, mais mieux vaut ne pas y songer -,
+            des crânes d'oisillons tombés du nid trônent sur une boîte à musique reconvertie
             en bureau, qui joue probablement un hymne si l'on en tourne la manivelle.^
             Le lit en est un vrai : un jouet de fillette initialement conçu pour une poupée
             sur lequel chaque rat du gang semble avoir écrit un message incongru ou
-            dessiné quelque obscénité. Le bon goût de Kay n'est plus à remettre en
-            question. La sortie est à l'est.";
+            dessiné quelque obscénité. La sortie est à l'est.";
           }
           else if (lampe hasnt on && lampe in location && lampe notin player) {
             "Vous ne voyez pas grand chose, excepté une lampe de vélo qui fait ici office de
@@ -1719,7 +1742,8 @@ Object  garde_entrepot "gardien endormi" couloir_entrepots
           Search: "Vous repérez une clef dorée mal acrochée dans la poche intérieure de la veste du
             gardien. Peut-être pourriez-vous la subtiliser si vous êtes assez discret.";
           WakeOther: "Le réveiller directement vous ferait repérer, mais si vous l'attiriez vers
-            un autre lieu ? La clef est si mal attachée qu'en se déplaçant, il la ferait peut-être tomber.";
+            un autre lieu ? La clef est si mal attachée qu'en se déplaçant, il la ferait peut-être
+            tomber.";
         ],
         life [;
           Answer,Ask,AskFor,Tell,ParlerSansPrecision: "Il dort. Le réveiller ainsi vous dévoilerait.";
@@ -1968,7 +1992,8 @@ Object  _caisses "caisses" entrepot
   has   scenery pluralname transparent;
 
 Object  fromage "morceaux de fromage" _caisses
-  with  name 'fromage' 'quelconque' 'morceau' 'morceaux' 'reblochon' 'chevre' 'camembert' 'gruyere' 'trous',
+  with  name 'fromage' 'quelconque' 'morceau' 'morceaux' 'reblochon' 'chevre' 'camembert' 'gruyere'
+            'trous',
         article "des",
         description "Des morceaux de fromage que vous ne prenez même pas la peine
             d'identifier, tout juste bons pour un rat vu leur aspect et leur odeur.",
@@ -2300,18 +2325,19 @@ Object  blason "blason de la famille royale"
   }
   if (entrepot hasnt visited) {
     "Pour entrer dans l'entrepôt, il n'y a qu'une solution : se procurer la clef du garde endormi.
-    Vous avez pour se faire trois possibilités, mais la plus astucieuse nécessite de réveiller le gardien.";
+    Vous avez pour se faire trois possibilités, mais la plus astucieuse nécessite de réveiller le
+    gardien.";
   }
   if (salle_reunion hasnt visited) {
-    "Pour atteindre la salle de réunion où se trouve probablement le blason, il va vous falloir gagner la
-    confiance du rat idiot qui en garde l'entrée. Ses allures de glouton ne trompent pas.";
+    "Pour atteindre la salle de réunion où se trouve probablement le blason, il va vous falloir gagner
+    la confiance du rat idiot qui en garde l'entrée. Ses allures de glouton ne trompent pas.";
   }
   if (salle_reunion.vu == 0) {
     "Aller un peu au nord, pour jeter un oeil furtif dans la salle.";
   }
   if (salle_reunion.vu == 1) {
-    "Cette fois vous devez subtiliser le blason, soit grâce à un déguisement, soit grâce à un accessoire,
-    soit grâce à un subterfuge.";
+    "Cette fois vous devez subtiliser le blason, soit grâce à un déguisement, soit grâce à un
+    accessoire, soit grâce à un subterfuge.";
   }
   if (blason in player) {
     "Il ne vous reste qu'à courir le plus vite possible auprès du roi !";
@@ -2421,8 +2447,8 @@ Object  blason "blason de la famille royale"
   entrée en matière facile, ludique et passionnante.^^
   Merci aussi à toute la communauté francophone de fiction interactive ("; style underline; print 
   "http://ifiction.free.fr"; style roman; print "), et principalement aux bêta-testeurs qui ont permis
-  d'améliorer grandement ce petit jeu : Samuel Verschelde (Stormi), Eric Forgeot (Otto Grimwald), Benjamin
-  Roux (Yoruk).^^
+  d'améliorer grandement ce petit jeu : Samuel Verschelde (Stormi), Eric Forgeot (Otto Grimwald),
+  Benjamin Roux (Yoruk).^^
   Merci ensuite à Eric Forgeot pour la conception de la jaquette du jeu, et à Matthieu Aubry pour la
   photographie que l'on peut retrouver à l'adresse suivante : "; style underline; print
   "http://flickr.com/photos/matthieu-aubry/440634859/"; style roman; print ".^^
