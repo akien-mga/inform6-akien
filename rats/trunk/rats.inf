@@ -50,7 +50,109 @@ Constant NUMBER_TASKS = 4;
 Constant MAX_SCORE = 40;
 Array task_scores -> 8 5 3 4;
 
+Replace Identical; ! pour la gestion des adjectifs
+
 Include "Parser";
+
+!--------------------------------------------
+! Attributs et propriétés
+!--------------------------------------------
+Property adjective; ! pour la gestion des adjectifs
+
+!--------------------------------------------
+! Directives de remplacement
+!--------------------------------------------
+! (Samuel Verschelde, tiré de pname.h)
+! Cette fonction est recopiée de parserm.h, avec un ajout pour tenir
+! compte de la propriété "adjective."
+[ Identical o1 o2 p1 p2 n1 n2 i j flag;
+    if (o1 == o2) rtrue;  ! This should never happen, but to be on the safe side
+    if (o1 == 0 || o2 == 0) rfalse;  ! Similarly
+    if (parent(o1) == compass || parent(o2) == compass) rfalse; ! Saves time
+
+    !  What complicates things is that o1 or o2 might have a parsing routine,
+    !  so the parser can't know from here whether they are or aren't the same.
+    !  If they have different parsing routines, we simply assume they're
+    !  different.  If they have the same routine (which they probably got from
+    !  a class definition) then the decision process is as follows:
+    !
+    !     the routine is called (with self being o1, not that it matters)
+    !       with noun and second being set to o1 and o2, and action being set
+    !       to the fake action TheSame.  If it returns -1, they are found
+    !       identical; if -2, different; and if >=0, then the usual method
+    !       is used instead.
+
+    if (o1.parse_name ~= 0 || o2.parse_name ~= 0) {
+        if (o1.parse_name ~= o2.parse_name) rfalse;
+        parser_action = ##TheSame; parser_one = o1; parser_two = o2;
+        j = wn; i = RunRoutines(o1,parse_name); wn = j;
+        if (i == -1) rtrue;
+        if (i == -2) rfalse;
+    }
+
+    !  This is the default algorithm: do they have the same words in their
+    !  "name" (i.e. property no. 1) properties.  (Note that the following allows
+    !  for repeated words and words in different orders.)
+
+    p1 = o1.&1; n1 = (o1.#1)/WORDSIZE;
+    p2 = o2.&1; n2 = (o2.#1)/WORDSIZE;
+
+    !  for (i=0 : i<n1 : i++) { print (address) p1-->i, " "; } new_line;
+    !  for (i=0 : i<n2 : i++) { print (address) p2-->i, " "; } new_line;
+
+    for (i=0 : i<n1 : i++) {
+        flag = 0;
+        for (j=0 : j<n2 : j++)
+            if (p1-->i == p2-->j) flag = 1;
+        if (flag == 0) rfalse;
+    }
+
+    for (j=0 : j<n2 : j++) {
+        flag = 0;
+        for (i=0 : i<n1 : i++)
+            if (p1-->i == p2-->j) flag = 1;
+        if (flag == 0) rfalse;
+    }
+
+    ! DEBUT MODIFICATION POUR LES ADJECTIFS
+    ! test sur la propriété adjective :
+    ! deux objets qui ont le même "name" mais
+    ! pas le même "adjective"
+    if ((o1 provides adjective) ~= (o2 provides adjective))
+        rfalse;
+
+    if (o1 provides adjective && o2 provides adjective)
+    {
+        n1=(o1.#adjective)/WORDSIZE; n2=(o2.#adjective)/WORDSIZE;
+
+        ! If there are a different number of words in the adjective
+        ! properties, they are distinguishable.
+        if (n1 ~= n2)
+            rfalse;
+
+        p1=o1.&adjective; p2=o2.&adjective;
+
+        for (i=0 : i<n1 : i++)
+        {
+            flag = 0;
+            for (j=0 : j<n2 : j++)
+                if (p1-->i == p2-->j) flag = 1;
+            if (flag == 0) rfalse;
+        }
+
+        for (j=0 : j<n2 : j++)
+        {
+            flag = 0;
+            for (i=0 : i<n1 : i++)
+                if (p1-->i == p2-->j) flag = 1;
+            if (flag == 0) rfalse;
+        }
+    }
+    ! FIN MODIFICATION POUR LES ADJECTIFS
+
+    !  print "Which are identical!^";
+    rtrue;
+];
 
 Object  LibraryMessages         ! Pour remplacer certains messages standard
   with  before [;
@@ -61,10 +163,63 @@ Object  LibraryMessages         ! Pour remplacer certains messages standard
 
 Include "VerbLib";
 
+! (Samuel Verschelde, tiré et amélioré de pname.h) gestion des adjectifs
+    ! et gestion aussi des mots de liaison comme dans "boule DE cristal"
+    ! => de est accepté, ainsi que d'autres mots que l'on peut trouver
+    ! entre deux mots désignant un même objet.
+    [ ParseNoun obj n m p w;
+        w = NextWord();
+        while((WordInProperty(w,obj,name) == 1) || (WordInProperty(w,obj,adjective) == 1) ||
+        (w=='de' or 'du' or 'des' or 'd^' or 'la' or 'le' or 'l^' or 'en' or 'a' or 'au' or 'aux'))
+        {
+            ! remarque : si un mot est à la fois dans name et adjective, il ne sera
+            ! compté qu'une fois, pour la propriété name
+            if (WordInProperty(w,obj,name) == 1)
+            {
+                m++;
+                p=0;
+            }
+            else
+            {
+                if (WordInProperty(w,obj,adjective) == 1)
+                {
+                    n++;
+                    p=0;
+                }
+                else
+                {
+                    ! Si le mot est 'de', 'du', 'des', 'la', 'en', 'a', 'au' ,'aux' :
+                    if (w=='de' or 'du' or 'des' or 'd^' or 'la' or 'le' or 'l^' or 'en' or 'a' or
+                    'au' or 'aux')
+                    {
+                        ! ajouter 1 à la variable p, qui contient le score à retirer
+                        ! au final (afin de revenir en arrière en cas d'occurrences qui ne
+                        ! sont pas comprises entre deux noms reconnus).
+                        n++; ! compter ce mot comme pertinent est discutable,
+                             ! mais sans cela cela ne fonctionne pas
+                        p++;
+                    }
+                }
+            }
+
+            w = NextWord();
+        }
+        wn = wn -p -1; ! retour arrière car le dernier mot lu n'a pas été reconnu
+        if (m == 0) return 0; return (m+n-p);
+    ];
+
+!=======================================================================================
+
+Class   Entree
+  with  before [;
+          Enter: <<Go in_obj>>;
+        ],
+  has   scenery concealed;
+
 !=======================================================================================
 
 Object  trou_dortoirs "Dortoirs du palais"
-  with  name 'dortoirs' 'dortoir' 'trou' 'palais',
+  with  name 'dortoirs' 'dortoir' 'trou' 'piece',
         description "Les dortoirs du palais du roi Mice s'étendent d'est en ouest, tout
             en longueur, et peuvent facilement accueillir plus d'une dizaine des plus
             proches de la couronne. Vous en faites partie, et votre couche est tout au
@@ -73,7 +228,7 @@ Object  trou_dortoirs "Dortoirs du palais"
             assoiffé de votre sang, qui rôde dans les alentours du palais. La salle du
             trône est à l'ouest.",
         scenic_look 'couche' 'couches' 'lit' 'lits' 'couchette' 'couchettes'
-            'couchettes' 'matelas' 'poil' 'poils' 'choupinette' 0 "Toutes plus ou moins
+            'couchettes' 'matelas' 0 "Toutes plus ou moins
             identiques à la votre, bien que cette dernière ait la particularité d'être nouée
             à l'aide de poils longs de Choupinette, dont la conquête est l'exploit qui a fait
             votre renommée et vous a valu d'être Chevalier du roi.",
@@ -96,14 +251,22 @@ Object  trou_dortoirs "Dortoirs du palais"
             if (trou_trone has visited) "Le devoir vous appelle, et le repos en journée y
               serait un manquement.";
             else "Mieux vaut ne pas faire attendre le roi.";
-          Listen: "La salle du trône à l'ouest semble plutôt animée.";
-          Smell: "Le manque d'aération fait régner ici une odeur amère perpétuelle.";
+          Listen: 
+            if (noun == 0) { "La salle du trône à l'ouest semble plutôt animée."; }
+          Smell:
+            if (noun == 0) { "Le manque d'aération fait régner ici une odeur amère perpétuelle."; }
         ],
         w_to trou_trone,
+        out_to trou_trone,
   has   scenery light;
 
+Object  trou_dortoirs_trone "salle du trône" class Entree
+  with  name 'salle' 'trone' 'roi' 'palais',
+        description "La salle du trône est à l'ouest, mais d'ici vous ne voyez rien de ce qui
+            s'y passe.";
+
 Object  heros "vous" trou_dortoirs
-  with  name 'hotte' 'sac' 'heros' 'protagoniste',
+  with  name 'heros' 'protagoniste' 'moi' 'hotte' 'sac' 'bagage',
         etat 0,
         peint 0,
         task0 0,
@@ -137,8 +300,8 @@ Object  heros "vous" trou_dortoirs
             "C'est bien vous, Chevalier du roi Mice VII, qui servez sous ses ordres
             depuis son accession au trône puisque vous avez toujours été de grands
             amis. Vous portez sur le dos une hotte de plastique jaune. Un jouet sur lequel
-            vous êtes tombé dans l'une de vos escapades, probablement associé jadis à une
-            figurine de père Noël, toujours est-il que sa forme est parfaitement adaptée aux
+            vous êtes tombé lors de l'une de vos escapades, probablement associé jadis à une
+            figurine de père Noël ; toujours est-il que sa forme est parfaitement adaptée aux
             objets que vous pourriez transporter."; }
         ],
         each_turn [;
@@ -161,8 +324,39 @@ Object  heros "vous" trou_dortoirs
         ],
   has   concealed animate proper transparent light;
 
+Object  heros_poils "poils"
+  with  name 'poils' 'poil' 'pilosite' 'moustache' 'moustaches' 'peau' 'fourrure',
+        articles "vos",
+        description "Vous pilosité est fine et lissée, digne d'un haut dignitaire de la cour,
+            avec des poils d'une douceur que vous envient nombre de vos semblables. Vos moustaches,
+            elles, glissent le long de vos joues pour courir sur vos côtés, vous prévenant de tout
+            obstacle que vos yeux auraient omis.",
+        found_in [; rtrue; ],
+        before [;
+          Take,Touch:
+            if (heros.peint == 0) {
+              "Une sensation délicate, presque suave... Un peu de tenue, tout de même !";
+            }
+            else {
+              "Vos poils recouverts de peinture sont devenus drus et secs.";
+            }
+          Taste,Drink: "Soyons idiot. Non mais vraiment...";
+          Listen: "L'air crépite au contact de votre peau. Enfin il crépiterait si vous aviez une
+            meilleure ouïe, probablement.";
+          Smell:
+            if (heros.peint == 0) {
+              "Vous sentez quelque peu la poussière, mais rien de très gênant en société. Enfin
+              un bon bain ne serait pas de refus tout de même.";
+            }
+            else {
+              "L'odeur de la peinture est âcre, et vous fait tourner la tête. Mais cela reste
+              supportable.";
+            }
+        ],
+  has   scenery concealed pluralname;
+
 Object  trou_trone "Palais du roi Mice"
-  with  name 'salle' 'palais' 'cavite' 'beton',
+  with  name 'salle' 'cavite' 'beton' 'palais' 'chateau' 'piece',
         description [;
           if (self hasnt visited) {
             "Vous êtes devant le trône de votre roi, Mice VII, dressé dans une
@@ -187,9 +381,12 @@ Object  trou_trone "Palais du roi Mice"
           }
         ],
         scenic_look 'trone' 'somptueux' 'siege' 'fauteuil' 'chaise' 'somptueux' 'polystyrene'
-            'pieux' 'accoudoirs' 'pieu' 'accoudoir' 'cure-dents' 'cure' 'dent' 0 "Le trône
-            royal est une perle de l'artisanat de la couronne, conçu par l'un de vos plus
-            proches amis lorsque le trône séculaire en bouchons de liège s'effrita."
+            'pieux' 'accoudoirs' 'pieu' 'accoudoir' 'cure-dents' 'cure' 'dent' 0 "Le trône,
+            somptueux, est taillé dans un bloc de polystyrène dans lequel deux pieux, ou cure-dents,
+            tiennent lieu d'accoudoirs. Perle de l'artisanat de la couronne, il a été conçu par
+            l'un de vos plus proches amis lorsque le trône séculaire en bouchons de liège s'effrita.
+            Au-dessus du trône se trouve un emplacement circulaire qui accueille en principe les
+            armes de la famille royale, mais qui est vide aujourd'hui."
             'fromage' 'plastique' 'rigide' 0 "Un jouet qui a eu le malheur de s'échouer
             à l'entrée du palais alors que le roi tentait une escapade diurne. Son
             Altesse s'est alors prise d'affection pour cette illusion de gruyère qui lui
@@ -199,8 +396,8 @@ Object  trou_trone "Palais du roi Mice"
             "Des éclats d'un beau miroir que les anciens ont récolté durant leurs
             aventures et qui conduisent la lumière de la porte jusqu'au trône qui,
             sans eux, serait plongé dans d'obscures ténèbres.",
-        scenic_look2 'arcade' 'entree' 'porte' 'buffet' 0 "Un simple trou dans le mur dont le
-            style architectural est des plus classiques : une arcade en demi-ovale
+        scenic_look2 'arcade' 'entree' 'porte' 'buffet' 0 "L'entrée est un simple trou dans le
+            mur dont le style architectural est des plus classiques : une arcade en demi-ovale
             permettant de faire passer deux sujets de front, vers le buffet.."
             'embleme' 'armes' 'armoiries' 'sceau' 'blason' 'ecu' 'bouclier' 'symbole'
             'emplacement' 'circulaire' 'cercle' 'trou' 0 "L'emplacement qui contient
@@ -241,16 +438,17 @@ Object  trou_trone "Palais du roi Mice"
         n_to buffet_dessous,
         out_to [; <<Go n_obj>>; ];
 
+Object  trou_trone_dortoirs "dortoirs" trou_trone class Entree
+  with  name 'dortoirs' 'chambres' 'chambre' 'dortoir',
+        description "Les dortoirs du palais du roi Mice sont à l'est.";
+
 Object  buffet_dessous "Sous le vieux buffet"
   with  description "Vous voilà devant l'entrée du palais royal, contre le mur sud du
             salon, sous le vieux buffet qui siège entre l'ordinateur à l'est et le
             téléviseur à l'ouest. Au nord vous êtes au beau milieu de la pièce, à
             découvert, et à la merci de Choupinette.",
-        scenic_look 'arcade' 'entree' 'porte' 'palais' 'chateau' 0 "Un simple trou dans le
-            mur dont le style architectural est des plus classiques : une arcade en demi-ovale
-            permettant de faire passer deux sujets de front."
-            'ordi' 'ordinateur' 'pc' 'tele' 'tv' 'televesion' 'televiseur' 0 "Le televiseur est
-            à l'ouest tandis que l'ordinateur est à l'est.",
+        scenic_look 'ordi' 'ordinateur' 'pc' 'tele' 'tv' 'televesion' 'televiseur' 0 "Le televiseur
+            est à l'ouest tandis que l'ordinateur est à l'est.",
         before [;
           Climb:
             <<Go u_obj>>;
@@ -288,6 +486,12 @@ Object  _buffet "buffet en acajou" buffet_dessous
         ],
   has   scenery concealed;
 
+Object  buffet_dessous_palais "entrée du palais" buffet_dessous class Entree
+  with  name 'arcade' 'entree' 'porte' 'palais' 'chateau',
+        description "L'entrée du palais est un simple trou dans le mur dont le style
+            architectural est des plus classiques : une arcade en demi-ovale permettant de faire
+            passer deux sujets de front.";
+
 Object  buffet_interieur "Dans le vieux buffet"
   with  name 'vieux' 'buffet' 'meuble' 'placard' 'commode' 'acajou',
         description "À l'intérieur du buffet en acajou, la seule lumière qui filtre provient
@@ -310,7 +514,8 @@ Object  buffet_interieur "Dans le vieux buffet"
         ],
         out_to [; <<Go d_obj>>; ],
         before [;
-          Smell: "La poussière vous fait éternuer.";
+          Smell:
+            if (noun == 0) { "La poussière vous fait éternuer."; }
         ];
 
 Object  televiseur "Près du poste de télévision"
@@ -342,15 +547,13 @@ Object  televiseur "Près du poste de télévision"
             'ecran' 'cathodique' 0 "Un gros écran, impressionnant au vu de votre petite taille.",
         before [;
           Smell:
-            if (noun == fille) { rfalse; }
-            else {
+            if (noun == 0) {
               "Ici se mêlent l'odeur trop prononcée du parfum de la demoiselle à la
               répugnante odeur féline de Choupinette, que se prélasse souvent sur les cuisses
               de la jeune fille avachie.";
             }
           Listen: 
-            if (noun == fille) { rfalse; }
-            else {
+            if (noun == 0) {
               "Le bruit des ondes du téléviseur, ponctué parfois de ~Non, Stecy ne quitte
               pas Brandon, sinon il te trompera avec Vanessa !~";
             }
@@ -388,7 +591,8 @@ Object  balcon "Sur le balcon"
         u_to arbuste,
         before [;
           Climb: if (noun == 0) { PlayerTo(arbuste); rtrue; }
-          Smell: "L'odeur âcre de la peinture se mêle aux fragrances horticoles.";
+          Smell: 
+            if (noun == 0) { "L'odeur âcre de la peinture se mêle aux fragrances horticoles."; }
         ];
 
 Object  arbuste "Au sommet de l'arbuste"
@@ -420,7 +624,8 @@ Object  arbuste "Au sommet de l'arbuste"
               rtrue;
             }
             else { "Un seul bain vous suffit."; }
-          Smell: "Une délicieuse odeur de verdure.";
+          Smell:
+            if (noun == 0) { "Une délicieuse odeur de verdure."; }
         ];
 
 Object  ordinateur "Sous le bureau de l'ordinateur"
@@ -443,15 +648,13 @@ Object  ordinateur "Sous le bureau de l'ordinateur"
             à l'est.",
         before [;
           Listen: 
-            if (noun == fils) rfalse;
-            else {
+            if (noun == 0) {
               style underline; print "Clic, clic, clic. ";
               style roman; print "Le cri d'agonie de votre congénère mécanique torturée vous
               fait frémir.^"; rtrue;
             }
           Smell: 
-            if (noun == fils) rfalse;
-            else { "L'odeur de poussière chaude vient chatouiller votre museau."; }
+            if (noun == 0) { "L'odeur de poussière chaude vient chatouiller votre museau."; }
         ],
         w_to buffet_dessous,
         e_to couloir_salon,
@@ -475,8 +678,11 @@ Object  couloir_salon "Couloir vers la cuisine"
             l'effet d'une agonie."
             'eau' 'robinet' 'goutte' 0 "Inlassable, le robinet goutte.",
         before [;
-          Listen: "Le cri de la souris d'ordinateur se mêle au décompte régulier du robinet de
-            la cuisine.";
+          Listen:
+            if (noun == 0) {
+              "Le cri de la souris d'ordinateur se mêle au décompte régulier du robinet de
+              la cuisine.";
+            }
         ],
         w_to ordinateur, 
         s_to couloir_chambres,
@@ -573,8 +779,11 @@ Object  cuisine "La cuisine"
           }
         ],
         before [;
-          Listen: "Le claquement strident de l'eau sur l'évier, inlassable, régulier, emplit
-            vos oreilles.";
+          Listen:
+            if (noun == 0) {
+              "Le claquement strident de l'eau sur l'évier, inlassable, régulier, emplit
+              vos oreilles.";
+            }
         ],
         s_to couloir_salon,
         e_to "Sortir de ce lieu signifierait probablement la mort, et si vous surviviez,
@@ -600,8 +809,6 @@ Object  cave "Au plus profond de la cave"
             "Des bouteilles de Côtes du Rhône bon marché sont stockées là dans des caisses,
             jouxtant un établi sur lequel reposent un vieux pantalon et divers outils de
             jardinage, dont une pelle à ce que vous parvenez à en voir depuis le sol.",
-        scenic_look2 'entree' 'trou' 'kay' 'gang' 'repaire' 'mur' 'nord' 0 "Sombre, l'entrée du
-            repaire de Kay semble s'enfoncer dans les profondeurs, et est bien gardée.",
         passe 0,
         n_to [;
           if (heros.task1 == 1) {
@@ -712,8 +919,14 @@ Object  cave "Au plus profond de la cave"
         ],
         e_to cuisine;
 
+Object  cave_repaire "repair de Kay" cave class Entree
+  with  name 'repaire' 'kay' 'gang' 'trou' 'entree' 'mur' 'nord',
+        description "Sombre, l'entrée du repaire de Kay semble s'enfoncer dans les profondeurs,
+            et est bien gardée.";
+
 Object  kay_hall "Hall du repaire de Kay"
-  with  description [;
+  with  name 'repaire' 'gang' 'trou',
+        description [;
           if (dynamo.cassee == 1) {
             "L'entrée de l'antre de Kay s'enfonce de plusieurs centimètres et
             passe sous le mur de la maison. Les diodes installées sur les murs sont pour
@@ -757,11 +970,17 @@ Object  kay_hall "Hall du repaire de Kay"
               else { "Certaines brillent encore, la plupart sont néanmoins éteintes."; }
             ],
         before [;
-          Smell: "Plusieurs rats en décomposition doivent se trouver non loin, vu l'odeur
-            nauséabonde qui règne en ces lieux.";
-          Listen: "Seuls le crépitement de diodes usagées et le grincement du vélo sur
-            lequel pédale le vieux rat chargé de produire l'électricité viennent perturber
-            le silence de mort qui règne ici.";
+          Smell:
+            if (noun == 0) {
+              "Plusieurs rats en décomposition doivent se trouver non loin, vu l'odeur
+              nauséabonde qui règne en ces lieux.";
+            }
+          Listen: 
+            if (noun == 0) {
+              "Seuls le crépitement de diodes usagées et le grincement du vélo sur
+              lequel pédale le vieux rat chargé de produire l'électricité viennent perturber
+              le silence de mort qui règne ici.";
+            }
         ],
         s_to [;
           if (heros.etat == 4 || heros.etat == 5 && cave.passe == 1) {
@@ -914,11 +1133,14 @@ Object  couloir_dortoirs "Couloir des dortoirs"
           }
         ],
         before [;
-          Smell: "Le sang et la sueur...";
+          Smell: 
+            if (noun == 0) { "Le sang et la sueur..."; }
           Listen:
-            print "Les éclats de rire gras se mêlent au thème de la "; style underline;
-            print "Lettre à Élise"; style roman; print " et du choc des dés sur la table,
-            au nord."; rtrue;
+            if (noun == 0) {
+              print "Les éclats de rire gras se mêlent au thème de la "; style underline;
+              print "Lettre à Élise"; style roman; print " et du choc des dés sur la table,
+              au nord."; rtrue;
+            }
         ],
         n_to [;
           print "Vous jetez un oeil du côté du dortoir nord et repérez trois soldats en
@@ -1110,14 +1332,15 @@ Object  salle_reunion "Antichambre de la salle de réunion"
 !=======================================================================================
 
 Object  _paille "paille de plastique" trou_dortoirs
-  with  name 'paille' 'pailles' 'plastique',
+  with  name 'paille' 'pailles',
+        adjective 'plastique',
         description "Les pailles de plastique jonchent le sol de la cuisine tous les
             matins, et vos amis n'ont pas eu beaucoup de mal à s'en approprier
-            suffisament pour confectionner ces couchettes. Elle sont surprenament rigides,
+            suffisament pour confectionner ces couchettes. Elles sont surprenament rigides,
             et peuvent supporter le poids d'une souris comme vous, svelte et agile.",
         prise 0,
         before [;
-          Touch,Take:
+          Touch,Take,Pull:
             if (self.prise == 0) {
               self.prise = 1;
               move paille to player;
@@ -1133,7 +1356,8 @@ Object  _paille "paille de plastique" trou_dortoirs
   has   scenery concealed female;
 
 Object  paille "paille de plastique"
-  with  name 'paille' 'pailles',
+  with  name 'paille' 'tuyau' 'tube',
+        article 'plastique',
         description "Une paille de plastique verte, déjà usagée mais qui pourtant garde une
             certaine rigidité qui ne manque pas de vous surprendre.",
         before [;
@@ -1155,8 +1379,9 @@ Object  _sujets "sujets de la cour" trou_trone
             miroirs, qui doivent exprimer une dissymétrie si parfaite, pour la
             satisfaction du roi, qu'elle en est presque mathématique.",
         life [;
-          Tell,Ask,Answer,ParlerSansPrecision: "Malgré le respect qu'ils ont pour votre personne,
-            vous voir traîner ici plutôt que d'être à la recherche du blason les fait vous dédaigner.";
+          Tell,Ask,AskFor,Answer,ParlerSansPrecision: "Malgré le respect qu'ils ont pour votre
+            personne, vous voir traîner ici plutôt que d'être à la recherche du blason les fait vous
+            dédaigner.";
         ],
   has   animate pluralname;
 
@@ -1178,9 +1403,9 @@ Object  roi "roi Mice VII" trou_trone
             move journal_kay to roi;
             move papier to roi;
             print "^Vous approchez du trône et tendez le journal au roi ainsi que le poignard de
-            Stanley et le morceau de parchemin brûlé que vous avez trouvés. Le roi, interpelé par le nom
-            gravé sur le couteau, commence sa lecture à partir de la page que vous lui avez indiquée. Son
-            visage devient rapidement blême, et il rugit :^^
+            Stanley et le morceau de parchemin brûlé que vous avez trouvés. Le roi, interpelé par le
+            nom gravé sur le couteau, commence sa lecture à partir de la page que vous lui avez
+            indiquée. Son visage devient rapidement blême, et il rugit :^^
             ~Stan ? Nous l'avons traîté comme un frère et il nous trahit ! Maudit soit-il !^
             Rapporte-moi le blason, et nous reparlons de ce félon plus tard.^";
             score = score + 2;
@@ -1200,12 +1425,13 @@ Object  roi "roi Mice VII" trou_trone
             Achieved(3);
             rtrue;
           }
-          else if (heros.task1 == 0 && journal_kay in player && poignard notin player && papier in player) {
+          else if (heros.task1 == 0 && journal_kay in player && poignard notin player && papier in
+          player) {
             move journal_kay to roi;
             move papier to roi;
-            print "^Vous approchez du trône et tendez le journal ainsi que le bout de parchemin brûlé au
-            roi. Ce dernier commence sa lecture à partir de la page que vous lui avez indiquée. Son visage
-            devient rapidement blême, et il rugit :^^
+            print "^Vous approchez du trône et tendez le journal ainsi que le bout de parchemin brûlé
+            au roi. Ce dernier commence sa lecture à partir de la page que vous lui avez indiquée. Son
+            visage devient rapidement blême, et il rugit :^^
             ~Stan ? Nous l'avons traîté comme un frère et il nous trahit ! Maudit soit-il !^
             Rapporte-moi le blason, et nous reparlons de ce félon plus tard.^";
             heros.task3 = 1;
@@ -1213,7 +1439,8 @@ Object  roi "roi Mice VII" trou_trone
             Achieved(3);
             rtrue;
           }
-          else if (heros.task1 == 0 && journal_kay in player && poignard in player && papier notin player) {
+          else if (heros.task1 == 0 && journal_kay in player && poignard in player && papier notin
+          player) {
             move journal_kay to roi;
             move poignard to roi;
             print "^Vous approchez du trône et tendez le journal ainsi que le poignard gravé au roi.
@@ -1307,7 +1534,8 @@ Object  roi "roi Mice VII" trou_trone
               Achieved(3);
               deadflag = 2;
             }
-            else if (heros.task3 == 0 && journal_kay in player && poignard in player && papier in player) {
+            else if (heros.task3 == 0 && journal_kay in player && poignard in player && papier in
+            player) {
               heros.task3 = 1;
               print "^À votre entrée dans la salle du trône, tous les regards se tournent
               sur vous et le blason que vous portez au bras. Les chuchotements vont bon
@@ -1358,8 +1586,8 @@ Object  roi "roi Mice VII" trou_trone
           }
         ],
         life [;
-          Tell,Ask,Answer,ParlerSansPrecision: "Vous obtenez pour seule réponse : ~Va, cours, vole
-            et me venge !~.";
+          Tell,Ask,AskFor,Answer,ParlerSansPrecision: "Vous obtenez pour seule réponse : ~Va, cours,
+            vole et me venge !~";
         ],
   has   animate male;
 
@@ -1422,7 +1650,7 @@ Object  fille "fille" televiseur
           Search: "Elle est un peu grande pour que vous puissiez la fouiller.";
         ],
         life [;
-          Answer,Ask,AskFor,Tell,ParlerSansPrecision: "Si encore vous saviez parler, je ne suis
+          Tell,Ask,AskFor,Answer,ParlerSansPrecision: "Si encore vous saviez parler, je ne suis
             pas sûr que ce serait du meilleur effet. Pendant sa série en plus...";
         ],
   has   animate female;
@@ -1534,7 +1762,7 @@ Object  fils "fils" ordinateur
             Force est d'avouer que sa conversation est passionnante.";
         ],
         life [;
-          Answer,Ask,AskFor,Tell,ParlerSansPrecision: "Si encore vous saviez parler, je ne suis
+          Tell,Ask,AskFor,Answer,ParlerSansPrecision: "Si encore vous saviez parler, je ne suis
             pas sûr que ce serait du meilleur effet. Pendant sa partie en plus...";
         ],
   has   animate male;
@@ -1644,7 +1872,8 @@ Object  _armoire "armoire en noyer" chambre_parents
             if (papier notin player) {
               score = score + 1;
               move papier to player;
-              "Vous prenez un morceau de parchemin qui était coincé sous la porte droite de l'armoire.";
+              "Vous prenez un morceau de parchemin qui était coincé sous la porte droite de
+              l'armoire.";
             }
             else rfalse;
         ],
@@ -1676,7 +1905,8 @@ Object  papier "morceau de parchemin" _armoire
             else {
               self.vu = 1;
               "C'est le bas d'une petite de parchemin à échelle de souris, un genre de post-it
-              en fait, qui a été en partie dévoré par le feu. Vous ne pouvez y lire plus que trois mots :^^
+              en fait, qui a été en partie dévoré par le feu. Vous ne pouvez y lire plus que trois
+              mots :^^
               ~pour le blason.~^^
               Et le tout est signé : Stanley.^^";
             }
@@ -1690,7 +1920,8 @@ Object  papier "morceau de parchemin" _armoire
             if (papier notin player) {
               move papier to player;
               score = score + 1;
-              "Vous prenez un morceau de parchemin qui était coincé sous la porte droite de l'armoire.";
+              "Vous prenez un morceau de parchemin qui était coincé sous la porte droite de
+              l'armoire.";
             }
             else { rfalse; };
           Drop,ThrowAt,ThrowDir:
@@ -1703,7 +1934,7 @@ Object  mere "mère" chambre_parents
         description "Tirant sur sa cigarette sans filtre à intervalles réguliers, cette
             femme d'une quarantaine d'années semble plongée dans ses rêves.",
         life [;
-          Answer,Ask,AskFor,Tell,ParlerSansPrecision: "Si encore vous saviez parler, je ne suis pas
+          Tell,Ask,AskFor,Answer,ParlerSansPrecision: "Si encore vous saviez parler, je ne suis pas
             sûr que ce serait du meilleur effet. Pendant sa cigarette en plus...";
         ],
   has   animate female;
@@ -1714,7 +1945,7 @@ Object  pere "père"
         description "Le maître de maison est un homme de haute taille au regard fier et
             intelligent, pour lequel vous avez un grand respect.",
         life [;
-          Answer,Ask,AskFor,Tell,ParlerSansPrecision: "Si encore vous saviez parler, je ne suis pas
+          Tell,Ask,AskFor,Answer,ParlerSansPrecision: "Si encore vous saviez parler, je ne suis pas
             sûr que ce serait du meilleur effet. Pendant qu'il câline sa femme en plus...";
         ],
   has   animate male;
@@ -1746,7 +1977,7 @@ Object  garde_entrepot "gardien endormi" couloir_entrepots
             tomber.";
         ],
         life [;
-          Answer,Ask,AskFor,Tell,ParlerSansPrecision: "Il dort. Le réveiller ainsi vous dévoilerait.";
+          Tell,Ask,AskFor,Answer,ParlerSansPrecision: "Il dort. Le réveiller ainsi vous dévoilerait.";
         ],
   has   animate male transparent;
 
@@ -2091,7 +2322,7 @@ Object  garde_idiot "garde idiot" couloir_reunion
             la porte avec fermeté, et passer ne sera pas aussi facile qu'il est idiot.",
         from 0,
         life [;
-          Answer,Ask,AskFor,Tell,ParlerSansPrecision: "~On m'a dit de garder la porte, pas de
+          Tell,Ask,AskFor,Answer,ParlerSansPrecision: "~On m'a dit de garder la porte, pas de
             parler aux gens.~";
         ],
   has   animate male;
@@ -2514,7 +2745,15 @@ Object  blason "blason de la famille royale"
 ];
 
 [ DisrobeHotteSub;
-  "Vous la gardez toujours sur votre dos.";
+  "Vous ne vous en séparez jamais.";
+];
+
+[ InsertHotteSub;
+  <<Take noun>>;
+];
+
+[ IdiotHotteSub;
+  "Ce serait idiot.";
 ];
 
 !=======================================================================================
@@ -2580,13 +2819,23 @@ Extend "sauter" last
     * noun                                                    -> JumpIn
     * 'dans' noun                                             -> JumpIn;
 
-Extend "enlever" first
+Extend "jeter" first
     * 'hotte'                                                 -> DisrobeHotte;
 
 Extend "laisser" first
     * 'hotte'                                                 -> DisrobeHotte;
 
-Extend "jeter" first
+Extend "enlever" first
     * 'hotte'                                                 -> DisrobeHotte;
+
+Extend "poser" first
+    * 'hotte'                                                 -> DisrobeHotte;
+
+Extend "mettre" first
+    * noun 'dans' 'la'/'ma' 'hotte'                           -> InsertHotte
+    * noun 'dans'      'hotte'                                -> InsertHotte;
+
+Extend "manger" first
+    * 'hotte'                                                 -> IdiotHotte;
 
 !=======================================================================================
