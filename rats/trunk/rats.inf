@@ -1,4 +1,4 @@
-!% -SD
+!% -S
 !=======================================================================================
 ! Licence BSD
 ! Copyright (c) 2008 Rémi Verschelde (Akien) - http://ifiction.free.fr
@@ -159,7 +159,9 @@ Object  LibraryMessages         ! Pour remplacer certains messages standard
           Miscellany:
             if (lm_n == 39)
                  "Cela n'a pas la moindre importance.";
-         ];
+          Sing,CrierSansPrecision:
+            "Vous n'avez pas pour habitude de faire preuve d'éloquence.";
+        ];
 
 Include "VerbLib";
 
@@ -212,7 +214,7 @@ Include "VerbLib";
 
 Class   Entree
   with  before [;
-          Enter: <<Go in_obj>>;
+          Taste,Eat,Smell,Attack,Take,Touch,PutOn,Remove,Search,SwitchOff,SwitchOn,Transfer,Wear: "C'est trop loin.";
         ],
   has   scenery concealed;
 
@@ -260,10 +262,15 @@ Object  trou_dortoirs "Dortoirs du palais"
         out_to trou_trone,
   has   scenery light;
 
-Object  trou_dortoirs_trone "salle du trône" class Entree
+Object  trou_dortoirs_trone "salle du trône" trou_dortoirs class Entree
   with  name 'salle' 'trone' 'roi' 'palais',
         description "La salle du trône est à l'ouest, mais d'ici vous ne voyez rien de ce qui
-            s'y passe.";
+            s'y passe.",
+        before [;
+          Go,GoIn,Enter:
+            PlayerTo(trou_trone); rtrue;
+        ];
+
 
 Object  heros "vous" trou_dortoirs
   with  name 'heros' 'protagoniste' 'moi' 'hotte' 'sac' 'bagage',
@@ -326,11 +333,8 @@ Object  heros "vous" trou_dortoirs
 
 Object  heros_poils "poils"
   with  name 'poils' 'poil' 'pilosite' 'moustache' 'moustaches' 'peau' 'fourrure',
-        articles "vos",
-        description "Vous pilosité est fine et lissée, digne d'un haut dignitaire de la cour,
-            avec des poils d'une douceur que vous envient nombre de vos semblables. Vos moustaches,
-            elles, glissent le long de vos joues pour courir sur vos côtés, vous prévenant de tout
-            obstacle que vos yeux auraient omis.",
+        article "vos",
+        description "Votre pilosité est fine et lissée, digne d'un haut dignitaire de la cour, avec des poils d'une douceur que vous envient nombre de vos semblables. Vos moustaches, elles, glissent le long de vos joues pour courir sur vos côtés, vous prévenant de tout obstacle que vos yeux auraient omis.",
         found_in [; rtrue; ],
         before [;
           Take,Touch:
@@ -341,17 +345,18 @@ Object  heros_poils "poils"
               "Vos poils recouverts de peinture sont devenus drus et secs.";
             }
           Taste,Drink: "Soyons idiot. Non mais vraiment...";
-          Listen: "L'air crépite au contact de votre peau. Enfin il crépiterait si vous aviez une
-            meilleure ouïe, probablement.";
+          Listen: "L'air crépite au contact de votre peau. Enfin il crépiterait si vous aviez une meilleure ouïe, probablement.";
           Smell:
             if (heros.peint == 0) {
-              "Vous sentez quelque peu la poussière, mais rien de très gênant en société. Enfin
-              un bon bain ne serait pas de refus tout de même.";
+              "Vous sentez quelque peu la poussière, mais rien de très gênant en société. Enfin un bon bain ne serait pas de refus tout de même.";
             }
             else {
-              "L'odeur de la peinture est âcre, et vous fait tourner la tête. Mais cela reste
-              supportable.";
+              "L'odeur de la peinture est âcre, et vous fait tourner la tête. Mais cela reste supportable.";
             }
+          Attack,Tie:
+            "Ce serait vous privez d'un organe essentiel dans votre relation au monde extérieur.";
+          Pull,Push,PushDir:
+            "De toute évidence, inutile.";
         ],
   has   scenery concealed pluralname;
 
@@ -440,7 +445,12 @@ Object  trou_trone "Palais du roi Mice"
 
 Object  trou_trone_dortoirs "dortoirs" trou_trone class Entree
   with  name 'dortoirs' 'chambres' 'chambre' 'dortoir',
-        description "Les dortoirs du palais du roi Mice sont à l'est.";
+        description "Les dortoirs du palais du roi Mice sont à l'est.",
+        before [;
+          Go,GoIn,Enter:
+            PlayerTo(trou_dortoirs); rtrue;
+        ],
+  has   scenery concealed;
 
 Object  buffet_dessous "Sous le vieux buffet"
   with  description "Vous voilà devant l'entrée du palais royal, contre le mur sud du
@@ -490,7 +500,10 @@ Object  buffet_dessous_palais "entrée du palais" buffet_dessous class Entree
   with  name 'arcade' 'entree' 'porte' 'palais' 'chateau',
         description "L'entrée du palais est un simple trou dans le mur dont le style
             architectural est des plus classiques : une arcade en demi-ovale permettant de faire
-            passer deux sujets de front.";
+            passer deux sujets de front.",
+        before [;
+          Go,GoIn,Enter: <<Go in_obj>>;
+        ];
 
 Object  buffet_interieur "Dans le vieux buffet"
   with  name 'vieux' 'buffet' 'meuble' 'placard' 'commode' 'acajou',
@@ -519,8 +532,7 @@ Object  buffet_interieur "Dans le vieux buffet"
         ];
 
 Object  televiseur "Près du poste de télévision"
-  with  name 'poste' 'televiseur' 'tele' 'television' 'tv',
-        description [;
+  with  description [;
           if (self hasnt visited) {
             "A l'ouest du buffet où se trouve l'entrée du palais royal siège
             fièrement un énorme téléviseur à écran cathodique, qui a longtemps été votre
@@ -544,7 +556,8 @@ Object  televiseur "Près du poste de télévision"
             commerciales télévisées, à savoir une publicité pour un fromage de chèvre,
             qui étrangement vous fait envie."
             'buffet' 'acajou' 'palais' 'entree' 0 "Le buffet et l'entrée du palais sont à l'est."
-            'ecran' 'cathodique' 0 "Un gros écran, impressionnant au vu de votre petite taille.",
+            'ecran' 'cathodique' 0 "Un gros écran, impressionnant au vu de votre petite taille."
+            'bouton' 'boutons' 0 "Les boutons classiques d'un téléviseur. Mieux vaut ne pas y toucher.",
         before [;
           Smell:
             if (noun == 0) {
@@ -557,12 +570,22 @@ Object  televiseur "Près du poste de télévision"
               "Le bruit des ondes du téléviseur, ponctué parfois de ~Non, Stecy ne quitte
               pas Brandon, sinon il te trompera avec Vanessa !~";
             }
-          SwitchOff:
-            "Vous appréciez trop la demoiselle pour lui faire l'affront d'éteindre le téléviseur.";
         ],
         e_to buffet_dessous,
         ne_to [; SalonChoupinette(); rtrue; ],
-        n_to balcon;
+        n_to balcon,
+        out_to balcon;
+
+Object  _televiseur "téléviseur" televiseur
+  with  name 'poste' 'televiseur' 'tele' 'television' 'tv',
+        description "L'énorme téléviseur à écran cathodique vous inspire une crainte démesurée depuis votre prise de conscience du danger qu'il représente pour une souris. Il ne comprend pas de magnétoscope ou autre lecteur DVD, mais une rangée de boutons se trouve sur son côté droit.",
+        before [;
+          SwitchOff:
+            "Vous appréciez trop la demoiselle pour lui faire l'affront d'éteindre le téléviseur.";
+          SwitchOn:
+            "Le téléviseur est déjà allumé.";
+        ],
+  has   scenery concealed;
 
 Object  balcon "Sur le balcon"
   with  name 'balcon',
@@ -589,10 +612,18 @@ Object  balcon "Sur le balcon"
         s_to televiseur,
         e_to [; SalonChoupinette(); rtrue; ],
         u_to arbuste,
+        in_to televiseur,
         before [;
           Climb: if (noun == 0) { PlayerTo(arbuste); rtrue; }
           Smell: 
             if (noun == 0) { "L'odeur âcre de la peinture se mêle aux fragrances horticoles."; }
+        ];
+
+Object  balcon_televiseur "porte vers le salon" balcon class Entree
+  with  name 'entree' 'porte' 'vers' 'salon' 'televiseur' 'tele' 'tv',
+        description "La porte derrière vous mene au salon où se trouve le televiseur.",
+        before [;
+          Go,GoIn,Enter: <<Go in_obj>>;
         ];
 
 Object  arbuste "Au sommet de l'arbuste"
@@ -922,7 +953,10 @@ Object  cave "Au plus profond de la cave"
 Object  cave_repaire "repair de Kay" cave class Entree
   with  name 'repaire' 'kay' 'gang' 'trou' 'entree' 'mur' 'nord',
         description "Sombre, l'entrée du repaire de Kay semble s'enfoncer dans les profondeurs,
-            et est bien gardée.";
+            et est bien gardée.",
+        before [;
+          Go,GoIn,Enter: <<Go in_obj>>;
+        ];
 
 Object  kay_hall "Hall du repaire de Kay"
   with  name 'repaire' 'gang' 'trou',
@@ -1357,7 +1391,7 @@ Object  _paille "paille de plastique" trou_dortoirs
 
 Object  paille "paille de plastique"
   with  name 'paille' 'tuyau' 'tube',
-        article 'plastique',
+        adjective 'plastique',
         description "Une paille de plastique verte, déjà usagée mais qui pourtant garde une
             certaine rigidité qui ne manque pas de vous surprendre.",
         before [;
@@ -1386,8 +1420,7 @@ Object  _sujets "sujets de la cour" trou_trone
   has   animate pluralname;
 
 Object  roi "roi Mice VII" trou_trone
-  with  name 'roi' 'sire' 'mice' 'vii' 'seigneur' 'suzerain' 'souverain' 'monarque' 'moustache'
-            'bedaine' 'pattes',
+  with  name 'roi' 'sire' 'mice' 'vii' 'seigneur' 'suzerain' 'souverain' 'monarque' 'bedaine' 'pattes',
         article "le",
         description "Le roi Mice VII est la plus énorme des souris que vous ayez eu
             l'occasion de rencontrer, sa bedaine frottant régulièrement le polystyrène
@@ -1648,6 +1681,7 @@ Object  fille "fille" televiseur
           Listen: "Un silence captivé, ponctué parfois de ~Non, Stecy ne quitte pas
             Brandon, sinon il te trompera avec Vanessa !~";
           Search: "Elle est un peu grande pour que vous puissiez la fouiller.";
+          Attack: "Fou... Non, vous ne l'êtes pas encore.";
         ],
         life [;
           Tell,Ask,AskFor,Answer,ParlerSansPrecision: "Si encore vous saviez parler, je ne suis
@@ -1664,22 +1698,34 @@ Object  _arbuste "arbuste" balcon
         ],
   has   scenery concealed;
 
-Object  _pot "pot de peinture"
-  with  name 'pot' 'pots' 'peinture' 'eau' 'noire' 'liquide',
-        description [;
-          if (location == balcon) { "Des pots de peinture noire, bleue et blanche, qui ont été
+Object  _pot1 "pot de peinture" balcon
+  with  name 'pot' 'pots' 'peinture' 'eau' 'liquide' 'cylindre' 'cylindres',
+        adjective 'metal' 'noire' 'noir',
+        description "Des pots de peinture noire, bleue et blanche, qui ont été
             utilisés récemment pour refaire la peinture du balcon sur lequel vous vous trouvez,
             et que l'homme de la maison n'a pas encore eu le courage de descendre au garage.
-            Divers pinceaux de formes variées encombrent le sol."; }
-          else { "L'un des pots, rempli de peinture noire, se trouve juste en dessous de vous."; }
-        ],
-        found_in balcon arbuste,
+            Divers pinceaux de formes variées encombrent le sol.",
         before [;
-          Enter,Go: "Vous ne pouvez pas entrer dans un pot, mais vous remarquez un arbuste dont
-            une des branches vient à vos pieds et une des feuilles dans un des pots.";
+          Enter,Go: 
+            "Vous ne pouvez pas entrer dans les pots de peinture, cependant vous remarquez un arbuste dont une des branches vient mourir à vos pieds tandis qu'une de ses feuilles descend jusqu'à un pot de peinture noire.";
           Smell: 
-            if (location == balcon) { "Une odeur âcre de peinture."; }
-            else { "La peinture noire semble presque inodore, étrangement."; }
+            "Une odeur âcre de peinture.";
+          Take,Touch:
+            "Vous posez la main sur un des pots. Vous n'avez malheureusement aucune communion avec les cylindres de métal, et rien ne se produit.";
+          EmptyT,ThrowAt,Push,Pull,PushDir:
+            "Vous n'avez pas la force requise pour déplacer un tel objet.";
+        ],
+  has   scenery concealed;
+
+Object  _pot2 "pot de peinture" arbuste
+  with  name 'pot' 'pots' 'peinture' 'eau' 'liquide' 'cylindre' 'cylindres',
+        adjective 'metal' 'noire' 'noir',
+        description "L'un des pots, rempli de peinture noire, se trouve juste en dessous de vous.",
+        before [;
+          Enter,Go: 
+            <<Jump>>;
+          Smell: 
+            "La peinture noire semble presque inodore, étrangement.";
           JumpIn:
             if (heros.peint == 0) {
               print "Pris soudain d'une envie irrépressible, vous bouchez vos narines à
@@ -1692,6 +1738,10 @@ Object  _pot "pot de peinture"
               rtrue;
             }
             else { "Un seul bain vous suffit."; }
+          Take,Touch:
+            "Vous êtes manifestement trop loin du pot pour le toucher.";
+           EmptyT,ThrowAt,Push,Pull,PushDir:
+            "Vous n'avez pas la force requise pour déplacer un tel objet, et vous êtes trop loin.";
         ],
   has   scenery concealed;
 
@@ -1724,6 +1774,8 @@ Object  _ordinateur "ordinateur" ordinateur
             else { "Il ne faut pas abuser des bonnes choses."; }
           Smell: "Une inspiration et vous éternuez, il vous faudra retenir votre
             respiration pour passer.";
+          SwitchOn:
+            "L'ordinateur est déjà allumé.";
         ],
   has   scenery;
 
@@ -1760,6 +1812,7 @@ Object  fils "fils" ordinateur
             adolescent, un vrai !";
           Listen: "~Gn... Prends-ça ! Headshot... Yes ! Rah le noob... Ghh...~^^
             Force est d'avouer que sa conversation est passionnante.";
+          Attack: "Fou... Non, vous ne l'êtes pas encore.";
         ],
         life [;
           Tell,Ask,AskFor,Answer,ParlerSansPrecision: "Si encore vous saviez parler, je ne suis
@@ -1934,8 +1987,7 @@ Object  mere "mère" chambre_parents
         description "Tirant sur sa cigarette sans filtre à intervalles réguliers, cette
             femme d'une quarantaine d'années semble plongée dans ses rêves.",
         life [;
-          Tell,Ask,AskFor,Answer,ParlerSansPrecision: "Si encore vous saviez parler, je ne suis pas
-            sûr que ce serait du meilleur effet. Pendant sa cigarette en plus...";
+          Tell,Ask,AskFor,Answer,ParlerSansPrecision: "Si encore vous saviez parler, je ne suis pas sûr que ce serait du meilleur effet. Pendant sa cigarette en plus...";
         ],
   has   animate female;
 
@@ -2765,14 +2817,14 @@ Constant ScenicErrorLook = NULL; ! utiliser le message par défaut Miscellany 39
 Constant ScenicErrorSmell = NULL; ! utiliser le message par défaut pour "Smell"
 Constant ScenicErrorListen = NULL; ! utiliser le message par défaut pour "Listen"
 Constant ScenicErrorTouch = "Vous n'y voyez aucune utilité.";
-Constant ScenicErrorTaste = NULL; ! utiliser le message par défaut pour "Taste"
+Constant ScenicErrorTaste = "C'est non comestible, selon toute évidence."; ! utiliser le message par défaut pour "Taste"
 Include "scenic5sens";
 
 ! Version 1.0
 
 Include "FrenchG";
 
-! Version 2.3devI6+I7 bibliothèques francophones
+! Version 2.3 des bibliothèques francophones
 
 Verb "help" "aide" "manuel" "manual" "info" "information"
     *               -> Help;
@@ -2816,8 +2868,7 @@ Extend "nager" last
     * 'dans' noun                                             -> JumpIn;
 
 Extend "sauter" last
-    * noun                                                    -> JumpIn
-    * 'dans' noun                                             -> JumpIn;
+    * noun                                                    -> JumpIn;
 
 Extend "jeter" first
     * 'hotte'                                                 -> DisrobeHotte;
