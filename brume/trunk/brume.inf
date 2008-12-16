@@ -1,0 +1,1422 @@
+!% -S
+!==============================================================================
+
+Constant Story "Brume";
+Constant Headline
+             "^Fiction interactive écrite par Rémi Verschelde (Akien),^
+             pour la quatrième édition du concours francophone de jeux textuels.^^";
+Release 2; Serial "151208";
+
+Constant NO_SCORE;
+
+Replace Identical; ! pour la gestion des adjectifs
+
+Include "Parser";
+
+
+!--------------------------------------------
+! Attributs et propriétés
+!--------------------------------------------
+Property adjective; ! pour la gestion des adjectifs
+
+!--------------------------------------------
+! Directives de remplacement
+!--------------------------------------------
+! (Samuel Verschelde, tiré de pname.h)
+! Cette fonction est recopiée de parserm.h, avec un ajout pour tenir
+! compte de la propriété "adjective."
+[ Identical o1 o2 p1 p2 n1 n2 i j flag;
+    if (o1 == o2) rtrue;  ! This should never happen, but to be on the safe side
+    if (o1 == 0 || o2 == 0) rfalse;  ! Similarly
+    if (parent(o1) == compass || parent(o2) == compass) rfalse; ! Saves time
+
+    !  What complicates things is that o1 or o2 might have a parsing routine,
+    !  so the parser can't know from here whether they are or aren't the same.
+    !  If they have different parsing routines, we simply assume they're
+    !  different.  If they have the same routine (which they probably got from
+    !  a class definition) then the decision process is as follows:
+    !
+    !     the routine is called (with self being o1, not that it matters)
+    !       with noun and second being set to o1 and o2, and action being set
+    !       to the fake action TheSame.  If it returns -1, they are found
+    !       identical; if -2, different; and if >=0, then the usual method
+    !       is used instead.
+
+    if (o1.parse_name ~= 0 || o2.parse_name ~= 0) {
+        if (o1.parse_name ~= o2.parse_name) rfalse;
+        parser_action = ##TheSame; parser_one = o1; parser_two = o2;
+        j = wn; i = RunRoutines(o1,parse_name); wn = j;
+        if (i == -1) rtrue;
+        if (i == -2) rfalse;
+    }
+
+    !  This is the default algorithm: do they have the same words in their
+    !  "name" (i.e. property no. 1) properties.  (Note that the following allows
+    !  for repeated words and words in different orders.)
+
+    p1 = o1.&1; n1 = (o1.#1)/WORDSIZE;
+    p2 = o2.&1; n2 = (o2.#1)/WORDSIZE;
+
+    !  for (i=0 : i<n1 : i++) { print (address) p1-->i, " "; } new_line;
+    !  for (i=0 : i<n2 : i++) { print (address) p2-->i, " "; } new_line;
+
+    for (i=0 : i<n1 : i++) {
+        flag = 0;
+        for (j=0 : j<n2 : j++)
+            if (p1-->i == p2-->j) flag = 1;
+        if (flag == 0) rfalse;
+    }
+
+    for (j=0 : j<n2 : j++) {
+        flag = 0;
+        for (i=0 : i<n1 : i++)
+            if (p1-->i == p2-->j) flag = 1;
+        if (flag == 0) rfalse;
+    }
+
+    ! DEBUT MODIFICATION POUR LES ADJECTIFS
+    ! test sur la propriété adjective :
+    ! deux objets qui ont le même "name" mais
+    ! pas le même "adjective"
+    if ((o1 provides adjective) ~= (o2 provides adjective))
+        rfalse;
+
+    if (o1 provides adjective && o2 provides adjective)
+    {
+        n1=(o1.#adjective)/WORDSIZE; n2=(o2.#adjective)/WORDSIZE;
+
+        ! If there are a different number of words in the adjective
+        ! properties, they are distinguishable.
+        if (n1 ~= n2)
+            rfalse;
+
+        p1=o1.&adjective; p2=o2.&adjective;
+
+        for (i=0 : i<n1 : i++)
+        {
+            flag = 0;
+            for (j=0 : j<n2 : j++)
+                if (p1-->i == p2-->j) flag = 1;
+            if (flag == 0) rfalse;
+        }
+
+        for (j=0 : j<n2 : j++)
+        {
+            flag = 0;
+            for (i=0 : i<n1 : i++)
+                if (p1-->i == p2-->j) flag = 1;
+            if (flag == 0) rfalse;
+        }
+    }
+    ! FIN MODIFICATION POUR LES ADJECTIFS
+
+    !  print "Which are identical!^";
+    rtrue;
+]; 
+
+
+Object  LibraryMessages         ! Pour remplacer certains messages standard
+  with  before [;
+          Miscellany:
+            if (lm_n == 39)
+                 "Cela n'a pas la moindre importance.";
+          Smell:
+            "Aucune odeur singulière ne vient altérer vos perceptions déjà troubles.";
+          Listen: 
+            "Aucun bruit particulier ne vient perturber davantage votre ouïe.";
+          Jump:
+            "Vous êtes trop faible pour vous dépenser à sauter vainement sur place.";
+          JumpOver:
+            "Vous êtes trop faible pour vous dépenser inutilement.";
+          WaveHands:
+            "Vous agitez vos mains devant vous : votre vue est trouble, les gestes sont rapides et difficiles à cerner.";
+          CrierSansPrecision:
+            "Vous pensez hurler votre douleur mais seul un râle agonisant s'échappe de votre gorge.";
+          Sing:
+            "Vous chantonnez les premières notes d'un air triste et douleureux.";
+          Pray:
+            "Vous vous agenouillez pour vous recueillir.";
+          Think:
+            "Même la réflexion vous est un supplice.";
+          Sleep:
+            "Vous doutez d'être toujours capable de vous relever si vous veniez à vous endormir.";
+          Wake:
+            "Malheureusement, tout cela est bien réel.";
+          Dig:
+            "Ce serait absurde.";
+          Climb,JumpOver:
+            "Vous êtes trop exténué pour faire ce genre d'exercice.";
+          Pull,Push:
+            "Vous êtes trop faible pour ce faire.";
+          Rub:
+            if (noun == player) { "Malgré votre extrême faiblesse, vous n'en êtes pas encore réduit à cela."; }
+          Buy:
+            "Rien n'est à vendre en ce lieu.";
+          ThrowAt: "À quoi bon ?";
+        ];
+
+
+Include "VerbLib";
+
+! (Samuel Verschelde, tiré et amélioré de pname.h) gestion des adjectifs
+! et gestion aussi des mots de liaison comme dans "boule DE cristal"
+! => de est accepté, ainsi que d'autres mots que l'on peut trouver
+! entre deux mots désignant un même objet.
+[ ParseNoun obj n m p w dict_flags_of_noun;
+    dict_flags_of_noun = 0;
+
+    w = NextWord();
+    while((WordInProperty(w,obj,name) == 1) || (WordInProperty(w,obj,adjective) == 1) || (w=='de' or 'du' or 'des' or 'd^' or 'la' or 'le' or 'l^' or 'en' or 'a' or 'au' or 'aux'))
+    {
+        ! remarque : si un mot est à la fois dans name et adjective, il ne sera
+        ! compté qu'une fois, pour la propriété name
+        if (WordInProperty(w,obj,name) == 1)
+        {
+            dict_flags_of_noun = ((w->#dict_par1) & $$01110100);
+            if (dict_flags_of_noun & 4) ! si c'est un pluriel (//p)
+            {
+                parser_action = ##PluralFound; ! notifier qu'un pluriel pouvant désigner
+                                               ! plusieurs objets a été trouvé
+            }
+            m++;
+            p=0;
+        }
+        else
+        {
+            if (WordInProperty(w,obj,adjective) == 1)
+            {
+                n++;
+                p=0;
+            }
+            else
+            {
+                ! Si le mot est 'de', 'du', 'des', 'la', 'en', 'a', 'au' ,'aux' :
+                if (w=='de' or 'du' or 'des' or 'd^' or 'la' or 'le' or 'l^' or 'en' or 'a' or 'au' or 'aux')
+                {
+                    ! ajouter 1 à la variable p, qui contient le score à retirer
+                    ! au final (afin de revenir en arrière en cas d'occurrences qui ne
+                    ! sont pas comprises entre deux noms reconnus).
+                    n++; ! compter ce mot comme pertinent est discutable,
+                         ! mais sans cela cela ne fonctionne pas
+                    p++;
+                }
+            }
+        }
+
+        w = NextWord();
+    }
+    wn = wn -p -1; ! retour arrière car le dernier mot lu n'a pas été reconnu
+    if (m == 0) return 0; return (m+n-p);
+];
+
+!==============================================================================
+
+Class   Decor
+  has   scenery concealed;
+
+!==============================================================================
+
+Object  chambre "Dans une chambre délabrée"
+  with  name 'chambre' 'piece' 'salle' 'lieu' 'prison',
+        adjective 'delabre' 'lugubre',
+        description [;
+          if (heros.tours < 75) { "Vous vous trouvez dans un lieu lugubre meublé d'un lit, d'une table de nuit, d'une armoire et d'un buffet, et qu'éclaire un vieux lustre. Le papier peint est écaillé, corné, voire déchiré par endroits, et deux ouvertures sont apparentes : la porte à l'est et une fenêtre au sud."; }
+          else { "Vous vous trouvez dans un lieu lugubre meublé d'un lit, d'une table de nuit, d'une armoire et d'un buffet. La pâle lumière du lieu provient de l'extérieur depuis que le lustre s'est éteint. Le papier peint est écaillé, corné, voire déchiré par endroits, et deux ouvertures sont apparentes : la porte à l'est et une fenêtre au sud."; }
+        ],
+        initial [;
+          if (self hasnt visited) {
+            KeyCharPrimitive();
+            ClearScreen();
+            print "La douleur est lancinante, transperce votre crâne, réduit votre esprit à un flot vaporeux, une "; style underline; print "brume"; style roman; print " opaque, moite, dans laquelle vos pensées errent et se perdent, se disloquent, s'annihilent...^^
+            Le réveil est rude. Vous prenez rapidement conscience de l'état d'extrême faiblesse dans lequel vous vous trouvez, votre corps débile et atrophié semblant à peine capable de porter votre tête pesante, lourde.^^
+            Au prix d'un immense effort, vous parvenez néanmoins à soulever vos jambes, délaissant les draps de lin grossier au profit du parquet miteux.";
+            KeyCharPrimitive();
+            ClearScreen();
+          }
+        ],
+        compass_look [;
+          if (noun == d_obj) {
+            <<Examine parquet>>;
+          }
+          if (noun == out_obj) {
+            if (fenetre has open) {
+              print "Une petite ruelle peu fréquentée borde la bâtisse au second étage de laquelle vous vous trouvez. Les murs sont de briques ocres et un troisième étage se trouve au dessus de votre tête.^";
+              if (heros.tours < 10) { print ""; }
+              else if (heros.tours < 20) { print "De petits grésillements se font entendre lorsque vous penchez votre tête à l'extérieur.^"; }
+              else if (heros.tours < 30) { print "Vous voyez des personnes fuir le bâtiment en grande hâte, emportant tout ce qu'il peuvent dans leurs bras malingres. Vous tentez de les interpeler mais votre voix s'éraille et vos bras endoloris ne peuvent trop s'agiter.^"; }
+              else if (heros.tours < 50) { print "La ruelle baignée par l'aurore commence à rougeoyer tandis que la chaleur extérieure augmente. Par moment, vous avez l'impression de voir un jet d'étincelles ou une petite flamme.^"; }
+              else if (heros.tours < 75) { 
+                move halogene to chambre;
+                print "Le bâtiment est en prise à un effrayant incendie : les flammes commencent à lécher les murs du rez-de-chaussée et l'air devient de plus en plus enfumé. Une lampe halogène du premier étage a du être bousculée dans la précipitation et se trouve en travers de la fenêtre en dessous de vous.^";
+              }
+              else if (heros.tours < 100) {
+                print "Les flammes montent désormais depuis le premier étage jusqu'à vous, si vous tendiez le bras par la fenêtre il rôtirait rapidement. La chaleur est insoutenable, et vous avez du mal à respirer, d'autant plus que la fumée commence à investir votre chambre par la fenêtre et par sous votre porte. La lampe halogène a basculé et s'est écrasée dans la ruelle.^";
+              }
+              rtrue;
+            }
+            else {
+              "La fenêtre est si sale que vous ne voyez rien au travers.";
+            }
+          }
+        ],
+        before [;
+          GoIn:
+            "Où voulez-vous entrer ?";
+          Exit:
+            if (noun == 0 || noun == chambre) {
+              if (passage in location) {
+                <<Enter passage>>;
+              }
+              else { "Vous cherchez justement le moyen de ce faire."; }
+            }
+          Smell:
+            if (noun == 0) {
+              if (heros.tours < 50) { "Une certaine odeur de renfermé règne ici, mêlée au papier peint humide dont les coins recourbés laissent apparaître l'état de moisissure."; }
+              else if (heros.tours < 75) { "Une certaine odeur de renfermé règne ici, mêlée au papier peint humide dont les coins recourbés laissent apparaître l'état de moisissure. De plus l'air commence à s'enfumer peu à peu, et la respiration devient de plus en plus difficile."; }
+              else if (heros.tours < 100) { "Une certaine odeur de renfermé règne ici, mêlée au papier peint humide dont les coins recourbés laissent apparaître l'état de moisissure. Vous devez vous courber pour trouver encore de l'air non saturé en gaz toxiques par l'abondante fumée."; }
+            }
+          Listen:
+            if (noun == 0) {
+              if (heros.tours < 30) { rfalse; }
+              else if (heros.tours < 50) { "Depuis le cri entendu il y a peu, le silence est resté complet."; }
+              else if (heros.tours < 75) { "Vous entendez régulièrement des craquements et de brèves explosions, ou du moins c'est ce que l'état délabré de votre esprit vous laisser imaginer."; }
+              else if (heros.tours < 100) { print "Vous pouvez désormais entendre avec certitude le crépitement des braises et de sourds craquements derrière la porte de votre "; style underline; print "prison"; style roman; "."; }
+            }
+          Dig:
+            if (noun == 0) {
+              "Creuser dans du parquet ? Vous regardez vos doigts endoloris et vous résignez.";
+            }
+        ],
+        cant_go [;
+          if (passage in location) { "La seule issue serait d'entrer dans ce passage sombre que vous avez découvert."; }
+          else { "La porte est fermée et vous êtes trop faible pour passer par la fenêtre : il n'y a aucune issue apparente."; }
+        ];
+
+Object  heros "vous" chambre
+  with  name 'heros' 'vous' 'moi' 'protagoniste' 'personnage' 'joueur',
+        description "Au réveil ce matin, vous vous êtes trouvé l'esprit si enfumé, si vaseux, si brumeux qu'à peine vous distinguiez vos mains. Les mouvements de votre corps débile sont gauches, veules, et chaque pas est pour vous une épreuve.",
+        tours 0,
+        each_turn [n;
+          n = random(60);
+          if (n == 1) { print "^Des images de l'écume fûmante vous reviennent, avec une sensation désagréable de brûlure...^"; }
+          if (n == 2) { print "^De votre rêve de cette nuit, vous revoyez soudain la forêt brumeuse que l'incendie ravage peu à peu, enfûmant les environs de traînées grisâtres...^"; }
+          if (n == 3) { print "^Brutalement, des images de la montagne crissant sous l'effet de la pluie sur la roche bouillante remontent à votre esprit...^"; }
+          self.tours = self.tours + 1;
+          if (self.tours == 10) { print "^La chaleur augmente progressivement. Votre peau déjà brûlante de fièvre devient moite et des gouttelettes de sueur commencent à y perler.^"; }
+          if (self.tours == 20) { print "^La température semble monter à une vitesse fulgurante, et l'atmosphère devient de plus en plus oppressante.^"; }
+          if (self.tours == 30) { print "^Vous entendez un cri venant de l'étage inférieur, suivi d'une grande agitation pendant une vingtaine de secondes, puis le calme revient. Vous envisagez de crier pour appeler à l'aide mais vous êtes trop faible pour ce faire.^"; }
+          if (self.tours == 50) { print "^Il vous semble désormais clair que le bâtiment est en proie aux flammes d'un incendie. Vos rêves de cette nuit encore bien ancrés dans votre esprit vous font frémir.^"; }
+          if (self.tours == 75) { 
+            print "^Tandis qu'une explosion sourde se fait entendre, le clignotement des ampoules du lustre se stoppe. Le système électrique, probablement touché par l'incendie, s'est arrêté. L'air devient de plus en plus lourd, et les murs vous transmettent une chaleur infernale.^";
+            give bougies ~light; }
+          if (self.tours == 100) {
+            deadflag = 1;
+            "^Les flammes dévorantes ont finalement raison de la porte de votre chambre et c'est pétrifié que vous les contemplez raser les murs jusqu'à vous avant que la fumée ne vous asphyxie.";
+          }
+        ],
+        before [;
+          Smell:
+            "Votre nuit a probablement été agitée : vous sentez la sueur et le sang, bien qu'aucune trace de blessure ne soit apparente.";
+          Listen:
+            "Les palpitations de votre coeur sont sourdes, irrégulières, et sinistrement inquiétantes.";
+          Touch:
+            "Il vous faut une concentration extrême pour parvenir à intellectualiser l'information que vous renvoient vos doigts. C'est vous, bien que votre corps décharné ne ressemble plus à l'idée que vous en aviez.";
+          Taste:
+            "Vous manger vous-même serait une bonne façon d'en finir avec ce malaise interminable, mais vous n'en avez ni l'envie ni la force.";
+          Attack:
+            if (poignard in player) {
+              print "Dans un dernier élan de désespoir, vous empoignez le poignard et le plantez dans votre côté gauche...^";
+              deadflag = 1;
+              rtrue;
+            }
+        ],
+  has   male animate;
+
+Object  parquet "plancher" chambre class Decor
+  with  name 'parquet' 'latte' 'lattes' 'sol' 'plancher',
+        description "Les lattes de parquet sont agencées parallèlement mais de façon assez sommaire.",
+        before [;
+          Take: "Vous en êtes incapable.";
+        ];
+
+Object  porte "porte" chambre class Decor
+  with  name 'porte',
+        adjective 'metal' 'sombre',
+        description "La porte de la chambre est en métal sombre et solidement fermée.",
+        before [;
+          Open:
+            "Vous tirez sur la poignée de toutes vos forces mais rien n'y fait, la porte reste close.";
+          Touch:
+            if (heros.tours < 30) { "Le métal est froid."; }
+            else if (heros.tours < 50) { "Le métal est tiède."; }
+            else if (heros.tours < 75) { "Le métal est chaud."; }
+            else if (heros.tours < 100) { "Le métal est bouillant et vous retirez votre main immédiatement."; }
+          Attack,Cut:
+            "Plus que la volonté, c'est la force qui vous fait défaut pour une telle entreprise.";
+          Unlock:
+            "La porte n'a pas de serrure, et la forcer est impensable.";
+          LookUnder:
+            "Vous vous baissez avec difficulté et tentez de regarder sous la porte, mais vous ne voyez rien.";
+        ],
+  has   female door ~open ~openable;
+
+Object  poignee_porte "poignée de la porte" chambre class Decor
+  with  name 'poignee',
+        adjective 'porte' 'metal' 'sombre',
+        description "La poignée de la porte, faite du même métal sombre que la porte.",
+        before [;
+          Take: "La porte et la poignée sont faites d'un seul bloc.";
+          Turn: "Elle semble figée. La porte doit être fermée à clef depuis l'extérieur.";
+          Touch:
+            if (heros.tours < 30) { "Le métal est froid."; }
+            else if (heros.tours < 50) { "Le métal est tiède."; }
+            else if (heros.tours < 75) { "Le métal est chaud."; }
+            else if (heros.tours < 100) { "Le métal est bouillant et vous retirez votre main immédiatement."; }
+        ],
+  has   female;
+
+Object  lit "lit" chambre class Decor
+  with  name 'lit' 'lits' 'couche' 'couchette' 'sommier' 'matelas',
+        adjective 'metal' 'noir' 'ecaille',
+        description "Un lit de métal noir écaillé gît contre le mur nord de la pièce, grinçant au moindre contact, et doté d'un matelas de mousse jaune que l'humidité a moisie. Des draps de lin en désordre le recouvrent.",
+        before [;
+          Search: "Lentement vous retournez les draps pour ne remarquer que leur moiteur, due aux rêves qui vous ont tourmenté cette nuit.";
+          LookUnder: "Rien que le parquet miteux.";
+          Touch:
+            if (heros.tours < 30) { "Le métal est froid, et le contact avec votre corps fiévreux vous fait tressaillir."; }
+            else if (heros.tours < 50) { "Le métal est tiède, un peu plus froid que votre corps fiévreux."; }
+            else if (heros.tours < 75) { "Le métal est chaud, à la même température que votre corps fiévreux, ce qui ne manque pas de vous inquiéter."; }
+            else if (heros.tours < 100) { "Le métal est bouillant et vous retirez votre main immédiatement."; }
+          Dormir: <<Sleep>>;
+          Enter: "Vous vous endormiriez avec certitude, et au vu de votre état, vous doutez d'être toujours capable de vous relever ensuite.";
+          AllerSous: "L'ambiance générale ne manque pas de vous donner l'envie de vous cacher ainsi, mais vous doutez que cela puisse vous aider à sortir.";
+        ];
+
+Object  draps "draps de lin" chambre class Decor
+  with  name 'drap' 'draps' 'couette',
+        adjective 'moite' 'moites' 'humide' 'humides' 'mouille' 'mouilles' 'lin',
+        description "Des draps de lin humides de votre sueur.",
+        before [;
+          Take: "S'encombrer de draps serait inutile.";
+          Touch: "Le lin est mouillé de votre sueur et le contact en est désagréable.";
+          Search: <<Search lit>>;
+        ],
+  has   pluralname;
+
+Class   Gelule
+  with  name 'gelules//p' 'gelule' 'capsule' 'capsules//p',
+        adjective 'blanche' 'etrange' 'opaque' 'opaques' 'bleue' 'bleues' 'blanches' 'bleu' 'bleus' 'blancs' 'blanc' 'plastique' 'souple' 'solide',
+        short_name "gélule opaque",
+        plural "gélules opaques",
+        description "Les gélules sont opaques, blanches et bleues, en plastique souple mais solide, et semblent contenir de la poudre.",
+        before [;
+          Smell:
+            print "Vous ouvrez une gélule, récoltez un peu de poudre dans vos mains et la portez à vos narines. La substance emplit vos sinus et vous monte au cerveau, vous faisant chanceler et sombrer dans un délire plus qu'euphorique. Lorsque viennent vous dévorer les flammes, c'est le sourire aux lèvres et le cerveau en bouillie que vous quittez ce monde...";
+            deadflag = 1;
+            rtrue;
+          Taste,Eat:
+            print "Vous ouvrez une gélule, portez un peu de poudre à vos lèvres, et si le goût en est amer, l'effet est doux et euphorisant : vous vous laissez retomber sur le lit et les éléphantaux des motifs du papier peint viennent danser devant vos yeux avant que vous ne vous endormiez. L'incendie dévore doucement votre corps drogué...";
+            deadflag = 1;
+            rtrue;
+          Touch: "Le plastique de la gélule est souple mais solide.";
+          Blow: "Vous soufflez sur une gélule... ce qui est parfaitement inutile.";
+          Search,Empty: "Il serait plus simple de l'ouvrir en premier lieu.";
+          Insert:
+            if (second == vase or acide) {
+              move noun to thedark;
+              "Vous laissez tomber une gélule dans le liquide que contient le vase bleu. Elle est rapidement rongée par un acide puissant et disparait.";
+            }
+          Open:
+            if (gelule_vide1 in player || gelule_vide2 in player) {
+              "Gaspiller la contenance d'une seule gélule vous aura suffit.";
+            }
+            else {
+              if (noun == gelule1) {
+                move gelule1 to thedark;
+                move gelule_vide1 to player;
+                "Vous ouvrez une gélule alors qu'un cri à l'étage inférieur vous fait tressaillir : votre sursaut fait s'éparpiller la poudre dans toute la chambre.";
+              }
+              if (noun == gelule2) {
+                move gelule2 to thedark;
+                move gelule_vide2 to player;
+                "Vous ouvrez une gélule alors qu'un cri à l'étage inférieur vous fait tressaillir : votre sursaut fait s'éparpiller la poudre dans toute la chambre.";
+              }
+            }
+        ],
+  has   female;
+
+Class   Gelule_vide
+  with  name 'gelule' 'gelules//p' 'compartiment' 'capsule' 'capsules//p',
+        adjective 'blanche' 'etrange' 'bleue' 'bleu' 'blanc' 'plastique' 'souple' 'solide' 'ouverte' 'vide',
+        short_name "gélule vide",
+        plural "gélules vides",
+        description "La gélule est désormais totalement vide.",
+        before [;
+          Smell: "Il reste une petite odeur de poudre, mais rien de marqué.";
+          Taste,Eat: "Manger une gélule vide ? Vous n'en êtes heureusement pas encore là.";
+          PutOn: "C'est bien trop petit pour contenir ", (a) noun, ".";
+          Touch: "Le plastique de la gélule est souple mais solide.";
+          Open: "Elle est déjà séparée en deux.";
+          Close: "Vous ne pouvez pas ressouder les deux compartiments.";
+          Empty: "Elle est déjà vide.";
+        ],
+  has   female;
+Gelule_vide gelule_vide1;
+Gelule_vide gelule_vide2;
+
+Object  gelule_vide3
+  class Gelule_vide,
+  with  name 'gelule' 'gelules//p' 'compartiment' 'capsule' 'capsules//p',
+        adjective 'blanche' 'etrange' 'bleue' 'bleu' 'blanc' 'plastique' 'souple' 'solide' 'ouverte' 'vide' 'eventree',
+        before [;
+          Take: "Vous n'avez aucun intérêt à prendre la gélule éventrée.";
+        ];
+
+Object  table "table de nuit" chambre class Decor
+  with  name 'table',
+        adjective 'nuit' 'metal' 'noir',
+        description [;
+          if (gelule_eventree in self && gelule1 in self && gelule2 in self) { "Une table de nuit faite dans le même métal noir que le lit attenant. Elle ne comprend aucun tiroir, mais simplement quelques gélules dont une est éventrée et répand sa contenance poudreuse blanche sur le métal."; }
+          else { print "Une table de nuit faite dans le même métal noir que le lit attenant qui ne comprend aucun tiroir. "; <<Search table>>; }
+        ],
+        before [;
+          Touch:
+            if (heros.tours < 30) { "Le métal est froid, et le contact avec votre corps fiévreux vous fait tressaillir."; }
+            else if (heros.tours < 50) { "Le métal est tiède, un peu plus froid que votre corps fiévreux."; }
+            else if (heros.tours < 75) { "Le métal est chaud, à la même température que votre corps fiévreux, ce qui ne manque pas de vous inquiéter."; }
+            else if (heros.tours < 100) { "Le métal est bouillant et vous retirez votre main immédiatement."; }
+          Push,Pull,PushDir,Turn: "Vous déplacez légèrement la table de nuit, ce qui n'a aucun effet notable si ce n'est de produire un crissement affreux sur le parquet.";
+        ],
+  has   supporter female;
+Gelule  gelule1 table;
+Gelule  gelule2 table;
+
+Object  gelule_eventree "gélule éventrée" table
+  with  name 'gelule' 'gelules//p' 'compartiment' 'capsule' 'capsules//p',
+        adjective 'blanche' 'etrange' 'bleue' 'bleu' 'blanc' 'plastique' 'souple' 'solide' 'ouverte' 'eventree',
+        description "La gélule est éventrée à la limite entre le compartiment blanc et le compartiment bleu et répand sur la table sa contenance blanchâtre.",
+        before [;
+          Smell: <<Smell poudre>>;
+          Taste,Eat: <<Eat poudre>>;
+          PutOn: "C'est bien trop petit pour contenir ", (a) noun, ".";
+          Touch: "Le plastique de la gélule est souple mais solide.";
+          Close: "Vous ne pouvez pas ressouder les deux compartiments.";
+          Open: "La gélule est déjà séparée en deux.";
+          Take: "Vous n'avez aucun intérêt à prendre une gélule ouverte, d'autant plus que sa contenance est répandue sur la table de nuit.";
+          Blow: <<Blow poudre>>;
+          Empty:
+            move gelule_eventree to thedark;
+            move gelule_vide3 to table;
+            "Vous videz la gélule éventrée sur la table mais votre respiration alors saccadée fait s'éparpiller la poudre dans toute la pièce.";
+        ],
+  has   container open female;
+
+Object  poudre "poudre" gelule_eventree
+  with  name 'poudre' 'contenance' 'drogue',
+        adjective 'blanche' 'blanchatre' 'poudreuse',
+        article "de la",
+        description "Une poudre blanchâtre répandue sur la table de nuit et dans une gélule éventrée.",
+        before [;
+          Smell:
+            print "Vous récoltez un peu de poudre dans vos mains et la portez à vos narines. La substance emplit vos sinus et vous monte au cerveau, vous faisant chanceler et sombrer dans un délire plus qu'euphorique. Lorsque viennent vous dévorer les flammes, c'est le sourire aux lèvres et le cerveau en bouillie que vous quittez ce monde...";
+            deadflag = 1;
+            rtrue;
+          Taste,Eat:
+            print "Vous portez un peu de poudre à vos lèvres, et si le goût en est amer, l'effet est doux et euphorisant : vous vous laissez retomber sur le lit et les éléphantaux des motifs du papier peint viennent danser devant vos yeux avant que vous ne vous endormiez. L'incendie dévore doucement votre corps drogué...";
+            deadflag = 1;
+            rtrue;
+          Touch:
+            "La poudre semble douce, bien que les perceptions de vos doigts endoloris soient altérées.";
+          Blow:
+            move gelule_eventree to thedark;
+            move gelule_vide3 to table;
+            "Vous soufflez sur la poudre qui s'éparpille a un mètre de vous.";
+          Empty:
+            <<Empty gelule_eventree>>;
+          Take:
+            "Vous prenez un peu de poudre dans vos doigts et l'éparpillez en les frottant.";
+        ],
+  has   female;
+
+Object  lustre "lustre" chambre class Decor
+  with  name 'lustre' 'lampe' 'lumiere',
+        adjective 'vieux' 'cuivre' 'bringueballant',
+        description "Un lustre de cuivre bringueballant orné de bougies électriques, dont certaines clignotent à un rythme oppressant tandis que d'autres restent désespérément éteintes...",
+        before [;
+          Blow: "Vous soufflez en l'air, en vain.";
+          Consult: "Le lustre n'est pas un objet consultable.";
+          SwitchOn,SwitchOff: "Bizarrement, vous ne remarquez aucun interrupteur dans la pièce.";
+          LookUnder: <<Look>>;
+          default: "Le lustre est accroché au plafond, et de fait il est bien trop haut pour que vous puissiez l'atteindre.";
+        ];
+
+Object  bougies "bougies électriques" chambre class Decor
+  with  name 'bougie' 'bougies' 'ampoule' 'ampoules',
+        adjective 'electrique' 'electriques' 'defaillante' 'defaillantes' 'eteinte' 'eteintes',
+        description [;
+          if (self has light) {
+            "Des ampoules électriques montées sur un socle en plastique, en forme de bougies, dont certaines sont défaillantes, et d'autres complètement éteintes.";
+          }
+          else {
+            "Des ampoules électriques montées sur un socle en plastique, en forme de bougies, qui ne procurent plus aucune lumière, car le système électrique semble touché par l'incendie.";
+          }
+        ],
+        before [;
+          Take,Touch: "Le lustre étant hors de portée, ses bougies le sont tout autant.";
+        ],
+  has   light female pluralname;
+
+Object  armoire "armoire" chambre class Decor
+  with  name 'armoire' 'penderie' 'meuble',
+        adjective 'bois' 'terne',
+        description [;
+          print "Faite de bois terne, l'armoire est placée contre le mur ouest de la pièce, d'où elle domine fièrement.";
+          if (self has open) {
+            " Elle est ouverte et révèle son contenu : quelques vieilles couvertures, des cintres tordus et des boules de naphtaline.";
+          }
+          else {
+            " Elle est fermée.";
+          }
+        ],
+        before [;
+          Search:
+            if (self has open) {
+              if (poignee.prise == true) {
+                "Vous ne trouvez rien d'autre que de la naphtaline, inutile, des couvertures et des cintres déformés.";
+              }
+              else {
+                "Vous ne trouvez rien d'autre que de la naphtaline, inutile, des couvertures et des cintres déformés. Vous remarquez cependant un objet brillant sous l'armoire.";
+              }
+            }
+            else {
+              "L'armoire est fermée.";
+            }
+          LookUnder:
+            if (poignee.prise == true) {
+              rfalse;
+            }
+            else {
+              move poignee to player;
+              poignee.prise = true;
+              "Vous vous baissez au prix d'un effort colossal, pliant peu à peu vos jambes gourdes, et découvrez une poignée de fenêtre sous l'armoire. Vous prenez la poignée.";
+            }
+          Enter: "Vous n'avez plus l'âge, et encore moins le courage, de vous cacher dans une armoire.";
+        ],
+  has   openable ~open container female;
+
+Object  poignee "poignée de fenêtre" class Decor
+  with  name 'poignee',
+        adjective 'fenetre' 'metal' 'fer' 'rouille' 'rouillee' 'grincante',
+        description "Une poignée de fer, rouillée, grinçante, mais toujours fonctionnelle.",
+        prise false,
+        before [;
+          Tie,Insert,PutOn:
+            if (second == fenetre or trous) {
+              give fenetre openable;
+              move self to fenetre;
+              "Vous installez la poignée sur la fenêtre, dans les trous prévus à cet effet.";
+            }
+          Take,Remove:
+            if (self in fenetre or trous) {
+              move self to player;
+              give fenetre ~openable;
+              "Vous retirez la poignée de la fenêtre.";
+            }
+          Turn:
+            if (self in fenetre) { <<Open fenetre>>; }
+            else { "Vous abaissez vainement la poignée que vous tenez entre vos mains."; }
+!          PrendreSous:
+!            if (second == armoire && self.prise == false) {
+!              self.prise = true;
+!              move poignee to player;
+!              "Vous vous baissez au prix d'un effort colossal, pliant peu à peu vos jambes gourdes, et !ramassez la poignée de fer qui se trouve sous l'armoire.";
+!            }
+        ],
+        before_implicit [;
+          Take: if (action_to_be == ##Disrobe) {
+            if (self in fenetre) return 1;
+          }
+        ],
+  has   female;
+
+Object  couvertures "couvertures" armoire
+  with  name 'couverture' 'couvertures' 'couette' 'couettes',
+        adjective 'vieille' 'vieilles' 'miteuse' 'miteuses',
+        description [;
+          if (papier in self) { "De vieilles couvertures miteuses sont empilées çà et là dans l'armoire, sans réelle organisation. Quelque chose semble coincé entre deux d'entre elles."; }
+          else { "De vieilles couvertures miteuses sont empilées çà et là dans l'armoire, sans réelle organisation."; }
+        ],
+        before [;
+          Take: "Cela ne vous serait pas d'une grande utilité. Vous tremblez de tout votre corps, mais vous n'avez pas froid.";
+          Search:
+            move papier to player;
+            "Vous trouvez et prenez un morceau de papier entre deux couvertures.";
+          Touch: "Le toucher des couvertures est rugueux, désagréable.";
+          Smell: "Une forte odeur de naphtaline mêlée de renfermé.";
+        ],
+  has   female pluralname;
+
+Object  papier "feuille de papier" couvertures
+  with  name 'feuille' 'morceau' 'papier',
+        description [;
+          print "Une feuille de papier, que vous dépliez non sans peine, et que vous tentez de lire malgré l'impressionnante bouillie qu'est devenu votre cerveau :^^
+          ~Chose promise, chose due. Voici la mort sur un plateau d'argent.^^
+          Mais je sais que tu ne souhaites par mourir ainsi... Jette un oeil "; style underline; print "à l'extérieur"; style roman; " de la pièce.~";
+        ],
+  has   female;
+
+Object  naphtaline "boules de naphtaline" armoire
+  with  name 'boule' 'boules' 'naphtaline',
+        description "Quelques boules de naphtaline sont éparpillées çà et là sur les couvertures.",
+        before [;
+          Eat,Taste: "Vous avez faim, mais pas à ce point.";
+          Smell: "Des boules émane une forte odeur de... naphtaline.";
+          Take: "Vous doutez sincèrement de leur utilité pour sortir d'ici.";
+        ],
+  has   female pluralname;
+
+Object  cintres "cintres tordus" armoire
+  with  name 'cintre' 'cintres',
+        adjective 'tordu' 'tordu' 'deforme' 'deformes',
+        description "Trois ou quatre cintres sont accrochés dans la penderie qui ne contient aucun vêtement. Ils sont si déformés que vous ne les identifiez qu'au crochet qui les suspend.",
+        before [;
+          Take: "Ce serait sans intérêt.";
+          Touch: "Le plastique a disparu et le fer est à nu, mais le contact de ces cintres ne vous procure aucune sensation particulière.";
+        ],
+  has   pluralname;
+
+Object  buffet "buffet" chambre class Decor
+  with  name 'buffet' 'commode' 'credence' 'bahut' 'meuble',
+        adjective 'ebene' 'noir',
+        description "Le buffet d'ébène est grossièrement agencé devant la fenêtre, à l'est. Il comporte un tiroir à gauche, un autre à droite, et un placard plus grand dans sa partie inférieure.",
+        before [;
+          Search,Open,Close,Lock,Unlock: "Soyez plus précis : il comporte deux tiroirs et un placard.";
+          LookUnder: "De la poussière en quantité.";
+        ];
+
+Object  poussiere "poussière" chambre class Decor
+  with  name 'poussiere' 'salete' 'crasse',
+        article "de la",
+        description "La poussière est omniprésente dans ce lieu.",
+        before [;
+          Take: "À quoi bon ramasser de la poussière ?";
+          Smell: "Vous approchez votre nez d'une surface poussiéreuse et manquez d'éternuer.";
+          Touch: "Vous laissez glisser votre doigt sur une surface poussiéreuse, marquant ainsi votre passage.";
+        ];
+
+Object  placard "placard du buffet" chambre class Decor
+  with  name 'placard' 'portes' 'battants',
+        adjective 'buffet' 'ebene' 'noir' 'deux',
+        article "le",
+        description [;
+          if (placard hasnt open) { "Le placard du buffet d'ébène constitue toute sa partie inférieure, et est surmonté de deux tiroirs. Ses portes à deux battants semblent avoir la même serrure que les tiroirs."; }
+          else {
+            if (vase in placard) { "Le placard du buffet d'ébène constitue toute sa partie inférieure, et est surmonté de deux tiroirs. Ses portes à deux battants semblent avoir la même serrure que les tiroirs. Le placard, ouvert, contient un vase bleu."; }
+            else { "Le placard du buffet d'ébène constitue toute sa partie inférieure, et est surmonté de deux tiroirs. Ses portes à deux battants semblent avoir la même serrure que les tiroirs. Le placard est ouvert."; }
+          }
+        ],
+        before [;
+          Take: "Le placard est encastré dans le buffet, vous ne pourrez pas prendre l'un sans l'autre.";
+          Attack:
+            if (self has locked) { "Vous êtes trop faible pour forcer le placard, mieux vaudrait trouver la clef."; }
+            else { "Ce serait sans intérêt."; }
+        ],
+        with_key clef,
+  has   container lockable locked openable ~open;
+
+Object  vase "vase bleu" placard
+  with  name 'vase' 'pot' 'recipient',
+        adjective 'etrange' 'bleu' 'couleur' 'bleue' 'ceramique',
+        description "Un étrange vase de céramique, dont la couleur bleue, profonde, vous intrigue plus qu'elle vous plait, et dont des fragrances entêtantes s'échappent. Il contient un étrange liquide noirâtre.",
+        before [;
+          Drink: <<Drink acide>>;
+          Smell: <<Smell acide>>;
+          Empty: "Vider le vase ainsi ne vous serait d'aucune utilité.";
+          PutOn,ViderSur: <<ThrowAt vase second>>;
+          ThrowAt:
+            if (second == plaque or murs_interieurs or papier_peint) {
+              if (plaque in chambre) {
+                if (plaque.acces == 0) {
+                  move vase to thedark;
+                  move bris to chambre;
+                  plaque.acces = 2;
+                  "Vous jetez le vase sur la déchirure où apparaît la plaque de bois. En se brisant, il libère tout le liquide noirâtre qu'il contenait sur le mur et rapidement le papier peint est rongé par l'effet corrosif de ce qui semble être un acide. Vous voyez désormais une large plaque de bois rectangulaire.";
+                }
+                else if (plaque.acces == 1) {
+                  "Ce serait superflu maintenant que la plaque est accessible.";
+                }
+              }
+            }
+        ],
+        capacity 1,
+  has   container transparent open;
+
+Object  bris "bris de vase" class Decor
+  with  name 'bris' 'debris' 'morceaux' 'cassure' 'vase' 'liquide' 'acide' 'eau' 'substance',
+        adjective 'ceramique' 'bleu' 'bleue' 'couleur' 'etrange',
+        description "Des morceaux du vase sont répandus au sol, contenant parfois encore un peu de liquide.",
+        before [;
+          Take,Touch: "Vous préférez ne pas toucher ce qui reluit encore de l'acide qui a rongé le papier peint.";
+        ],
+  has   pluralname;
+
+Object  acide "liquide noirâtre" vase
+  with  name 'liquide' 'eau' 'substance' 'acide',
+        adjective 'noiratre' 'noir' 'etrange' 'froid',
+        description "Le liquide noirâtre a par endroit des agglomérats de bulles d'air, et semble avoir creusé le vase dont la courbe intérieure n'est pas régulière alors que son aspect extérieur est superbe, envoûtant.",
+        touche 0,
+        before [;
+          Take,Remove,Push,Pull,PushDir: "Vous ne pouvez pas saisir un liquide dans vos mains.";
+          Turn,Touch:
+            if (self.touche == 0) {
+              self.touche = 1;
+              "Vous plongez un doigt dans le liquide froid qui en ressort imbibé de l'étrange substance. L'effet corrosif du liquide commence à ronger votre phalange que vous essuyez promptement sur vos vêtements dans un râle de souffrance.";
+            }
+            else { "Pour rien au monde vous ne toucheriez de nouveau cet acide."; }
+          Drink,Taste:
+            if (self.touche == 1) { "Vu l'action du liquide sur votre doigt, il serait suicidaire de le boire."; }
+            else {
+              print "La chaleur environnante est oppressante et votre gorge est bien sèche. Vous saisissez le vase à deux mains et le portez à votre bouche.^^Le vase se brise. Le poison ronge votre organisme.";
+              deadflag = 1;
+              return true;
+            }
+          Smell: "Des fragrances entêtantes emplissent vos narines, tant et si bien que vous chancelez un instant.";
+          PutOn,ViderSur,ThrowAt: <<ThrowAt vase second>>;
+        ];
+
+Object  tiroir_gauche "tiroir de gauche" chambre class Decor
+  with  name 'tiroir' 'tiroirs',
+        adjective 'gauche',
+        article "le",
+        description [;
+          if (self has open) { "Le tiroir gauche du buffet est ouvert. Il est vide."; }
+          else if (self has locked) { "Le tiroir gauche du buffet est fermé à clef."; }
+          else { "Le tiroir gauche du buffet est fermé, mais pas à clef."; }
+        ],
+        before [;
+          Take: "Les tiroirs sont encastrés dans le buffet, vous ne pourrez pas prendre les uns sans l'autre.";
+          Attack:
+            if (self has locked) { "Vous êtes trop faible pour forcer le tiroir, mieux vaudrait trouver la clef."; }
+            else { "Ce serait sans intérêt."; }
+        ],
+        with_key clef,
+  has   lockable ~locked openable container ~open;
+
+Object  tiroir_droit "tiroir de droite" chambre class Decor
+  with  name 'tiroir' 'tiroirs',
+        adjective 'droit' 'droite',
+        article "le",
+        description [;
+          if (self has open) {
+            if (poignard in self) { "Le tiroir droit du buffet est ouvert et contient un poignard d'airain."; }
+            else { "Le tiroir droit du buffet est ouvert."; }
+          }
+          else if (self has locked) { "Le tiroir droit du buffet est fermé à clef."; }
+          else { "Le tiroir droit du buffet est fermé, mais pas à clef."; }
+        ],
+        before [;
+          Take: "Les tiroirs sont encastrés dans le buffet, vous ne pourrez pas prendre les uns sans l'autre.";
+          Attack:
+            if (self has locked) { "Vous êtes trop faible pour forcer le tiroir, mieux vaudrait trouver la clef."; }
+            else { "Ce serait sans intérêt."; }
+        ],
+        with_key clef,
+  has   openable container ~open lockable locked;
+
+Object  serrure_gauche "serrure du tiroir gauche" chambre class Decor
+  with  name 'serrures' 'serrure' 'verou',
+        adjective 'tiroir' 'gauche',
+        article "la",
+        description "Les trois serrures des tiroirs et du placard du buffet sont identiques, et s'ouvrent probablement avec la même clef.",
+        before [;
+          Take:
+            "La serrure est solidement ancrée dans le tiroir gauche.";
+        ],
+  has   female;
+
+Object  serrure_droit "serrure du tiroir droit" chambre class Decor
+  with  name 'serrures' 'serrure' 'verou',
+        adjective 'tiroir' 'droit' 'droite',
+        article "la",
+        description "Les trois serrures des tiroirs et du placard du buffet sont identiques, et s'ouvrent probablement avec la même clef.",
+        before [;
+          Take:
+            "La serrure est solidement ancrée dans le tiroir droit.";
+        ],
+  has   female;
+
+Object  serrure_placard "serrure du placard" chambre class Decor
+  with  name 'serrures' 'serrure' 'verou',
+        adjective 'placard',
+        article "la",
+        description "Les trois serrures des tiroirs et du placard du buffet sont identiques, et s'ouvrent probablement avec la même clef.",
+        before [;
+          Take:
+            "La serrure est solidement ancrée dans les portes du placard.";
+        ],
+  has   female;
+
+Object  murs_interieurs "murs intérieurs" chambre class Decor
+  with  name 'mur' 'murs' 'platre',
+        adjective 'interieur' 'interieurs' 'platre' 'chambre',
+        article "les",
+        description [;
+          print "Les quatre murs de la chambre sont faits de plâtre recouvert d'un papier peint immonde, qui, s'il est aussi vétuste et pourrissant que lui, jure totalement avec le reste de l'ameublement de la pièce, de par ses couleurs jaune et rose et son iconographie éléphantine. Il est déchiré en de multiples endroits, corné en d'autres, ou encore écaillé comme s'il avait été gratté par des ongles désespérés. ";
+          if (plaque notin chambre) {
+            move plaque to chambre;
+            "Une des déchirures laisse apparaître une plaque de bois.";
+          }
+          else if (plaque.acces == 0) { "Une des déchirures laisse apparaître une plaque de bois."; }
+          else if (plaque.acces == 1) {
+            "Une partie du papier peint a été déchirée à coups de poignard, révélant une large plaque de bois rectangulaire à côté de l'armoire.";
+          }
+          else if (plaque.acces == 2) {
+            "L'acide a rongé une partie du papier peint, picorant aussi une large plaque de bois rectangulaire à côté de l'armoire.";
+          }
+        ],
+        before [;
+          Search: <<Examine self>>;
+          Take: "Il faut rester réaliste.";
+          Rub,Attack,Cut:
+            <<Cut papier_peint>>;
+        ],
+  has   pluralname;
+
+Object  papier_peint "papier peint" chambre class Decor
+  with  name 'papier' 'papier-peint',
+        adjective 'peint' 'ecaille' 'corne' 'dechire' 'immonde' 'vetuste' 'pourrissant',
+        before [;
+          Examine: <<Examine murs_interieurs>>;
+          Take: "Vous ne pouvez pas prendre le papier peint.";
+          Rub,Attack,Cut:
+            if (plaque in chambre) {
+              <<Cut plaque>>;
+            }
+        ];
+
+Object  motifs "motifs roses" chambre class Decor
+  with  name 'dessins' 'dessin' 'illustrations' 'illustration' 'motifs' 'motif' 'elephants' 'elephant' 'iconographie',
+        adjective 'couleur' 'couleurs' 'jaune' 'rose' 'elephantine',
+        description "Des éléphants roses dansant sur une toile jaunâtre... Vous ne vous rappelez pas avoir bu, mais votre état fluctue entre délire et agonie, alors ces motifs ne vous alarment pas.",
+        before [;
+          Take: "Se saisir d'un motif imprimé reste difficile, malgré votre état particulier.";
+        ],
+  has   pluralname;
+
+Object  coins "coins recourbés du papier peint" chambre class Decor
+  with  name 'coin' 'coins' 'angle' 'angles',
+        adjective 'recourbe' 'recourbes' 'courbe' 'courbes' 'papier' 'peint',
+        description "Le papier peint recouvrant les murs intérieurs est corné par endroits, laissant voir le plâtre se trouvant derrière.",
+        before [;
+          Take,Pull,Tirer: "Vous tentez de tirer sur un des coins recourbés du papier peint mais ne dégagez que du plâtre jadis blanc recouvert de colle sèche.";
+          Touch: "Vous passez un doigt derrière un coin recourbé. Le contact de la colle séchée est désagréable et vous retirez votre main.";
+        ],
+  has   pluralname;
+
+Object  colle "colle sèche" chambre class Decor
+  with  name 'colle' 'matiere',
+        adjective 'moisie' 'jaunatre' 'seche',
+        article "de la",
+        description "De la matière jaunâtre coagulée.",
+        before [;
+          Touch,Take: <<Touch coins>>;
+        ],
+  has   female;
+
+Object  plaque "plaque de bois"
+  with  name 'plaque' 'planche' 'contreplaque' 'agglomere' 'déchirure',
+        adjective 'bois',
+        acces 0,
+        description [;
+          if (plaque.acces == 0) {
+            "Une déchirure dans le papier peint laisse apparaître une plaque de bois qui diffère avec le reste du mur, fait en plâtre.";
+          }
+          if (plaque.acces == 1) {
+            "Votre ouvrage au poignard a permis de mettre en évidence une large plaque de bois rectangulaire d'une cinquantaine de centimètres sur un mètre, encore recouverte de papier peint mais dont les limites sont visibles.";
+          }
+          if (plaque.acces == 2) {
+            "L'oeuvre de l'acide que vous avez lancé sur le mur a mis en évidence une large plaque de bois rectangulaire d'une cinquantaine de centimètres sur un mètre, qui est désormais en partie rongée par le liquide, avec encore quelques bribes de papier peint çà et là.";
+          }
+          if (plaque.acces == 3) { "La plaque de bois gît désormais à terre."; }
+          if (plaque.acces == 4) { "La plaque de bois gît à terre, rongée par l'acide qui y a creusé çà et là de petits trous."; }
+        ],
+        before [;
+          Rub,Cut:
+            if (plaque.acces == 0) {
+              if (poignard in player) {
+                plaque.acces = 1;
+                "À l'aide du poignard, vous entreprenez de déchirer le papier peint là où se trouve la plaque de bois. Vous parvenez à faire apparaître la jonction entre la plaque et le plâtre sur tous les côtés.";
+              }
+              else { "Vous n'avez pas le courage de faire cela sans outil."; }
+            }
+            else if (plaque.acces == 1) {
+              "Il serait superflu de continuer à décoller le papier peint sur la plaque.";
+            }
+            else if (plaque.acces == 2) {
+              "Ce n'est pas nécessaire, la plaque est déjà bien visible et accessible.";
+            }
+          Attack,Take,Pull,Push,Open:
+            if (plaque.acces == 0) { <<Cut plaque>>; }
+            else if (plaque.acces == 1) {
+              plaque.acces = 3;
+              move passage to chambre;
+              "Vous servant du poignard comme d'un levier, vous faites basculer la plaque de bois qui tombe à terre dans un fracas assourdissant, laissant voir le passage sombre qu'elle dissimulait.";
+            }
+            else if (plaque.acces == 2) {
+              plaque.acces = 4;
+              move passage to chambre;
+              "Vous agrippez un bord de la plaque de bois en grimaçant sous l'action de l'acide sur vos phalanges et parvenez à dégager la plaque qui tombe au sol dans un fracas assourdissant, laissant voir le passage sombre qu'elle dissimulait.";
+            }
+          Touch:
+            if (plaque.acces == 2 or 4) { "Vous posez quelques doigts sur la plaque encore sous l'effet de l'acide. Une violente brûlure vous fait retirer votre main."; }
+        ],
+  has   concealed;
+
+Object  fenetre "fenêtre" chambre class Decor
+  with  name 'fenetre' 'carreau' 'carreaux' 'vitre',
+        adjective 'sale' 'sales' 'grasse' 'gras' 'verre',
+        article "la",
+        description [;
+          if (fenetre hasnt open) {
+            print "La fenêtre aussi bien que ses carreaux sont particulièrement sales et gras, reflétant maintes traces de doigts et même rayures, "; style underline; print "griffures"; style roman; print ", si bien que vous ne voyez rien de ce qui se trouve au dehors.^";
+            if (fenetre hasnt openable) {
+              "Elle n'a pas de poignée, et en lieu et place de cette dernière, deux trous vous observent.";
+            }
+            else {
+              "La poignée que vous avez réinstallée permet d'ouvrir et de fermer la fenêtre.";
+            }
+          }
+          else {
+            print "La fenêtre désormais ouverte vous permet de mieux concevoir l'étrange lieu dans lequel vous vous trouvez : votre "; style underline; print "prison"; style roman; ", ou du moins chambre, se situe au deuxième étage d'une bâtisse en comprenant trois, donnant sur une petite ruelle peu fréquentée. Les murs extérieurs sont en briques ocres.";
+          }
+        ],
+        before [;
+          Open:
+            if (fenetre hasnt openable) {
+              "Vous ne pouvez pas ouvrir la fenêtre, elle n'a pas de poignée.";
+            }
+          Close:
+            "La fenêtre est déjà fermée.";
+          Unlock:
+            if (second == poignee) {
+              give self openable;
+              move poignee to self;
+              print "Vous installez la poignée sur la fenêtre, dans les trous prévus à cet effet.^";
+              <<Open self>>;
+            }
+          RegarderPar:
+            <<Examine out_obj>>;
+          Attack:
+            "La vitre semble solide, et vous n'avez pas la force de la briser.";
+          Enter:
+            if (self has open) { "Passer par la fenêtre ? L'escalade, vers le toit, est impossible dans votre état. La descente n'est pas plus envisageable."; }
+            else { "La fenêtre est fermée."; }
+          Rub:
+            "Vous passez un doigt sur la surface vitrée : la crasse est incrustée dans le verre.";
+        ],
+        after [;
+          Open:
+            move murs_exterieurs to chambre;
+            rfalse;
+          Close:
+            move murs_exterieurs to thedark;
+            rfalse;
+        ],
+  has   light ~open transparent female ~openable;
+
+Object  trous "trous" chambre class Decor
+  with  name 'trou' 'trous',
+        adjective 'deux',
+        article "deux",
+        description [;
+          if (fenetre hasnt openable) {
+            "Deux trous dans lesquels peut s'insérer la poignée prévue à cet effet.";
+          }
+          else {
+            "Vous ne voyez rien de tel, à moins que cela ne soit sans grande importance.";
+          }
+        ],
+        before [;
+          Take: "C'est évidemment impossible.";
+        ],
+  has   pluralname;
+
+Object  murs_exterieurs "murs extérieurs" class Decor
+  with  name 'mur' 'murs' 'exterieur' 'exterieurs' 'briques' 'brique' 'parpaing' 'moellon',
+        adjective 'rouge' 'ocre' 'orange' 'dehors',
+        article "les",
+        description [;
+          print "Les murs extérieurs sont faits, à votre niveau, de briques ocres maladroitement agencées, qui feraient de bonnes prises à un escaladeur.^";
+          if (clef in murs_exterieurs) {
+            clef.vue = true;
+            "Vous remarquez une clef posée sur une brique près du battant gauche de la fenêtre.";
+          }
+        ],
+        before [;
+          Search:
+            if (clef in murs_exterieurs) {
+              <<Examine self>>;
+            }
+            else if (clef.vue == true) {
+              move clef to player;
+              "Vous tendez le bras dans l'embrasure de la fenêtre, manquant de tomber à plusieurs reprises, et saisissez finalement l'objet avec un soupir de soulagement, revenant dans la pièce.";
+            }
+          Climb:
+            "Si seulement vous êtiez moins faible, vous pourriez envisager cette solution.";
+        ],
+  has   pluralname transparent;
+
+Object  clef "clef du buffet" murs_exterieurs
+  with  name 'clef' 'cle' 'clé' 'clefs' 'cles' 'clés' 'trousseau',
+        adjective 'bronze',
+        article "la",
+        vue false,
+        description [;
+          if (self.vue == true) {
+            if (self in player) {
+              "Une clef de bronze qui vous semble lourde. Votre faiblesse semble s'aggraver à chaque instant. La clef ouvre probablement le buffet.";
+            }
+            else if (self in murs_exterieurs) { "Une clef de bronze est jonchée sur une brique à portée."; }
+            else { "Une clef de bronze qui ouvre probablement le buffet."; }
+          }
+          else { "Vous ne voyez rien de tel, à moins que cela ne soit sans grande importance."; }
+        ],
+        before [;
+          Take:
+            if (self.vue == true) {
+              if (self in murs_exterieurs) {
+                move self to player;
+                "Vous tendez le bras dans l'embrasure de la fenêtre, manquant de tomber à plusieurs reprises, et saisissez finalement l'objet avec un soupir de soulagement, revenant dans la pièce.";
+              }
+              else rfalse;
+            }
+            else {
+              "Vous ne voyez rien de tel, à moins que cela ne soit sans grande importance.";
+            }
+          Smell: "Une odeur classique de bronze.";
+          Taste: "Vous casser une dent ne fait pas partie de vos priorités.";
+        ],
+  has   female;
+
+Object  halogene "lampe halogène" class Decor
+  with  name 'lampe' 'halogene' 'lampadaire',
+        description [;
+          if (heros.tours >= 50) { "La lampe halogène a brisé la fenêtre du premier étage se situant juste sous la votre en tombant, et sort maintenant d'un bon mètre à l'extérieur."; }
+          else if (heros.tours >= 75) { "Poussée par le souffle de l'explosion, la lampe halogène est tombée dans la ruelle où elle s'est brisée en deux morceaux."; }
+        ],
+        before [;
+          default: "La lampe halogène est trop loin de vous.";
+        ],
+  has   female;
+
+Object  poignard "poignard en airain" tiroir_droit
+  with  name 'poignard' 'couteau' 'lame',
+        adjective 'airain' 'fer' 'bronze' 'metal',
+        description "Une fine lame de métal clair montée sur une poignée en airain.",
+        before [;
+          Insert:
+            if (second == vase or acide) { "Tremper le poignard dans cet étrange liquide ne vous serait a priori pas particulièrement utile."; }
+        ];
+
+Object  passage "passage sombre" class Decor
+  with  name 'passage' 'sortie' 'trou',
+        adjective 'sombre',
+        description "Derrière la plaque de bois se trouvait un passage s'enfonçant doucement dans la noirceur de l'inconnu. Il semble assez grand pour que vous y entriez accroupi ou assis.",
+        before [;
+          Take: "C'est évidemment impossible.";
+          Enter:
+            ClearScreen();
+            print "Peu rassuré, vous entrez doucement dans le passage qui descend en pente douce. Au bout de quelques minutes d'une progression lente et difficile, due à votre état misérable, vous atteignez ce que vous reconnaissez comme une porte par tâtonnement.^^Vous l'ouvrez pour voir danser devant vous de hautes flammes : des craquements retentissent tandis que des rideaux enflammés tombent devant vous depuis une fenêtre ouverte du premier étage ; dans la panique, vous sautez en avant et trouvez la force de rouler pour vous déplacer à un bon mètre du bâtiment en feu. Toussant faiblement sous l'action de la fumée, vous rampez au plus loin de l'incendie jusqu'à ce que l'épuisement vous submerge : vos paupières s'alourdissent tandis que vous apercevez devant vous, au bout de la ruelle, un homme souriant. Il vous est étrangement familier, mais le sommeil vous gagne avant que vous ayez pu l'identifier.";
+            KeyCharPrimitive();
+            print "^^Après quelques minutes de somnolence retentissent les sirènes jointes des pompiers, policiers et ambulanciers...^";
+            deadflag = 2;
+            rtrue;
+        ];
+
+!==============================================================================
+
+[ Initialise;
+  lookmode = 2;
+  ChangePlayer(heros);
+  print "La brume s'appesantit sur le rivage de l'immense océan immaculé, les marées d'écume se succèdent, l'une, puis l'autre, et enfin surviennent les cendres, brûlantes, précédées d'une abondante fumée...^^Le brouillard noie dans ses bras voluptueux les derniers rescapés, arbres majestueux aux mille branches rougeoyantes, tandis que déjà, les flammes dévorent plantes et animaux indistinctement, répandant au dessus de la forêt une traînée grisâtre de fumée...^^Battue de pluies diluviennes, la fière montagne panse ses blessures infligées par le feu, l'eau du ciel ruisselant dans chaque aspérité de la paroi, faisant ainsi émerger dans un bruit strident de crissement les dernières vapeurs noires fumantes...^^";
+  KeyCharPrimitive();
+  ClearScreen();
+  print "Si vous jouez pour la première fois à une fiction interactive, tapez "; style underline; print "aide"; style roman; print " une fois l'introduction passée.^^";
+];
+
+[ HelpSub;
+  DoMenu("Informations sur le jeu ~Brume~.^
+    ^      Aide
+    ^      Solution
+    ^      Auteur
+    ^      Remerciements
+    ^      Licence
+    ^      Rien, finalement.^",
+    HelpMenu, HelpInfo);
+];
+
+[ HelpMenu;
+  if (menu_item==0) { item_name="Informations";return 6; }
+  if (menu_item==1) { item_name="Aide"; }
+  if (menu_item==2) { item_name="Solution"; }
+  if (menu_item==3) { item_name="Auteur"; }
+  if (menu_item==4) { item_name="Remerciements"; }
+  if (menu_item==5) { item_name="Licence"; }
+  if (menu_item==6) { item_name="Rien, finalement."; }
+];
+
+[ HelpInfo;
+  if (menu_item==1) {
+    print "Ce programme est un jeu d'aventure textuel, ou "; style underline; print "fiction interactive"; style roman; print " et se base donc sur un dialogue entre le joueur, vous, et sa machine. Ainsi vous pouvez interagir avec le milieu environnant à travers des ordres à l'infinitif, tels que ceux-ci :^"; print " > regarder les murs interieurs^ > prendre les gelules^ > ouvrir la fenetre^^Il peut parfois arriver (voire assez souvent pour un joueur néophyte) que vos instructions ne soient pas comprises, vous pouvez alors réessayer en reformulant d'une manière plus claire et simple (l'association "; style underline; print "verbe"; style roman; print " + "; style underline; print "complément"; style roman; print " est la plus courante).^^"; print "Pour déplacer votre personnage de lieux en lieux, utilisez les huits points cardinaux ("; style underline; print "nord, nord-est, est, sud-est, sud, sud-ouest, ouest, nord-ouest, nord"; style roman; print ") ainsi qu'"; style underline; print "entrer, sortir, haut, bas"; style roman; print ".^Pour avoir de nouveau la description d'un lieu qui apparaît lorsque l'on s'y rend, tapez "; style underline; print "regarder"; style roman; print " lorsque vous vous y trouvez, et pour lister vos acquisitions, tapez "; style underline; print "inventaire"; style roman; print ".^^Vous pouvez aussi utiliser les commandes "; style underline; print "sauvegarder, charger, recommencer"; style roman; print " et "; style underline; print "quitter"; style roman; print ".^^Enfin le site "; style underline; print "http://ifiction.free.fr"; style roman; print " et toute la communauté française de fiction interactive sont à votre disposition.^";
+  }
+  if (menu_item==2) { SoluceSub(); }
+  if (menu_item==3) { AuthorSub(); }
+  if (menu_item==4) { ThanksSub(); }
+  if (menu_item==5) { LicenseSub(); }
+  if (menu_item==6) { return 3; }
+];
+
+[ SoluceSub;
+  DoMenu("La solution peut enlever de son intérêt au jeu.^
+    ^      Introduction
+    ^      Ouvrir la fenêtre
+    ^      Trouver la clef
+    ^      Première possibilité : le poignard
+    ^      Seconde possibilité : le vase
+    ^      Solution non romancée
+    ^      Rien, finalement.^",
+    SoluceMenu, SoluceInfo);
+];
+
+[ SoluceMenu;
+  if (menu_item==0) { item_name="Solution du jeu ~Brume~";return 7; }
+  if (menu_item==1) { item_name="Introduction"; }
+  if (menu_item==2) { item_name="Ouvrir la fenêtre"; }
+  if (menu_item==3) { item_name="Trouver la clef"; }
+  if (menu_item==4) { item_name="Première possibilité : le poignard"; }
+  if (menu_item==5) { item_name="Seconde possibilité : le vase"; }
+  if (menu_item==6) { item_name="Solution non romancée"; }
+  if (menu_item==7) { item_name="Rien, finalement.^"; }
+];
+
+[ SoluceInfo;
+  if (menu_item==1) {
+    style underline; print "La brume environnante et la lueur sélène se réfléchissent de concert sur l'océan où se succèdent les marées d'écume, et les vagues viennent lécher délicatement la grève que constellent de petites braises portées par la brise des mers...^^";
+    style roman; print "Une paupière, puis l'autre, au prix d'un effort colossal. Votre esprit endolori a du mal à faire le lien entre vos perceptions visuelles et les notions qu'elles impliquent, pourtant vous reconnaissez un plafond terne dont la peinture écaillée était autrefois blanche. Un lustre de cuivre y est suspendu, et ses bougies électriques éclairent le lieu d'une lueur pâle. Vous parvenez tant bien que mal à vous hisser en position assise, prenant appui sur vos deux bras courbaturés. Vous êtes dans une chambre délabrée, et votre lit comprend bien les armatures en fer rouillées que vous sentez encore dans votre dos, grâce à la mince épaisseur de votre matelas de mousse rongé par la moisissure.^^
+    Vous glissez une jambe depuis vos draps de lin jusqu'au sol. Puis l'autre, et enfin vous vous tenez debout, fourbu. Vos perceptions sont altérées, et le mal de crâne est insoutenable. Le moindre mouvement, la moindre pensée requièrent une concentration totale et une volonté de fer. Vous commencez cependant à prendre conscience de votre état : vous êtes dans un lieu inconnu, à une date inconnue, et votre mal-être est tel que vous n'en avez jamais connu. Et alors que vous parcourez les lieux du regard, vos yeux s'arrêtent sur la table de nuit de fer noir à côté de votre lit, qui ne comprend que trois capsules blanches : deux pleines, la troisième éventrée et répandant une partie de sa substance blanchâtre sur la noirceur du meuble. Vous êtes drogué.^";
+  }
+  if (menu_item==2) {
+    style underline; print "Le brouillard noie dans ses bras voluptueux les arbres majestueux dont les mille branches rougeoyantes font danser la mort au coeur de la forêt calcinée, tandis que brûlent ou fuient plantes et animaux...^^";
+    style roman; print "La panique succède au réveil douloureux. Péniblement, vous avancez vers la porte et tentez de l'ouvrir. Désespérément close. Vous assénez votre poing sur le bois une, deux, trois fois, mais l'effort que cela demande et le bruit sourd qui martèle vos tympans vous arrachent un faible cri, et vous arrêtez votre entreprise. La seule autre issue semble être la fenêtre, à votre droite, mais elle n'a pas de poignée, et seuls restent deux trous sans vis. Et; dos à la porte, vous vous laissez glisser jusqu'à vous asseoir sur le parquet miteux.^^
+    C'est alors que vous apercevez un objet lumineux sous l'armoire, près de vous. Vous vous glissez lentement jusqu'au meuble et vous couchez sur le sol pour tenter de saisir ce qui vous apparaît désormais comme une poignée de métal. Et les deux vis qui y sont insérées ne semblant demander qu'à rejoindre la fenêtre, vous vous levez en prenant appui sur un angle de l'armoire et allez visser la pièce de métal dans les trous adéquats. Vous vous empressez alors d'ouvrir la fenêtre pour renouveler l'air vicié qui règne dans la pièce, et pour tenter d'en sortir.^^
+    Un bref coup d'oeil à l'extérieur vous permet de voir que vous vous trouvez au deuxième étage d'une bâtisse de briques ocres en comprenant trois, donnant sur une ruelle peu fréquentée d'un village inconnu. La possibilité de s'échapper par là est vite évincée par la réalité : votre corps débile et endolori ne saurait s'accrocher à la paroi.^^
+    Alors que votre panique se transforme en résignation, vous commencez à ressentir une douce chaleur qui apaise quelque peu votre esprit, comme si vous vous prélassiez allégrement devant l'âtre d'une cheminée où brûle un feu réconfortant.^";
+  }
+  if (menu_item==3) {
+    style underline; print "L'eau du ciel vient panser les blessures de la fière montagne, faisant crisser les roches noircies et brûlantes de la montagne dans un bruit strident, et jaillir un mince filet de vapeur pour chaque goutte en contact avec le sol, tandis que la brume arrive depuis la vallée...^^";
+    style roman; print "Ce n'est qu'au bout de quelques minutes, quand la chaleur ne se fait plus douce mais oppressante, et semble griffer vos joues comme une brise amère, que vous comprenez la situation. En regardant à l'extérieur à nouveau, ce sont de hautes flammes qui s'offrent à votre vue, léchant les murs de briques du rez-de-chaussée devenus écarlates, tandis que le brasier semble commencer à s'étendre au premier étage.^^
+    Après la stupéfaction vient la terreur, et vous cherchez désespéré-ment un moyen de vous échapper de cette prison. Vous commencez un second examen des lieux et constatez qu'un buffet comprenant deux tiroirs et un placard est fermé à clef, tandis que l'armoire sous laquelle vous avez trouvé la poignée de la fenêtre n'est pas verrouillée.^^
+    Vous commencez par inspecter le buffet d'ébène qui se trouve près de vous. Outre un compartiment principal vide, il comprend deux tiroirs. Celui de gauche est tout aussi vide, mais celui de droite vous intrigue, car il est fermé à clef, tout comme le placard placé dessous. Vous cherchez la clef vers le buffet, même dessous en vous baissant au prix d'un effort considérable, mais en vain. Vous laissez donc de côté ce meuble pour aller explorer l'armoire.^^
+    De vos doigts gourds, vous ouvrez un battant de l'armoire, puis l'autre, et vous tentez d'y trouver quoi que ce soit qui pourrait vous aider. Entre deux couvertures crasseuses gorgées de boules de naphtaline, vous découvrez un petit morceau de papier. Machinale-ment, vous le dépliez et vos yeux le parcourent sans le lire. Il vous faut vous y prendre à plusieurs reprises pour arriver à concentrer votre esprit sur les lettres, les mots, les phrases. Visiblement placé là par celui qui vous a drogué et enfermé ici, le message vous propose de chercher la clef du buffet à l'extérieur de la pièce.^^
+    Effectivement, suite à une inspection difficile, vous voyez les flammes dansantes se refléter sur un morceau de métal jonché sur une des briques du mur extérieur, à votre niveau. Une clef de fer rouillée, mais qui semble correspondre aux serrures du buffet.^";
+  }
+  if (menu_item==4) {
+    print "Vous ouvrez le tiroir de droite qui ne contient qu'un seul objet : un poignard à garde d'airain, qui sans être bien grand vous semble peser un poids considérable lorsque vous le saisissez ; vos forces physiques sont toujours bien altérées. Cet outil ne vous paraît pas vraiment comme étant le moyen d'évasion le plus évident, et au comble du désespoir, vous vous laissez choir sur le lit. C'est alors qu'en détaillant le papier peint abîmé, immonde trame jaunâtre peuplée d'éléphants roses, vous remarquez qu'en un endroit une déchirure laisse apparaître ce qui semble être une plaque de bois, tandis que le reste du mur est fait de plâtre.^^
+    Vous vous approchez avec difficulté du mur et, saisissant le poignard, tentez d'en dégager la plaque. Vous déchirez une portion de papier peint et parvenez à faire apparaître les limites de la plaque, grande pièce de bois rectangulaire d'une cinquantaine de centimètres sur un mètre. Vous servant du couteau pour faire levier, vous parvenez à extraire la planche du mur pour laisser apparaître un passage sombre s'enfonçant doucement dans la noirceur de l'inconnu.^^
+    Peu rassuré, vous entrez doucement dans le passage qui descend en pente douce. Au bout de quelques minutes d'une progression lente et difficile, due à votre état misérable, vous atteignez ce que vous reconnaissez comme une porte par tâtonnement. Vous l'ouvrez pour voir danser devant vous de hautes flammes : des craquements retentissent tandis que des rideaux enflammés tombent devant vous depuis une fenêtre ouverte du premier étage ; dans la panique, vous sautez en avant et trouvez la force de rouler pour vous déplacer à un bon mètre du bâtiment en feu. Toussant faiblement sous l'action de la fumée, vous rampez au plus loin de l'incendie jusqu'à ce que l'épuisement vous submerge : vos paupières s'alourdissent tandis que vous apercevez devant vous, au bout de la ruelle, un homme souriant. Il vous est étrangement familier, mais le sommeil vous gagne avant que vous ayez pu l'identifier.^";
+  }
+  if (menu_item==5) {
+    print "Déverrouillant le placard à l'aide de la clef, vous y découvrez un unique objet : un vase de céramique bleue contenant un liquide noirâtre. Quelque peu intrigué, vous plongez un doigt dans le liquide froid qui en ressort imbibé de l'étrange substance. L'effet corrosif du liquide commence à ronger votre phalange que vous essuyez promptement sur vos vêtements dans un râle de souffrance. Après quelques minutes de souffrance intense, la douleur s'estompe et vous pouvez recommencer à vous concentrer. Vous déduisez de votre expérience malheureuse que le vase contient probablement un acide assez concentré, mais probablement trop peu pour vraiment dissoudre autre chose que du papier.^^
+    C'est alors que votre regard se tournant vers le papier peint abîmé, immonde trame jaunâtre peuplée d'éléphants roses, vous remarquez qu'en un endroit une déchirure laisse apparaître ce qui semble être une plaque de bois, tandis que le reste du mur est fait de plâtre. Sans trop être sûr de ce que vous faites, vous projetez le vase que vous teniez entre vos mains sur le mur à cet endroit ; se brisant, le récipient déverse sur le papier peint sa substance corrosive. Et rapidement, les limites de la planche de bois deviennent visibles, tandis que l'acide continue d'en ronger le bois.^^
+    Vous agrippez un bord de la plaque de bois en grimaçant sous l'action de l'acide sur vos phalanges et parvenez à dégager la plaque qui tombe au sol dans un fracas assourdissant, laissant voir le passage sombre qu'elle dissimulait.^^
+    Peu rassuré, vous entrez doucement dans le passage qui descend en pente douce. Au bout de quelques minutes d'une progression lente et difficile, due à votre état misérable, vous atteignez ce que vous reconnaissez comme une porte par tâtonnement. Vous l'ouvrez pour voir danser devant vous de hautes flammes : des craquements retentissent tandis que des rideaux enflammés tombent devant vous depuis une fenêtre ouverte du premier étage ; dans la panique, vous sautez en avant et trouvez la force de rouler pour vous déplacer à un bon mètre du bâtiment en feu. Toussant faiblement sous l'action de la fumée, vous rampez au plus loin de l'incendie jusqu'à ce que l'épuisement vous submerge : vos paupières s'alourdissent tandis que vous apercevez devant vous, au bout de la ruelle, un homme souriant. Il vous est étrangement familier, mais le sommeil vous gagne avant que vous ayez pu l'identifier.^";
+  }
+  if (menu_item==6) {
+    print "ouvrir l'armoire^
+    fouiller les couvertures^
+    lire la feuille de papier^
+    fouiller sous l'armoire^
+    installer la poignee sur la fenetre^
+    ouvrir la fenetre^
+    regarder dehors^
+    regarder les murs exterieurs^
+    prendre la clef^^";
+    KeyCharPrimitive();
+    style underline; print "Première possibilité :^";
+    style roman; print "deverrouiller le tiroir de droite^
+    ouvrir le tiroir de droite^
+    prendre le poignard dans le tiroir de droite^
+    regarder les murs interieurs^
+    gratter le papier peint^
+    regarder la plaque de bois^
+    tirer la plaque de bois^
+    sortir^^";
+    KeyCharPrimitive();
+    style underline; print "Seconde possibilité :^";
+    style roman; print "deverrouiller le placard^
+    ouvrir le placard^
+    prendre le vase dans le placard^
+    regarder les murs interieurs^
+    jeter le vase sur le papier peint^
+    regarder la plaque de bois^
+    tirer la plaque de bois^
+    sortir^";
+  }
+  if (menu_item==7) { return 3; }
+];
+
+[ AuthorSub;
+  print "Cette fiction interactive est la deuxième oeuvre de Rémi Verschelde (Akien), réalisée dans le cadre de la quatrième édition du concours des jeux d'aventures textuels organisé par la communauté francophone de fictions interactives (ifiction.free.fr).^^Le concours, qui comptait 5 jeux en lice, s'est terminé le lundi 15 décembre 2008 à 11:57, sur le classement suivant :^
+  - "; style underline; print "Brume"; style roman; print ",^
+  - "; style underline; print "Lettres volées"; style roman; print ", par Éric Forgeot (Otto Grimwald),^
+  - "; style underline; print "Survivre"; style roman; print ", par Benjamin Roux (Yoruk),^
+  - "; style underline; print "Le loup, la chèvre et la salade"; style roman; print ", par Benjamin Roux (Yoruk),^
+  - "; style underline; print "Le donjon aux 1001 dangers et mystères"; style roman; print ", par SIM54.^^
+  Le thème du concours était la "; style underline; print "fumée"; style roman; ", ce terme pouvant être interprété par les auteurs de la façon dont ils le souhaitaient.";
+];
+
+[ ThanksSub;
+  print "Je tiens à remercier en premier lieu tous les protagonistes du concours 2008, auteurs, joueurs, testeurs et commentateurs, et surtout Éric Forgeot (Otto Grimwald) car sans son organisation le concours n'aurait pas eu lieu. Merci aux neuf personnes qui ont voté et émis des avis riches et constructifs, merci à Samuel Verschelde (Stormi) pour sa beta-test assez poussée avant l'échéance, merci aussi à Flap qui proposa le thème de cette édition du concours.^^Merci à Graham Nelson et à toutes les communautés de fiction interactive qui font évoluer cette discipline méconnue qu'est le jeu textuel mais néanmoins passionnante, et notamment à son carrefour francophone: "; style underline; print "ifiction.free.fr"; style roman; ".";
+];
+
+[ LicenseSub;
+  print "Licence BSD^
+  Copyright (c) 2008 Rémi Verschelde (Akien) - http://ifiction.free.fr^^
+  Tous droits réservés.^
+  La redistribution et l'utilisation sous forme binaire ou de code source,
+  avec ou sans modification, est autorisée à condition que les conditions 
+  suivantes soient respectées:^^
+  1. Les redistributions du code source doivent conserver l'indication de 
+   copyright ci-dessus, cette liste de conditions et la renonciation suivante.^ 
+  2. Les redistributions sous forme binaire doivent reproduire l'indication 
+   de copyright ci-dessus, cette liste de conditions et la renonciation suivante 
+   dans la documentation et/ou les autres accessoires fournis avec la distribution.^ 
+  3. Toutes les publicités mentionnant les caractéristiques ou l'utilisation 
+   de ce logiciel doivent mentionner la phrase suivante : 
+   ~Ce produit inclus un logiciel et du travail développés par Rémi Verschelde (Akien) et
+   la communauté de la fiction interactive francophone (http://ifiction.free.fr/) 
+    et internationale, ainsi que par les créateurs du système INFORM 
+   (http://www.inform-fiction.org).~^
+  4. Les noms des créateurs et développeurs ne peuvent être utilisés pour 
+   approuver ou promouvoir les produits dérivés de ce logiciel sans une 
+   permission écrite spécifique préalable.^^";
+  KeyCharPrimitive();
+  print "CE LOGICIEL EST FOURNI PAR LES TITULAIRES DU COPYRIGHT ET LES PARTICIPANTS
+  ~TEL QUEL~ ET TOUTES LES GARANTIES EXPLICITES OU IMPLICITES, Y COMPRIS, 
+  MAIS NON LIMITÉES A CELLES-CI, LES GARANTIES IMPLICITES DE COMMERCIALISATION 
+  ET D'ADÉQUATION À UN USAGE PARTICULIER SONT DÉNIÉES.
+  EN AUCUN CAS LES TITULAIRES DU COPYRIGHT OU LES PARTICIPANTS NE PEUVENT 
+  ÊTRE TENUS POUR RESPONSABLE DES DOMMAGES DIRECTS, INDIRECTS, FORTUITS, 
+  PARTICULIERS, EXEMPLAIRES OU CONSÉCUTIFS À UNE ACTION (Y COMPRIS, MAIS NON 
+  LIMITÉS À CEUX-CI, L'ACQUISITION DE MARCHANDISES OU DE SERVICES DE REMPLACEMENT; 
+  LES PERTES D'UTILISATIONS, DE DONNÉES OU FINANCIÈRES; OU L'INTERRUPTION 
+  D'ACTIVITÉS) DE QUELQUE MANIÈRE QUE CES DOMMAGES SOIENT CAUSÉS ET CECI 
+  POUR TOUTES LES THÉORIES DE RESPONSABILITÉS, QUE CE SOIT DANS UN CONTRAT, 
+  POUR DES RESPONSABILITÉS STRICTES OU DES PRÉJUDICES (Y COMPRIS DUS À UNE 
+  NEGLIGENCE OU AUTRE CHOSE) SURVENANT DE QUELQUE MANIÈRE QUE CE SOIT EN DEHORS 
+  DE L'UTILISATION DE CE LOGICIEL, MÊME EN CAS D'AVERTISSEMENT DE LA POSSIBILITÉ 
+  DE TELS DOMMAGES.^";
+];
+
+[ DormirSub;
+  print "Vous ne pouvez pas dormir sur ", (the) noun, ".^";
+];
+
+[ AllerSousSub;
+  print "Vous ne pouvez pas aller sous ", (the) noun, ".^";
+];
+
+[ RegarderParSub;
+  print "Vous ne pouvez pas regarder à travers ", (the) noun, ".^";
+];
+
+[ TirerSub;
+  print "Vous ne pouvez pas tirer sur ", (the) noun, ".^";
+];
+
+[ ViderSurSub;
+  print "Ce serait futile.";
+];
+
+[ ViderDansSub;
+  print (The) second, " ", (IsorAreNot) second, " un récipient pouvant contenir ", (the) noun, ".^";
+];
+
+![ PrendreSousSub;
+!  print (The) noun, " ", (IsorAreNot) noun, " sous ", (the) second, ".^";
+!];
+
+!==============================================================================
+
+Global ScenicFlag = 4;
+
+Constant ScenicErrorOther = "Vous n'y voyez aucune utilité.";
+Constant ScenicErrorLook = NULL; ! utiliser le message par défaut Miscellany 39
+Constant ScenicErrorSmell = NULL; ! utiliser le message par défaut pour "Smell"
+Constant ScenicErrorListen = NULL; ! utiliser le message par défaut pour "Listen"
+Constant ScenicErrorTouch = "Vous n'y voyez aucune utilité.";
+Constant ScenicErrorTaste = "C'est non comestible, selon toute évidence."; ! utiliser le message par défaut pour "Taste"
+Include "scenic5sens";
+
+! Version 1.0
+
+Include "FrenchG";
+
+! Version 2.3 des bibliothèques francophones
+
+!==============================================================================
+  
+Extend only "devisser" replace
+  * noun                                     -> Remove;
+
+Extend only "visser" replace  
+  * noun 'sur' noun                          -> PutOn;
+
+Extend "dormir" last
+  * 'sur'/'dans' noun                        -> Dormir;
+
+Extend "aller" first
+  * 'sous'/'dessous' noun                    -> AllerSous;
+
+Extend "souffler" first
+  * 'sur' noun                               -> Blow
+  * noun                                     -> Blow;
+
+Extend "vider" replace
+  * noun                                     -> Empty
+  * noun 'sur' noun                          -> ViderSur
+  * noun 'dans' noun                         -> ViderDans;
+
+Extend "regarder" last
+  * 'par' noun                               -> RegarderPar
+  * 'a' 'travers' noun                       -> RegarderPar;
+
+Extend "tirer" last
+  * 'sur' noun                               -> Tirer;
+
+!Extend "prendre" last
+!  * noun 'sous'/'dessous' noun              -> PrendreSous;
+
+Verb "installer"
+  * noun 'sur' noun                          -> PutOn;
+
+Verb "tremper" = "inserer";
+
+Verb "degager" = "tirer";
+
+Verb "help" "aide" "manuel" "manual" "info" "information" "menu"
+    *                                        -> Help;
+
+Verb "solution" "soluce"
+    *                                        -> Soluce;
+
+Verb "auteur" "credits"
+    *                                        -> Author;
+
+Verb "licence" "license" "droits"
+    *                                        -> License;
+
+Verb "remerciements" "testeurs" "merci"
+    *                                        -> Thanks;
+
+!==============================================================================
