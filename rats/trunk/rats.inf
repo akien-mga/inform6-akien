@@ -152,7 +152,7 @@ Property adjective; ! pour la gestion des adjectifs
 
     !  print "Which are identical!^";
     rtrue;
-];
+]; 
 
 Object  LibraryMessages         ! Pour remplacer certains messages standard
   with  before [;
@@ -166,49 +166,55 @@ Object  LibraryMessages         ! Pour remplacer certains messages standard
 Include "VerbLib";
 
 ! (Samuel Verschelde, tiré et amélioré de pname.h) gestion des adjectifs
-    ! et gestion aussi des mots de liaison comme dans "boule DE cristal"
-    ! => de est accepté, ainsi que d'autres mots que l'on peut trouver
-    ! entre deux mots désignant un même objet.
-    [ ParseNoun obj n m p w;
-        w = NextWord();
-        while((WordInProperty(w,obj,name) == 1) || (WordInProperty(w,obj,adjective) == 1) ||
-        (w=='de' or 'du' or 'des' or 'd^' or 'la' or 'le' or 'l^' or 'en' or 'a' or 'au' or 'aux'))
+! et gestion aussi des mots de liaison comme dans "boule DE cristal"
+! => de est accepté, ainsi que d'autres mots que l'on peut trouver
+! entre deux mots désignant un même objet.
+[ ParseNoun obj n m p w dict_flags_of_noun;
+    dict_flags_of_noun = 0;
+
+    w = NextWord();
+    while((WordInProperty(w,obj,name) == 1) || (WordInProperty(w,obj,adjective) == 1) || (w=='de' or 'du' or 'des' or 'd^' or 'la' or 'le' or 'l^' or 'en' or 'a' or 'au' or 'aux'))
+    {
+        ! remarque : si un mot est à la fois dans name et adjective, il ne sera
+        ! compté qu'une fois, pour la propriété name
+        if (WordInProperty(w,obj,name) == 1)
         {
-            ! remarque : si un mot est à la fois dans name et adjective, il ne sera
-            ! compté qu'une fois, pour la propriété name
-            if (WordInProperty(w,obj,name) == 1)
+            dict_flags_of_noun = ((w->#dict_par1) & $$01110100);
+            if (dict_flags_of_noun & 4) ! si c'est un pluriel (//p)
             {
-                m++;
+                parser_action = ##PluralFound; ! notifier qu'un pluriel pouvant désigner
+                                               ! plusieurs objets a été trouvé
+            }
+            m++;
+            p=0;
+        }
+        else
+        {
+            if (WordInProperty(w,obj,adjective) == 1)
+            {
+                n++;
                 p=0;
             }
             else
             {
-                if (WordInProperty(w,obj,adjective) == 1)
+                ! Si le mot est 'de', 'du', 'des', 'la', 'en', 'a', 'au' ,'aux' :
+                if (w=='de' or 'du' or 'des' or 'd^' or 'la' or 'le' or 'l^' or 'en' or 'a' or 'au' or 'aux')
                 {
-                    n++;
-                    p=0;
-                }
-                else
-                {
-                    ! Si le mot est 'de', 'du', 'des', 'la', 'en', 'a', 'au' ,'aux' :
-                    if (w=='de' or 'du' or 'des' or 'd^' or 'la' or 'le' or 'l^' or 'en' or 'a' or
-                    'au' or 'aux')
-                    {
-                        ! ajouter 1 à la variable p, qui contient le score à retirer
-                        ! au final (afin de revenir en arrière en cas d'occurrences qui ne
-                        ! sont pas comprises entre deux noms reconnus).
-                        n++; ! compter ce mot comme pertinent est discutable,
-                             ! mais sans cela cela ne fonctionne pas
-                        p++;
-                    }
+                    ! ajouter 1 à la variable p, qui contient le score à retirer
+                    ! au final (afin de revenir en arrière en cas d'occurrences qui ne
+                    ! sont pas comprises entre deux noms reconnus).
+                    n++; ! compter ce mot comme pertinent est discutable,
+                         ! mais sans cela cela ne fonctionne pas
+                    p++;
                 }
             }
-
-            w = NextWord();
         }
-        wn = wn -p -1; ! retour arrière car le dernier mot lu n'a pas été reconnu
-        if (m == 0) return 0; return (m+n-p);
-    ];
+
+        w = NextWord();
+    }
+    wn = wn -p -1; ! retour arrière car le dernier mot lu n'a pas été reconnu
+    if (m == 0) return 0; return (m+n-p);
+];
 
 !=======================================================================================
 
@@ -270,7 +276,6 @@ Object  trou_dortoirs_trone "salle du trône" trou_dortoirs class Entree
           Go,GoIn,Enter:
             PlayerTo(trou_trone); rtrue;
         ];
-
 
 Object  heros "vous" trou_dortoirs
   with  name 'heros' 'protagoniste' 'moi' 'hotte' 'sac' 'bagage',
@@ -2826,7 +2831,7 @@ Include "FrenchG";
 
 ! Version 2.3 des bibliothèques francophones
 
-Verb "help" "aide" "manuel" "manual" "info" "information"
+Verb "help" "aide" "manuel" "manual" "info" "information" "menu"
     *               -> Help;
 
 Verb "astuces" "tips" "astuce" "tip"
