@@ -1,4 +1,4 @@
-!% -SD
+!% -S
 !==============================================================================
 
 Constant Story "Brume";
@@ -230,7 +230,7 @@ Object  chambre "Dans une chambre délabrée"
             ClearScreen();
             print "La douleur est lancinante, transperce votre crâne, réduit votre esprit à un flot vaporeux, une "; style underline; print "brume"; style roman; print " opaque, moite, dans laquelle vos pensées errent et se perdent, se disloquent, s'annihilent...^^
             Le réveil est rude. Vous prenez rapidement conscience de l'état d'extrême faiblesse dans lequel vous vous trouvez, votre corps débile et atrophié semblant à peine capable de porter votre tête pesante, lourde.^^
-            Au prix d'un immense effort, vous parvenez néanmoins à soulever vos jambes, délaissant les draps de lin grossier au profit du parquet miteux.";
+            Au prix d'un immense effort, vous parvenez néanmoins à soulever vos jambes, délaissant les draps de lin grossier au profit du parquet miteux.^";
             KeyCharPrimitive();
             ClearScreen();
           }
@@ -451,7 +451,7 @@ Class   Gelule
 
 Class   Gelule_vide
   with  name 'gelule' 'gelules//p' 'compartiment' 'capsule' 'capsules//p',
-        adjective 'blanche' 'etrange' 'bleue' 'bleu' 'blanc' 'plastique' 'souple' 'solide' 'ouverte' 'vide',
+        adjective 'blanche' 'blanches' 'etrange' 'etranges' 'bleue' 'bleues' 'bleu' 'blanc' 'blanche' 'blanches' 'plastique' 'souple' 'solide' 'ouverte' 'ouvertes' 'vide' 'vides',
         short_name "gélule vide",
         plural "gélules vides",
         description "La gélule est désormais totalement vide.",
@@ -704,11 +704,17 @@ Object  cintres "cintres tordus" armoire
 Object  buffet "buffet" chambre class Decor
   with  name 'buffet' 'commode' 'credence' 'bahut' 'meuble',
         adjective 'ebene' 'noir',
-        description "Le buffet d'ébène est grossièrement agencé devant la fenêtre, à l'est. Il comporte un tiroir à gauche, un autre à droite, et un placard plus grand dans sa partie inférieure.",
+        description [;
+          if (children(buffet) > 0) {
+            print "Le buffet d'ébène est grossièrement agencé devant la fenêtre, à l'est. Il comporte un tiroir à gauche, un autre à droite, et un placard plus grand dans sa partie inférieure. Sur le buffet, vous voyez : "; WriteListFrom(child(buffet), ENGLISH_BIT); print ".^";
+          }
+          else { "Le buffet d'ébène est grossièrement agencé devant la fenêtre, à l'est. Il comporte un tiroir à gauche, un autre à droite, et un placard plus grand dans sa partie inférieure."; }
+        ],
         before [;
           Search,Open,Close,Lock,Unlock: "Soyez plus précis : il comporte deux tiroirs et un placard.";
           LookUnder: "De la poussière en quantité.";
-        ];
+        ],
+  has   supporter;
 
 Object  poussiere "poussière" chambre class Decor
   with  name 'poussiere' 'salete' 'crasse',
@@ -1101,7 +1107,8 @@ Object  batisse "bâtisse" class Decor
         before [;
           Examine,Look:
           default: "Tant que vous serez séquestré dans ce lieu, cela restera impossible.";
-        ];
+        ],
+  has   female;
 
 Object  ruelle "ruelle" class Decor
   with  name 'rue' 'ruelle' 'chaussee',
@@ -1110,7 +1117,8 @@ Object  ruelle "ruelle" class Decor
         before [;
           Examine,Look:
           default: "Tant que vous serez séquestré dans ce lieu, cela restera impossible.";
-        ];
+        ],
+  has   female;
 
 Object  clef "clef du buffet" murs_exterieurs
   with  name 'clef' 'cle' 'clé' 'clefs' 'cles' 'clés' 'trousseau',
@@ -1185,7 +1193,7 @@ Object  passage "passage sombre" class Decor
 [ Initialise;
   lookmode = 2;
   ChangePlayer(heros);
-  print "La brume s'appesantit sur le rivage de l'immense océan immaculé, les marées d'écume se succèdent, l'une, puis l'autre, et enfin surviennent les cendres, brûlantes, précédées d'une abondante fumée...^^Le brouillard noie dans ses bras voluptueux les derniers rescapés, arbres majestueux aux mille branches rougeoyantes, tandis que déjà, les flammes dévorent plantes et animaux indistinctement, répandant au-dessus de la forêt une traînée grisâtre de fumée...^^Battue de pluies diluviennes, la fière montagne panse ses blessures infligées par le feu, l'eau du ciel ruisselant dans chaque aspérité de la paroi, faisant ainsi émerger dans un bruit strident de crissement les dernières vapeurs noires fumantes...^^";
+  print "La brume s'appesantit sur le rivage de l'immense océan immaculé, les marées d'écume se succèdent, l'une, puis l'autre, et enfin surviennent les cendres, brûlantes, précédées d'une abondante fumée...^^Le brouillard noie dans ses bras voluptueux les derniers rescapés, arbres majestueux aux mille branches rougeoyantes, tandis que déjà, les flammes dévorent plantes et animaux indistinctement, répandant au-dessus de la forêt une traînée grisâtre de fumée...^^Battue de pluies diluviennes, la fière montagne panse ses blessures infligées par le feu, l'eau du ciel ruisselant dans chaque aspérité de la paroi, faisant ainsi émerger dans un bruit strident de crissement les dernières vapeurs noires fumantes...^";
   KeyCharPrimitive();
   ClearScreen();
   print "Si vous jouez pour la première fois à une fiction interactive, tapez "; style underline; print "aide"; style roman; print " une fois l'introduction passée.^^";
