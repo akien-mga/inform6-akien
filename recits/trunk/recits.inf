@@ -1,0 +1,459 @@
+!% -S
+!==============================================================================
+
+Constant Story "Récits de grand-père";
+Constant Headline
+             "^Fiction interactive écrite par Rémi Verschelde (Akien),^
+             pour la quatrième speed-if francophone.^^";
+Release 1;
+
+Constant NO_SCORE;
+
+Replace Identical; ! pour la gestion des adjectifs
+
+Include "Parser";
+
+
+!--------------------------------------------
+! Attributs et propriétés
+!--------------------------------------------
+Property adjective; ! pour la gestion des adjectifs
+
+!--------------------------------------------
+! Directives de remplacement
+!--------------------------------------------
+! (Samuel Verschelde, tiré de pname.h)
+! Cette fonction est recopiée de parserm.h, avec un ajout pour tenir
+! compte de la propriété "adjective."
+[ Identical o1 o2 p1 p2 n1 n2 i j flag;
+    if (o1 == o2) rtrue;  ! This should never happen, but to be on the safe side
+    if (o1 == 0 || o2 == 0) rfalse;  ! Similarly
+    if (parent(o1) == compass || parent(o2) == compass) rfalse; ! Saves time
+
+    !  What complicates things is that o1 or o2 might have a parsing routine,
+    !  so the parser can't know from here whether they are or aren't the same.
+    !  If they have different parsing routines, we simply assume they're
+    !  different.  If they have the same routine (which they probably got from
+    !  a class definition) then the decision process is as follows:
+    !
+    !     the routine is called (with self being o1, not that it matters)
+    !       with noun and second being set to o1 and o2, and action being set
+    !       to the fake action TheSame.  If it returns -1, they are found
+    !       identical; if -2, different; and if >=0, then the usual method
+    !       is used instead.
+
+    if (o1.parse_name ~= 0 || o2.parse_name ~= 0) {
+        if (o1.parse_name ~= o2.parse_name) rfalse;
+        parser_action = ##TheSame; parser_one = o1; parser_two = o2;
+        j = wn; i = RunRoutines(o1,parse_name); wn = j;
+        if (i == -1) rtrue;
+        if (i == -2) rfalse;
+    }
+
+    !  This is the default algorithm: do they have the same words in their
+    !  "name" (i.e. property no. 1) properties.  (Note that the following allows
+    !  for repeated words and words in different orders.)
+
+    p1 = o1.&1; n1 = (o1.#1)/WORDSIZE;
+    p2 = o2.&1; n2 = (o2.#1)/WORDSIZE;
+
+    !  for (i=0 : i<n1 : i++) { print (address) p1-->i, " "; } new_line;
+    !  for (i=0 : i<n2 : i++) { print (address) p2-->i, " "; } new_line;
+
+    for (i=0 : i<n1 : i++) {
+        flag = 0;
+        for (j=0 : j<n2 : j++)
+            if (p1-->i == p2-->j) flag = 1;
+        if (flag == 0) rfalse;
+    }
+
+    for (j=0 : j<n2 : j++) {
+        flag = 0;
+        for (i=0 : i<n1 : i++)
+            if (p1-->i == p2-->j) flag = 1;
+        if (flag == 0) rfalse;
+    }
+
+    ! DEBUT MODIFICATION POUR LES ADJECTIFS
+    ! test sur la propriété adjective :
+    ! deux objets qui ont le même "name" mais
+    ! pas le même "adjective"
+    if ((o1 provides adjective) ~= (o2 provides adjective))
+        rfalse;
+
+    if (o1 provides adjective && o2 provides adjective)
+    {
+        n1=(o1.#adjective)/WORDSIZE; n2=(o2.#adjective)/WORDSIZE;
+
+        ! If there are a different number of words in the adjective
+        ! properties, they are distinguishable.
+        if (n1 ~= n2)
+            rfalse;
+
+        p1=o1.&adjective; p2=o2.&adjective;
+
+        for (i=0 : i<n1 : i++)
+        {
+            flag = 0;
+            for (j=0 : j<n2 : j++)
+                if (p1-->i == p2-->j) flag = 1;
+            if (flag == 0) rfalse;
+        }
+
+        for (j=0 : j<n2 : j++)
+        {
+            flag = 0;
+            for (i=0 : i<n1 : i++)
+                if (p1-->i == p2-->j) flag = 1;
+            if (flag == 0) rfalse;
+        }
+    }
+    ! FIN MODIFICATION POUR LES ADJECTIFS
+
+    !  print "Which are identical!^";
+    rtrue;
+];
+
+Include "VerbLib";
+
+! (Samuel Verschelde, tiré et amélioré de pname.h) gestion des adjectifs
+! et gestion aussi des mots de liaison comme dans "boule DE cristal"
+! => de est accepté, ainsi que d'autres mots que l'on peut trouver
+! entre deux mots désignant un même objet.
+[ ParseNoun obj n m p w dict_flags_of_noun;
+    dict_flags_of_noun = 0;
+
+    w = NextWord();
+    while((WordInProperty(w,obj,name) == 1) || (WordInProperty(w,obj,adjective) == 1) || (w=='de' or 'du' or 'des' or 'd^' or 'la' or 'le' or 'l^' or 'en' or 'a' or 'au' or 'aux'))
+    {
+        ! remarque : si un mot est à la fois dans name et adjective, il ne sera
+        ! compté qu'une fois, pour la propriété name
+        if (WordInProperty(w,obj,name) == 1)
+        {
+            dict_flags_of_noun = ((w->#dict_par1) & $$01110100);
+            if (dict_flags_of_noun & 4) ! si c'est un pluriel (//p)
+            {
+                parser_action = ##PluralFound; ! notifier qu'un pluriel pouvant désigner
+                                               ! plusieurs objets a été trouvé
+            }
+            m++;
+            p=0;
+        }
+        else
+        {
+            if (WordInProperty(w,obj,adjective) == 1)
+            {
+                n++;
+                p=0;
+            }
+            else
+            {
+                ! Si le mot est 'de', 'du', 'des', 'la', 'en', 'a', 'au' ,'aux' :
+                if (w=='de' or 'du' or 'des' or 'd^' or 'la' or 'le' or 'l^' or 'en' or 'a' or 'au' or 'aux')
+                {
+                    ! ajouter 1 à la variable p, qui contient le score à retirer
+                    ! au final (afin de revenir en arrière en cas d'occurrences qui ne
+                    ! sont pas comprises entre deux noms reconnus).
+                    n++; ! compter ce mot comme pertinent est discutable,
+                         ! mais sans cela cela ne fonctionne pas
+                    p++;
+                }
+            }
+        }
+
+        w = NextWord();
+    }
+    wn = wn -p -1; ! retour arrière car le dernier mot lu n'a pas été reconnu
+    if (m == 0) return 0; return (m+n-p);
+];
+
+!==============================================================================
+
+Class   Decor
+  has   scenery concealed;
+
+Attribute chargee;
+
+!==============================================================================
+
+Object  rue "Dans la rue"
+  with  name 'rue' 'ruelle' 'route' 'chemin',
+        description "Une rue commune, identique à toutes celles de ce quartier, qui se croisent à angle droits. Sur les côtés est et ouest se succèdent de jolies maisons, toutes semblables. La route continue à perte de vue au nord et au sud. Vous vous trouvez devant votre maison, à l'est.",
+        initial [;
+          KeyCharPrimitive();
+          ClearScreen();
+          "~Pierre, il va bientôt être sept heures, dépêche-toi de rentrer à la maison !~^^
+          Vous détournez votre regard de vos billes qui jonchent le sol et regardez votre mère rentrer chez vous en laissant la porte ouverte, vous invitant à la suivre.";
+        ],
+        e_vu 0,
+        n_to "Allons, vous pouvez bien jouer aux billes quelques minutes de plus. Votre montre n'indique que six heures vingt-trois après tout.",
+        s_to "Allons, vous pouvez bien jouer aux billes quelques minutes de plus. Votre montre n'indique que six heures vingt-trois après tout.",
+        w_to "Rentrer chez Tommy ? Pourquoi pas.^Vous allez sonner mais personne ne répond.",
+        e_to [;
+          if (self.e_vu == 0) {
+            self.e_vu = 1;
+            "Votre mère voudrait vous voir rentrer, mais le soleil est encore haut de le ciel et puis, il n'est que six heures vingt-trois.";
+          }
+          else {
+            print "Finalement c'est vrai qu'il se fait tard, mieux vaut obéir à votre mère. Vous rentrez chez vous et votre mère vous sert un bon verre de lait.";
+            deadflag = 2;
+            rtrue;
+          }
+        ];
+
+Object  heros "vous" rue
+  with  name 'heros' 'vous' 'moi' 'protagoniste' 'personnage' 'joueur' 'enfant' 'gosse' 'pierre',
+        description "Vous êtes un enfant turbulent, mais pas méchant, et qui sait tout l'amour que lui portent ses parents. Vous portez une montre au poignet.",
+  has   male animate light;
+
+Object  maisons "maisons" rue class Decor
+  with  name 'maison' 'maisons' 'foyer',
+        adjective 'identique' 'identiques' 'semblable' 'semblables',
+        description "De multiples maisons identiques qui s'alignent à l'est et à l'ouest. La votre se trouve derrière vous, à l'est.",
+  has   female pluralname;
+
+Object  montre "montre" heros
+  with  name 'montre' 'poignet',
+        adjective 'fluo' 'fluorescente',
+        article "votre",
+        vue 0,
+        description [;
+          if (self.vue == 0) {
+            self.vue = 1;
+            "Votre montre fluorescente indique six heures vingt-trois.";
+          }
+          else { "Votre montre indique toujours six heures vingt-trois. Peut-être est-elle cassée finalement ?"; }
+        ],
+  has   female worn;
+
+Object  sac_billes "sac de billes" rue
+  with  name 'sac' 'sachet',
+        adjective 'tissus' 'bille' 'billes',
+        article "votre",
+        description [;
+          print "Un sac de billes en tissus qui contient neuf billes.^";
+        ],
+        before [;
+          Receive:
+            if (noun == billes) { rfalse; }
+            else { "Ce sac ne peut contenir que des billes."; }
+        ],
+  has   container open;
+
+Object  billes "billes rouges et bleues" sac_billes
+  with  name 'bille' 'billes',
+        adjective 'bleue' 'bleu' 'bleues' 'bleus' 'rouge' 'rouges',
+        description "Des billes rouges et bleues, de vos couleurs préférées.",
+  has   female pluralname;
+
+Object  bunker "Dans un bunker délabré"
+  with  name 'bunker' 'blockhaus' 'casemate' 'fortin',
+        adjective 'delabre' 'vetuste',
+        description "Ce blockhaus semble manifestement de facture italienne. Les ouvertures sont bien trop hautes pour que vous puissez regarder à l'extérieur ou vous hisser, mais vous pouvez observer quelques éléments intéressants, dont une porte en fer à l'ouest.",
+        before [;
+          Pull,VagueFire:
+            if (noun == 0) { <<VagueUse breda>>; }
+        ],
+        w_to porte_beta,
+        cant_go "Aucune issue de ce côté là.";
+
+Object  breda "mitrailleuse Breda M37" bunker
+  with  name 'mitrailleuse' 'breda' 'm37' 'm1937',
+        adjective 'lourde' 'italienne',
+        description [;
+          print "Une mitrailleuse lourde fixée dans la paroi et pointant vers l'extérieur, sur laquelle vous parvenez à lire : ~Breda M1937~. Votre grand-père vous avait parlé de cette fameuse arme qu'utilisaient les italiens durant la guerre de 39-45.";
+          if (self has chargee) { " Elle semble chargée..."; }
+          else { " Elle n'est heureusement pas chargée."; }
+        ],
+        before [;
+          Receive:
+            if (noun == chargeur) { rfalse; }
+            else { "Vous ne pouvez rien mettre d'autre que des munitions pour Breda M37 dans cette arme."; }
+          VagueUse:
+            if (self has chargee) {
+              move chargeur to thedark;
+              give breda ~chargee;
+              print "Vous hissant sur la pointe des pieds, vous appuyez sur la détente et tirez une salve de munitions dans un bruit assourdissant.^^Vous entendez alors de grands cris et un homme en uniforme s'approche, vous dévisage. Il vous parle dans une langue que vous ne comprenez pas, de l'italien très probablement. Vous l'entendez alors longer le bunker pour descendre à votre niveau, et déverrouiller la porte qui donne sur l'extérieur.^^
+              Il arrive le front rouge de rage, écumant, bouillant comme si de la vapeur lui sortait par les oreilles, et vous agrippe par le col. Vous traînant à l'extérieur, il vous propulse devant lui sur le "; style underline; print "no man's land"; style roman; print ".^";
+              PlayerTo(nomansland);
+              rtrue;
+            }
+            else { "Vous appuyez sur la gachette mais rien ne se produit."; }
+          Fire:
+            if (noun == self) { <<VagueUse self>>; }
+        ],
+  has   female static ~chargee;
+
+Object  bunker_couloir "Couloir menant à l'extérieur"
+  with  name 'bunker' 'blockhaus' 'casemate' 'fortin' 'couloir',
+        adjective 'delabre' 'vetuste',
+        description "Le couloir chemin d'est en ouest et débouche de chaque côté sur une porte en fer.",
+        w_to porte_alpha,
+        e_to porte_beta,
+        cant_go "Aucune issue de ce côté là.";
+
+Object  porte_beta "porte bêta"
+  with  name 'porte' 'beta',
+        adjective 'deuxieme' 'seconde' 'fer' 'lourde' 'blanc',
+        description "Une lourde porte de fer sur laquelle est inscrit un grand bêta en blanc.",
+        found_in bunker bunker_couloir,
+        door_dir [;
+          if (location == bunker) { return w_to; }
+          else { return e_to; }
+        ],
+        door_to [;
+          if (location == bunker) { return bunker_couloir; }
+          else { return bunker; }
+        ],
+  has   ~open openable door scenery female;
+
+Object  porte_alpha "porte alpha"
+  with  name 'porte' 'alpha',
+        adjective 'premiere' 'fer' 'lourde' 'blanc',
+        description "Une lourde porte de fer sur laquelle est inscrit un grand alpha en blanc.",
+        found_in bunker_couloir,
+        door_dir w_to,
+        door_to "La porte est fermée à clef, et vous ne possédez pas de quoi l'ouvrir.",
+  has   ~open locked lockable door scenery female;
+
+Object  malle "malle militaire en fer" bunker_couloir
+  with  name 'malle' 'caisse' 'coffre',
+        adjective 'militaire' 'fer' 'forge' 'lourde',
+        description "Une lourde malle militaire en fer forgé se trouve contre le mur sud.",
+  has   ~open openable container female;
+
+Object  chargeur "chargeur de Breda M37" malle
+  with  name 'chargeur' 'chargeurs' 'munitions' 'recharge' 'recharge' 'munition',
+        adjective 'breda' 'm37' 'm1937' 'militrailleuse',
+        before [;
+          Insert:
+            if (second == breda) {
+              give breda chargee;
+              move chargeur to breda;
+              "Vous chargez tant bien que mal la mitrailleuse Breda M37, avec le peu de connaissances en ballistiques que vous possédez. L'objet vous effraie et vous fascine à la fois.";
+            }
+          Take:
+            if (self in breda) {
+              give breda ~chargee;
+              move chargeur to player;
+              "Vous déchargez la mitrailleuse Breda M37. C'est en effet plus prudent.";
+            }
+        ];
+
+Object  nomansland "No man's land"
+  with  name 'no' 'man^s' 'land' 'terrain' 'vague',
+        description "Vous êtes au milieu de nulle part, sur un terrain vague. Le bunker dépasse du sol, devant vous, et vous pouvez sentir le regard du soldat italien peser sur vous depuis derrière la mitrailleuse, de même que les regards de nombreux autres militaires dans les tranchées. Au fur et à mesure que passe le temps, le bunker se fait plus distant...",
+        scenic_look 'cordellino' 'serge' 'gris' 'clair' 0 "L'uniforme classique des officiers italiens durant la Seconde Guerre mondiale, tel que vous l'a décrit votre grand-père."
+        'bottes' 'hautes' 'cuir' 'noir' 0 "Des bottes semblables à celles des militaires allemands."
+        'bunker' 'blockhaus' 'casemate' 'fortin' 0 "Le bunker vous semble s'éloigner...",
+        scenic_smell 'soldats' 'militaires' 'officiers' 'fascistes' 'italiens' 0 "Vous êtes loin d'eux, et pourtant vous parvenez à sentir l'odeur de crasse qui les imprègne.",
+        scenic_listen 'soldats' 'militaires' 'officiers' 'fascistes' 'italiens' 0 "Vous les entendez chuchoter en vous observant.",
+        scenic_allactions 'soldats' 'militaires' 'officiers' 'fascistes' 'italiens' 0 "De nombreux militaires vous observent depuis les tranchées, mais restent muets à vos supplications.",
+        before [;
+          Wake:
+            if (noun == 0) {
+              print "Vous vous réveillez en sursaut dans votre salon, assis sur le canapé aux côtés de votre grand-père qui vous racontait ses exploits militaires avant de s'endormir. Le coeur battant, vous allez raconter votre cauchemar à votre mère qui vous sert un verre de lait en disant qu'il est dangereux d'écouter le vécu terrifiant de son grand-père un peu gâteux lorsque l'on à six ans...";
+              deadflag = 2;
+              rtrue;
+            }
+        ],
+        cant_go [;
+          print "Vous esquissez un mouvement mais l'officier italien tire une salve de balles pour vous couper la route.";
+        ];
+
+Object  soldat "soldat italien" nomansland class Decor
+  with  name 'soldat' 'italien' 'militaire' 'fasciste' 'officier',
+        description [;
+          print "Vous pouvez plus le détailler désormais : c'est visiblement un officier italien vêtu d'un "; style underline; print "cordellino"; style roman; " en sergé gris clair et portant de hautes bottes de cuir noir.";
+        ],
+        before [;
+          Attack:
+            print "Vous tentez de l'approcher mais l'officier tire une salve de balles de Brenda M37...^^
+            Vous vous réveillez en sursaut dans votre salon, assis sur le canapé aux côtés de votre grand-père qui vous racontait ses exploits militaires avant de s'endormir. Le coeur battant, vous allez raconter votre cauchemar à votre mère qui vous sert un verre de lait en disant qu'il est dangereux d'écouter le vécu terrifiant de son grand-père un peu gâteux lorsque l'on à six ans...";
+            deadflag = 2;
+            rtrue;
+        ],
+        life [;
+          Look,Examine:
+          Tell,Ask,AskFor,Answer,ParlerSansPrecision: "Vous balbutiez quelques mots en français et l'officier vous répond avec un fort accent :^^
+          ~Pas oune geste sinon je te toue, comunista !~^^
+          Ah, si seulement vous aviez écouté votre mère ! Si seulement vous pouviez vous réveiller, sortir de ce cauchemar affreux.";
+          default: "Il est trop loin de vous et il vous fait signe de ne pas bouger.";
+        ],
+  has   male animate;
+
+!==============================================================================
+
+[ Initialise;
+  lookmode = 2;
+  ChangePlayer(heros);
+  print "Si vous jouez pour la première fois à une fiction interactive, tapez "; style underline; print "aide"; style roman; print " une fois l'introduction passée.^^";
+];
+
+[ HelpSub;
+  print "Ce programme est un jeu d'aventure textuel, ou "; style underline; print "fiction interactive"; style roman; print " et se base donc sur un dialogue entre le joueur, vous, et sa machine. Ainsi vous pouvez interagir avec le milieu environnant à travers des ordres à l'infinitif, tels que ceux-ci :^"; print " > regarder les murs interieurs^ > prendre les gelules^ > ouvrir la fenetre^^Il peut parfois arriver (voire assez souvent pour un joueur néophyte) que vos instructions ne soient pas comprises, vous pouvez alors réessayer en reformulant d'une manière plus claire et simple (l'association "; style underline; print "verbe"; style roman; print " + "; style underline; print "complément"; style roman; print " est la plus courante).^^"; print "Pour déplacer votre personnage de lieux en lieux, utilisez les huits points cardinaux ("; style underline; print "nord, nord-est, est, sud-est, sud, sud-ouest, ouest, nord-ouest, nord"; style roman; print ") ainsi qu'"; style underline; print "entrer, sortir, haut, bas"; style roman; print ".^Pour avoir de nouveau la description d'un lieu qui apparaît lorsque l'on s'y rend, tapez "; style underline; print "regarder"; style roman; print " lorsque vous vous y trouvez, et pour lister vos acquisitions, tapez "; style underline; print "inventaire"; style roman; print ".^^Vous pouvez aussi utiliser les commandes "; style underline; print "annuler, sauvegarder, charger, recommencer"; style roman; print " et "; style underline; print "quitter"; style roman; print ".^^Enfin le site "; style underline; print "http://ifiction.free.fr"; style roman; print " et toute la communauté française de fiction interactive sont à votre disposition.^";
+];
+
+[ PlaySub;
+  if ((billes in location) || (billes in sac_billes) || (billes in player)) {
+    print "Vous tapez d'une pichenette dans une bille qui vient en heurter une seconde.^^
+    Votre mère sort à nouveau de la maison : ~Pierre, il est tard ! Rentre tout de suite où le bonhomme sept-heures viendra t'enlever !~^^
+    Dédaignant son injonction, vous continuez à jouer quand soudain...^^";
+    move billes to rue;
+    KeyCharPrimitive();
+    print "Un vieil homme à l'air sérieux, portant un chapeau melon, une longue cape noire et un sac sur son dos, s'approche claudiquant à l'aide d'une canne de bois clair. Arrivé à votre hauteur, il prend une poignée de sable dans son sac et vous la lance au visage. Vous êtes aveuglé mais comprenez cependant qu'il vous emporte sur son épaule, tandis qu'au loin résonne la voix de votre mère :^^
+    ~Je t'avais prévenu que le bonhomme sept-heures aller passer ! Si tu avais écouté ta mère, ça ne serait pas arrivé ! Ah, j'aurais dû rendre son paquet à la cigogne qui t'a confié à moi.~^^";
+    KeyCharPrimitive();
+    ClearScreen();
+    print "Sans trop savoir comment, vous reprenez connaissance seul dans un blockhaus datant, à ce que laissent penser les faisceaux romains gravés sur les murs au couteau, du fascisme italien. Un peu comme dans les "; style underline; print "films"; style roman; print " qu'avait tournés votre grand-père durant la Seconde Guerre mondiale à l'aide du kinétographe de son propre aïeul. Vous vous souvenez des temps amusants où vous vous émerveilliez devant son kinétoscope centenaire, malgré l'atrocité des images qu'il vous montrait.^";
+    PlayerTo(bunker);
+  }
+  else { "Jouer avec quoi ?"; }
+];
+
+[ PlayBillesSub;
+  if (noun == billes) { <<Play>>; }
+  else { "Vous ne voulez pas jouer avec ça."; }
+];
+
+[ FireSub;
+  "Il n'y a aucune arme utilisable ici.";
+];
+
+[ VagueFireSub;
+  "Pouvez-vous être plus précis ?";
+];
+
+!==============================================================================
+
+Global ScenicFlag = 4;
+
+Constant ScenicErrorOther = "Vous n'y voyez aucune utilité.";
+Constant ScenicErrorLook = NULL; ! utiliser le message par défaut Miscellany 39
+Constant ScenicErrorSmell = NULL; ! utiliser le message par défaut pour "Smell"
+Constant ScenicErrorListen = NULL; ! utiliser le message par défaut pour "Listen"
+Constant ScenicErrorTouch = "Vous n'y voyez aucune utilité.";
+Constant ScenicErrorTaste = "C'est non comestible, selon toute évidence."; ! utiliser le message par défaut pour "Taste"
+Include "scenic5sens";
+
+! Version 1.0
+
+Include "FrenchG";
+
+! Version 2.3 des bibliothèques francophones
+
+!==============================================================================
+
+Verb "help" "aide" "manuel" "manual" "info" "information" "menu"
+    *                                        -> Help;
+
+Verb "jouer"
+  *                                             -> Play
+  * 'aux'/'avec' noun                           -> PlayBilles;
+
+Extend "tirer" first
+  * 'avec' noun                                 -> Fire;
+
+Extend "faire" first
+  * 'feu'                                       -> VagueFire
+  * 'feu' 'avec' noun                           -> Fire;
