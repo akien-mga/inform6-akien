@@ -114,6 +114,40 @@ Property adjective; ! pour la gestion des adjectifs
     rtrue;
 ];
 
+Object  LibraryMessages         ! Pour remplacer certains messages standard
+  with  before [;
+          Miscellany:
+            if (lm_n == 39)
+                 "Cela n'a pas la moindre importance.";
+          Smell:
+            if (location == bunker or bunker_couloir or nomansland) { "L'odeur de sang et de crasse est omniprésente en ces lieux."; }
+            else { "Aucune odeur singulière ne vient altérer vos perceptions déjà troubles."; }
+          Listen: 
+            if (location == bunker or bunker_couloir or nomansland) { "Vous entendez parfois des personnes parler à l'extérieur, mais relativement loin."; }
+            else { rfalse; }
+          WaveHands:
+            "Vous agitez vos petites menottes.";
+          CrierSansPrecision:
+            "Vous criez ce qui vous passe par la tête, mais personne ne répond.";
+          Sing:
+            print "Vous chantonnez les premières notes du générique de "; style underline; print "Il faut sauver le soldat Ryan"; style roman; ".";
+          Pray:
+            "Vous vous agenouillez pour vous recueillir.";
+          Think:
+            if (location == bunker or bunker_couloir or nomansland) { "Vous pensez... Et vous demandez si vous ne seriez pas en plein cauchemar."; }
+            else { "Vous pensez, et vos pensées vous disent de continuer à jouer."; }
+          Sleep:
+            if (location == bunker or bunker_couloir or nomansland) { print "Vous vous allongez et vous endormez...^^"; <<Wake>>; }
+            else { rfalse; }
+          Wake:
+            "Rêve ou réalité, qui saurait le dire ?";
+          Dig:
+            "Ce serait absurde.";
+          Buy:
+            "Rien n'est à vendre en ce lieu.";
+          ThrowAt: "À quoi bon ?";
+        ];
+
 Include "VerbLib";
 
 ! (Samuel Verschelde, tiré et amélioré de pname.h) gestion des adjectifs
@@ -226,7 +260,7 @@ Object  montre "montre" heros
         ],
   has   female worn;
 
-Object  sac_billes "sac de billes" rue
+Object  sac "sac de billes" rue
   with  name 'sac' 'sachet',
         adjective 'tissus' 'bille' 'billes',
         article "votre",
@@ -240,7 +274,7 @@ Object  sac_billes "sac de billes" rue
         ],
   has   container open;
 
-Object  billes "billes rouges et bleues" sac_billes
+Object  billes "billes rouges et bleues" sac
   with  name 'bille' 'billes',
         adjective 'bleue' 'bleu' 'bleues' 'bleus' 'rouge' 'rouges',
         description "Des billes rouges et bleues, de vos couleurs préférées.",
@@ -251,6 +285,12 @@ Object  bunker "Dans un bunker délabré"
         adjective 'delabre' 'vetuste',
         description "Ce blockhaus semble manifestement de facture italienne. Les ouvertures sont bien trop hautes pour que vous puissez regarder à l'extérieur ou vous hisser, mais vous pouvez observer quelques éléments intéressants, dont une porte en fer à l'ouest.",
         before [;
+          Wake:
+            if (noun == 0) {
+              print "Vous vous réveillez en sursaut dans votre salon, assis sur le canapé aux côtés de votre grand-père qui vous racontait ses exploits militaires avant de s'endormir. Le coeur battant, vous allez raconter votre cauchemar à votre mère qui vous sert un verre de lait en disant qu'il est dangereux d'écouter le vécu terrifiant de son grand-père un peu gâteux lorsque l'on à six ans...";
+              deadflag = 2;
+              rtrue;
+            }
           Pull,VagueFire:
             if (noun == 0) { <<VagueUse breda>>; }
         ],
@@ -288,6 +328,14 @@ Object  bunker_couloir "Couloir menant à l'extérieur"
   with  name 'bunker' 'blockhaus' 'casemate' 'fortin' 'couloir',
         adjective 'delabre' 'vetuste',
         description "Le couloir chemin d'est en ouest et débouche de chaque côté sur une porte en fer.",
+        before [;
+          Wake:
+            if (noun == 0) {
+              print "Vous vous réveillez en sursaut dans votre salon, assis sur le canapé aux côtés de votre grand-père qui vous racontait ses exploits militaires avant de s'endormir. Le coeur battant, vous allez raconter votre cauchemar à votre mère qui vous sert un verre de lait en disant qu'il est dangereux d'écouter le vécu terrifiant de son grand-père un peu gâteux lorsque l'on à six ans...";
+              deadflag = 2;
+              rtrue;
+            }
+        ],
         w_to porte_alpha,
         e_to porte_beta,
         cant_go "Aucune issue de ce côté là.";
@@ -305,6 +353,10 @@ Object  porte_beta "porte bêta"
           if (location == bunker) { return bunker_couloir; }
           else { return bunker; }
         ],
+        before [;
+          Attack:
+            "Vous frappez à la porte qui étrangement ne résonne pas mais produit un son sourd, peu audible.";
+        ],
   has   ~open openable door scenery female;
 
 Object  porte_alpha "porte alpha"
@@ -314,13 +366,17 @@ Object  porte_alpha "porte alpha"
         found_in bunker_couloir,
         door_dir w_to,
         door_to "La porte est fermée à clef, et vous ne possédez pas de quoi l'ouvrir.",
+        before [;
+          Attack:
+            "Vous frappez à la porte qui étrangement ne résonne pas mais produit un son sourd, peu audible.";
+        ],
   has   ~open locked lockable door scenery female;
 
 Object  malle "malle militaire en fer" bunker_couloir
   with  name 'malle' 'caisse' 'coffre',
         adjective 'militaire' 'fer' 'forge' 'lourde',
         description "Une lourde malle militaire en fer forgé se trouve contre le mur sud.",
-  has   ~open openable container female;
+  has   ~open openable container female static;
 
 Object  chargeur "chargeur de Breda M37" malle
   with  name 'chargeur' 'chargeurs' 'munitions' 'recharge' 'recharge' 'munition',
@@ -356,6 +412,10 @@ Object  nomansland "No man's land"
               deadflag = 2;
               rtrue;
             }
+          Dig:
+            move billes to sac;
+            move sac to player;
+            "Vous creusez et trouvez... un sac de billes !";
         ],
         cant_go [;
           print "Vous esquissez un mouvement mais l'officier italien tire une salve de balles pour vous couper la route.";
@@ -395,7 +455,7 @@ Object  soldat "soldat italien" nomansland class Decor
 ];
 
 [ PlaySub;
-  if ((billes in location) || (billes in sac_billes) || (billes in player)) {
+  if ((billes in location) || (billes in sac) || (billes in player)) {
     print "Vous tapez d'une pichenette dans une bille qui vient en heurter une seconde.^^
     Votre mère sort à nouveau de la maison : ~Pierre, il est tard ! Rentre tout de suite où le bonhomme sept-heures viendra t'enlever !~^^
     Dédaignant son injonction, vous continuez à jouer quand soudain...^^";
@@ -424,6 +484,16 @@ Object  soldat "soldat italien" nomansland class Decor
   "Pouvez-vous être plus précis ?";
 ];
 
+[ LoadSub;
+  if (noun == breda && chargeur in player) {
+    give breda chargee;
+    move chargeur to breda;
+    "Vous chargez tant bien que mal la mitrailleuse Breda M37, avec le peu de connaissances en ballistiques que vous possédez. L'objet vous effraie et vous fascine à la fois.";
+  }
+  else if (noun == breda) { "Vous n'avez pas de quoi charger la mitrailleuse Breda M37."; }
+  else { print_ret "Vous ne pouvez pas charger ", (the) noun, "."; }
+];
+
 !==============================================================================
 
 Global ScenicFlag = 4;
@@ -445,7 +515,7 @@ Include "FrenchG";
 !==============================================================================
 
 Verb "help" "aide" "manuel" "manual" "info" "information" "menu"
-    *                                        -> Help;
+    *                                           -> Help;
 
 Verb "jouer"
   *                                             -> Play
@@ -457,3 +527,6 @@ Extend "tirer" first
 Extend "faire" first
   * 'feu'                                       -> VagueFire
   * 'feu' 'avec' noun                           -> Fire;
+
+Extend "charger"
+  * noun                                        -> Load;
