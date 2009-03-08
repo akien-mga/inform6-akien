@@ -1330,7 +1330,7 @@ Object  passage "passage sombre" class Decor
   - "; style underline; print "Lettres volées"; style roman; print ", par Éric Forgeot (Otto Grimwald),^
   - "; style underline; print "Survivre"; style roman; print ", par Benjamin Roux (Yoruk),^
   - "; style underline; print "Le loup, la chèvre et la salade"; style roman; print ", par Benjamin Roux (Yoruk),^
-  - "; style underline; print "Le donjon aux 1001 dangers et mystères"; style roman; print ", par SIM54.^^
+  - "; style underline; print "Le donjon aux 1001 dangers et mystères"; style roman; print ", par Simon Chabrol (SIM54).^^
   Le thème du concours était la "; style underline; print "fumée"; style roman; print ", ce terme pouvant être interprété par les auteurs de la façon dont ils le souhaitaient.^^
   L'illustration accompagnant ce jeu est une propriété d'Alex McCombie, alias nylongbow, que ce dernier m'a gracieusement autorisé à utiliser pour la promotion de cette fiction interactive. La photographie originale, intitulée "; style underline; print "Fire Fog"; style roman; ", était disponible au 30 décembre 2008 à cette adresse :^http://www.flickr.com/photos/nylongbow/369355047/";
 ];
