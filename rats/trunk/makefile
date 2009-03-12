@@ -3,7 +3,7 @@
 # http://informfr.tuxfamily.org/
 # http://ifiction.free.fr/
 #
-INCLUDEPATH=./,./lib,/usr/local/share/inform/6.31/include/,/usr/local/share/inform/6.31/module/,../../../informfr/inform6-fr/trunk/,../../../informfr/outils/divers/trunk/,../../../informfr/outils/scenic5sens/trunk/I6/
+INCLUDEPATH=./,./lib,/usr/local/share/inform/6.31/include/,/usr/local/share/inform/6.31/module/,/usr/share/inform/6.31/include/,/usr/share/inform/6.31/module/,../../../informfr/inform6-fr/trunk/,../../../informfr/outils/divers/trunk/,../../../informfr/outils/scenic5sens/trunk/I6/
 ZOPTIONS='$$MAX_DICT_ENTRIES=5000'
 
 info:
