@@ -112,7 +112,7 @@ Property adjective; ! pour la gestion des adjectifs
 
     !  print "Which are identical!^";
     rtrue;
-]; 
+];
 
 Object  LibraryMessages         ! Pour remplacer certains messages standard
   with  before [;
@@ -155,8 +155,6 @@ Object  LibraryMessages         ! Pour remplacer certains messages standard
         ];
 
 
-Include "VerbLib";
-
 ! (Samuel Verschelde, tiré et amélioré de pname.h) gestion des adjectifs
 ! et gestion aussi des mots de liaison comme dans "boule DE cristal"
 ! => de est accepté, ainsi que d'autres mots que l'on peut trouver
@@ -165,7 +163,7 @@ Include "VerbLib";
     dict_flags_of_noun = 0;
 
     w = NextWord();
-    while((WordInProperty(w,obj,name) == 1) || (WordInProperty(w,obj,adjective) == 1) || (w=='de' or 'du' or 'des' or 'd^' or 'la' or 'le' or 'l^' or 'en' or 'a' or 'au' or 'aux'))
+    while((WordInProperty(w,obj,name) == 1) || (WordInProperty(w,obj,adjective) == 1) || (w=='de' or 'du' or 'des' or 'd^' or 'la' or 'le' or 'l^' or 'en' or 'a//' or 'à//' or 'au' or 'aux'))
     {
         ! remarque : si un mot est à la fois dans name et adjective, il ne sera
         ! compté qu'une fois, pour la propriété name
@@ -190,7 +188,7 @@ Include "VerbLib";
             else
             {
                 ! Si le mot est 'de', 'du', 'des', 'la', 'en', 'a', 'au' ,'aux' :
-                if (w=='de' or 'du' or 'des' or 'd^' or 'la' or 'le' or 'l^' or 'en' or 'a' or 'au' or 'aux')
+                if (w=='de' or 'du' or 'des' or 'd^' or 'la' or 'le' or 'l^' or 'en' or 'a//' or 'à//' or 'au' or 'aux')
                 {
                     ! ajouter 1 à la variable p, qui contient le score à retirer
                     ! au final (afin de revenir en arrière en cas d'occurrences qui ne
@@ -959,7 +957,7 @@ Object  plaque "plaque de bois"
         acces 0,
         description [;
           if (plaque.acces == 0) {
-            "Une déchirure dans le papier peint laisse apparaître une plaque de bois qui diffère avec le reste du mur, fait en plâtre.";
+            "Une déchirure dans le papier peint laisse apparaître une plaque de bois qui diffère du reste du mur, fait en plâtre.";
           }
           if (plaque.acces == 1) {
             "Votre ouvrage au poignard a permis de mettre en évidence une large plaque de bois rectangulaire d'une cinquantaine de centimètres sur un mètre, encore recouverte de papier peint mais dont les limites sont visibles.";
@@ -1185,7 +1183,7 @@ Object  passage "passage sombre" class Decor
           Take: "C'est évidemment impossible.";
           Enter:
             ClearScreen();
-            print "Peu rassuré, vous entrez doucement dans le passage qui descend en pente douce. Au bout de quelques minutes d'une progression lente et difficile, due à votre état misérable, vous atteignez ce que vous reconnaissez comme une porte par tâtonnement.^^Vous l'ouvrez pour voir danser devant vos yeux de hautes flammes : des craquements retentissent tandis que des rideaux enflammés tombent vous depuis une fenêtre ouverte du premier étage et vous frôlent ; dans la panique, vous sautez en avant et trouvez la force de rouler pour vous déplacer à un bon mètre du bâtiment en feu. Toussant faiblement sous l'action de la fumée, vous rampez au plus loin de l'incendie jusqu'à ce que l'épuisement vous submerge : vos paupières s'alourdissent tandis que vous apercevez non loin, au bout de la ruelle, un homme souriant. Il vous est étrangement familier, mais le sommeil vous gagne avant que vous ayez pu l'identifier.";
+            print "Peu rassuré, vous entrez doucement dans le passage qui descend en pente douce. Au bout de quelques minutes d'une progression lente et difficile, due à votre état misérable, vous atteignez ce que vous reconnaissez comme une porte par tâtonnement.^^Vous l'ouvrez pour voir danser devant vos yeux de hautes flammes : des craquements retentissent tandis que des rideaux enflammés tombent depuis une fenêtre ouverte du premier étage et vous frôlent ; dans la panique, vous sautez en avant et trouvez la force de rouler pour vous déplacer à un bon mètre du bâtiment en feu. Toussant faiblement sous l'action de la fumée, vous rampez au plus loin de l'incendie jusqu'à ce que l'épuisement vous submerge : vos paupières s'alourdissent tandis que vous apercevez non loin, au bout de la ruelle, un homme souriant. Il vous est étrangement familier, mais le sommeil vous gagne avant que vous ayez pu l'identifier.";
             KeyCharPrimitive();
             print "^^Après quelques minutes de somnolence retentissent les sirènes jointes des pompiers, policiers et ambulanciers...^";
             deadflag = 2;
