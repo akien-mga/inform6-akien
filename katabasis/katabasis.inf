@@ -3,7 +3,7 @@
 
 Constant Story "Katabasis";
 Constant Headline
-            "^^Une fiction interactive de Rémi Verschelde (Akien).^^";
+            "^^Une fiction interactive de RÃ©mi Verschelde (Akien).^^";
 Release 0;  Serial "080220";
 
 Constant MAX_SCORE 2;
@@ -24,26 +24,26 @@ Class   AverneScenic
             pourrait vivre dans ce lieu macabre.",
         scenic_look
             'eaux' 'eau' 'lac' 'noir' 'sombre' 'flots' 'mer' 'liquide' 'flux' 'Averne'
-            'remous' 'nauséeuses' 0 "C'est un immense lac noir dont les eaux ténébreuses
-            semblent se perdre dans les profondeurs, mais vous dénotez une lueur
+            'remous' 'nausÃ©euses' 0 "C'est un immense lac noir dont les eaux tÃ©nÃ©breuses
+            semblent se perdre dans les profondeurs, mais vous dÃ©notez une lueur
             jaillissant en son fond.",
         scenic_touch
             'eaux' 'eau' 'lac' 'noir' 'sombre' 'flots' 'mer' 'liquide' 'flux' 'Averne'
-            'remous' 'nauséeuses' 0 "Vous glissez votre main dans l'eau glacée du lac
-            et la retirez aussitôt, soudain pris d'une angoisse indéfinissable. Vous
-            vous resolvez à continuer votre périple en descendant la rivière.",
+            'remous' 'nausÃ©euses' 0 "Vous glissez votre main dans l'eau glacÃ©e du lac
+            et la retirez aussitÃ´t, soudain pris d'une angoisse indÃ©finissable. Vous
+            vous resolvez Ã  continuer votre pÃ©riple en descendant la riviÃ¨re.",
         scenic_taste
             'eaux' 'eau' 'lac' 'noir' 'sombre' 'flots' 'mer' 'liquide' 'flux' 'Averne'
-            'remous' 'nauséeuses' 0 "Le désespoir n'est pas encore assez grand pour
-            tenter de vous empoisonner avec ces eaux nauséeuses.",
+            'remous' 'nausÃ©euses' 0 "Le dÃ©sespoir n'est pas encore assez grand pour
+            tenter de vous empoisonner avec ces eaux nausÃ©euses.",
         scenic_smell
             'eaux' 'eau' 'lac' 'noir' 'sombre' 'flots' 'mer' 'liquide' 'flux' 'Averne'
-            'remous' 'nauséeuses' 0 "De toutes parts, les odeurs vous assaillent,
-            mêlées de cendres et d'encens, la poussière environnante se joignant aux
-            relents nauséeux en provenance de la rivière.",
+            'remous' 'nausÃ©euses' 0 "De toutes parts, les odeurs vous assaillent,
+            mÃªlÃ©es de cendres et d'encens, la poussiÃ¨re environnante se joignant aux
+            relents nausÃ©eux en provenance de la riviÃ¨re.",
         scenic_listen
             'eaux' 'eau' 'lac' 'noir' 'sombre' 'flots' 'mer' 'liquide' 'flux' 'Averne'
-            'remous' 'nauséeuses' 0 "Les quelques remous de l'eau s'estompent et un
+            'remous' 'nausÃ©euses' 0 "Les quelques remous de l'eau s'estompent et un
             silence macabre vient s'installer.";
 
 Class   AverneTerre
@@ -51,79 +51,79 @@ Class   AverneTerre
           if (dans_barque == 1) {
             dans_barque = 0;
             "Vous accostez votre barque le long de la rive du lac, et posez avec force
-            précaution votre pied à terre.";
+            prÃ©caution votre pied Ã  terre.";
           }
         ],
         scenic_all
             'poussiere' 'poussieres' 'etrange' 'substance' 'malodorante' 0 "Vous vous
-            penchez un peu plus pour identifier cette étrange poussière mais vous ne
+            penchez un peu plus pour identifier cette Ã©trange poussiÃ¨re mais vous ne
             faites qu'emplir vos poumons d'une substance malodorante qui vous fait
-            éternuer.",
+            Ã©ternuer.",
         before [;
-          Smell: "De toutes parts, les odeurs vous assaillent, mêlées de cendres et
-            d'encens, la poussière environnante se joignant aux relents nauséeux en
-            provenance de la rivière.";
-          Listen: "Le silence vous pèse. Les eaux stagnantes ont fini d'onduler suite
+          Smell: "De toutes parts, les odeurs vous assaillent, mÃªlÃ©es de cendres et
+            d'encens, la poussiÃ¨re environnante se joignant aux relents nausÃ©eux en
+            provenance de la riviÃ¨re.";
+          Listen: "Le silence vous pÃ¨se. Les eaux stagnantes ont fini d'onduler suite
             aux remous de votre accostage, et maintenant, plus aucun son ne parvient
-            jusqu'à vous.";
-          Swim: "Les eaux noirâtres de la rivière vous répugnent et vous n'avez
-            réellement aucune envie d'y entrer.";
+            jusqu'Ã  vous.";
+          Swim: "Les eaux noirÃ¢tres de la riviÃ¨re vous rÃ©pugnent et vous n'avez
+            rÃ©ellement aucune envie d'y entrer.";
         ],
-        cant_go "Aucune issue apparente dans la paroi granitique. La rivière semble
-            être la seule échappatoire.",
+        cant_go "Aucune issue apparente dans la paroi granitique. La riviÃ¨re semble
+            Ãªtre la seule Ã©chappatoire.",
         barque_la 0,
   has   light;
 
 Class   Cocyte
   with  scenic_smell
             'eaux' 'eau' 'flots' 'mer' 'liquide' 'flux' 'Cocyte' 'riviere' 'fleuve'
-            'ruisseau' 'affluent' 'remous' 'nauséeuses' 0 "De toutes parts, les odeurs
-            vous assaillent, mêlées de cendres et d'encens, les relents nauséeux de
-            la rivière s'alliant aux vapeurs sulfures en provenance des profondeurs.",
+            'ruisseau' 'affluent' 'remous' 'nausÃ©euses' 0 "De toutes parts, les odeurs
+            vous assaillent, mÃªlÃ©es de cendres et d'encens, les relents nausÃ©eux de
+            la riviÃ¨re s'alliant aux vapeurs sulfures en provenance des profondeurs.",
         scenic_look
             'orme' 'ormes' 'peuplier' 'peupliers' 'saule' 'saules' 'arbre' 'arbres'
             'foret' 'oree' 'rangee' 'allee' 'fruits' 0 "Des arbres aux couleurs de
-            l'automne mais qui vous procurent une étrange sensation de malaise, rangés
-            en ligne droite de chaque côté de la rivière.",
+            l'automne mais qui vous procurent une Ã©trange sensation de malaise, rangÃ©s
+            en ligne droite de chaque cÃ´tÃ© de la riviÃ¨re.",
         scenic_smell2
             'orme' 'ormes' 'peuplier' 'peupliers' 'saule' 'saules' 'arbre' 'arbres'
-            'foret' 'oree' 'rangee' 'allee' 'fruits' 0 "Ces arbres n'ont étrangement
-            aucune odeur particulière si ce n'est la mort qui semble omniprésente dans
+            'foret' 'oree' 'rangee' 'allee' 'fruits' 0 "Ces arbres n'ont Ã©trangement
+            aucune odeur particuliÃ¨re si ce n'est la mort qui semble omniprÃ©sente dans
             ces lieux, ce qui n'a pas pour effet de vous rassurer.";
 
 !=======================================================================================
 
-Object  neant "Néant"
-  with  description "Néant.";
+Object  neant "NÃ©ant"
+  with  description "NÃ©ant.";
 
 Object  averne_lac "L'Averne" class AverneScenic
   with  name 'surface', 
         description "Votre barque se situe au beau milieu d'un immense lac noir dont
-            les eaux ténébreuses semblent se perdre dans les profondeurs, bien que perle
-            dans l'abysse une lueur qui éclaire le lieu d'une lumière diffuse. Au dessus
-            du lac, ce que vous preniez pour un firmament étoilé n'est en fait qu'une
-            gigantesque voute de roche granitique parsemée de cristaux bleutés et
-            violacés. Ce lac souterrain est sans nul doute la source de la rivière que
-            vous voyez s'écouler au sud. La rive ouest est bien trop escarpée pour être
-            rejointe par les eaux, mais vous devriez être en mesure d'accoster à l'est
+            les eaux tÃ©nÃ©breuses semblent se perdre dans les profondeurs, bien que perle
+            dans l'abysse une lueur qui Ã©claire le lieu d'une lumiÃ¨re diffuse. Au dessus
+            du lac, ce que vous preniez pour un firmament Ã©toilÃ© n'est en fait qu'une
+            gigantesque voute de roche granitique parsemÃ©e de cristaux bleutÃ©s et
+            violacÃ©s. Ce lac souterrain est sans nul doute la source de la riviÃ¨re que
+            vous voyez s'Ã©couler au sud. La rive ouest est bien trop escarpÃ©e pour Ãªtre
+            rejointe par les eaux, mais vous devriez Ãªtre en mesure d'accoster Ã  l'est
             et au nord.",
         initial [;
           if (dans_barque == 0) {
             dans_barque = 1;
-            "Vous réembarquez sur votre frêle embarcation, craignant de la voir
+            "Vous rÃ©embarquez sur votre frÃªle embarcation, craignant de la voir
             s'effriter lorsque vous y posez le pied.";
           }
         ],
         before [;
-          Smell: "De toutes parts, les odeurs vous assaillent, mêlées de cendres et
-            d'encens, la poussière environnante se joignant aux relents nauséeux en
-            provenance de la rivière.";
-          Listen: "Le silence n'est troublé que par les doux remous de l'eau ondulant
+          Smell: "De toutes parts, les odeurs vous assaillent, mÃªlÃ©es de cendres et
+            d'encens, la poussiÃ¨re environnante se joignant aux relents nausÃ©eux en
+            provenance de la riviÃ¨re.";
+          Listen: "Le silence n'est troublÃ© que par les doux remous de l'eau ondulant
             depuis votre barque. Vous retenez votre respiration quelques instants et
-            arrêtez de bouger. Les ondes finissent de couler jusqu'au rivage, puis plus
+            arrÃªtez de bouger. Les ondes finissent de couler jusqu'au rivage, puis plus
             rien. Un silence macabre.";
-          Swim: "Les eaux noirâtres de la rivière vous répugnent et vous n'avez
-            réellement aucune envie d'y entrer.";
+          Swim: "Les eaux noirÃ¢tres de la riviÃ¨re vous rÃ©pugnent et vous n'avez
+            rÃ©ellement aucune envie d'y entrer.";
         ],
         barque_la 1,
         e_to [;
@@ -138,37 +138,37 @@ Object  averne_lac "L'Averne" class AverneScenic
           averne_nord.barque_la = 1;
           return averne_nord;
         ],
-        ne_to "Ici encore, des roches aiguisées vous font rebrousser chemin.",
+        ne_to "Ici encore, des roches aiguisÃ©es vous font rebrousser chemin.",
         nw_to "Vous tentez d'accoster votre barque le long de la rive ouest du lac,
-            mais des roches aiguisées vous font rebrousser chemin.",
+            mais des roches aiguisÃ©es vous font rebrousser chemin.",
         w_to "Vous tentez d'accoster votre barque le long de la rive ouest du lac,
-            mais des roches aiguisées vous font rebrousser chemin.",
+            mais des roches aiguisÃ©es vous font rebrousser chemin.",
         s_to [;
           if (cristal in player) {
             print "Tenant fermement votre cristal diaphane dans une main, vous
-              entreprenez d'approcher votre barque de la rivière qui s'étend au sud du
-              lac, et fermant les yeux, vous laissez votre embarcation dériver d'elle
-              même dans la pente douce.^";
+              entreprenez d'approcher votre barque de la riviÃ¨re qui s'Ã©tend au sud du
+              lac, et fermant les yeux, vous laissez votre embarcation dÃ©river d'elle
+              mÃªme dans la pente douce.^";
             KeyCharPrimitive();
             ClearScreen();
-            box "Je te frapperai sans colère"
+            box "Je te frapperai sans colÃ¨re"
               "Et sans haine, comme un boucher,"
               "Comme Moise le rocher !"
-              "Et je ferai de ta paupière,"
+              "Et je ferai de ta paupiÃ¨re,"
               ""
               "Pour abreuver mon Saharah,"
               "Jaillir les eaux de la souffrance."
-              "Mon désir gonflé d'espérance"
-              "Sur tes pleurs salés nagera";
+              "Mon dÃ©sir gonflÃ© d'espÃ©rance"
+              "Sur tes pleurs salÃ©s nagera";
             move rame to cocyte_01;
             move barque to cocyte_01;
             PlayerTo(cocyte_01);
             return;
           }
           else {
-            "Plongeant votre regard dans les profondeurs glaciales où sillonne la
-            rivière, vous vous dites qu'il serait préférable de trouver un quelconque
-            objet pour vous éclairer avant de vous enfoncer dans les ténèbres.";
+            "Plongeant votre regard dans les profondeurs glaciales oÃ¹ sillonne la
+            riviÃ¨re, vous vous dites qu'il serait prÃ©fÃ©rable de trouver un quelconque
+            objet pour vous Ã©clairer avant de vous enfoncer dans les tÃ©nÃ¨bres.";
           }
         ],
   has   light;
@@ -176,10 +176,10 @@ Object  averne_lac "L'Averne" class AverneScenic
 Object  averne_lueur "lueur"
   with  name 'lueur' 'abysse' 'lumiere' 'entree' 'passage' 'profondeurs' 'fond'
             'abyssales',
-        description "Vous scrutez les profondeurs abyssales avec intérêt, et la lumière
-            qui en provient vous remplit d'un sentiment de paix intérieure. Vous lancez
-            un regard du côté de la rivière qui semble plonger dans les ténèbres
-            infinies et formez l'hypothèse que cette lumière, luisant depuis le fin
+        description "Vous scrutez les profondeurs abyssales avec intÃ©rÃªt, et la lumiÃ¨re
+            qui en provient vous remplit d'un sentiment de paix intÃ©rieure. Vous lancez
+            un regard du cÃ´tÃ© de la riviÃ¨re qui semble plonger dans les tÃ©nÃ¨bres
+            infinies et formez l'hypothÃ¨se que cette lumiÃ¨re, luisant depuis le fin
             fond du lac, serait le seul lien avec la surface terrestre.^
             Cependant vous voyez mal comment vous pourriez y retourner, si tant est que
             vous en venez.",
@@ -190,18 +190,18 @@ Object  averne_caverne "caverne"
   with  name 'caverne' 'grotte' 'plafond' 'toit' 'murs' 'mur' 'firmament' 'etoile'
             'gigantesque' 'granit' 'granitiques' 'granitique' 'relief' 'reliefs'
             'parois' 'paroi',
-        description "Votre esprit obscuranti par un sommeil peu agréable avait tout
-            d'abord pris ces reliefs pour un firmament étoilé, mais vous remarquez bien
-            vite que ce sont des parois de roche granitique incrustées de cristaux
+        description "Votre esprit obscuranti par un sommeil peu agrÃ©able avait tout
+            d'abord pris ces reliefs pour un firmament Ã©toilÃ©, mais vous remarquez bien
+            vite que ce sont des parois de roche granitique incrustÃ©es de cristaux
             aux reflets bleus et violets, qui diffusent dans la caverne une doucereuse
-            lumière.",
+            lumiÃ¨re.",
         found_in averne_lac averne_est averne_nord averne_ouest,
   has   scenery female;
 
 Object  averne_riviere "riviere"
   with  name 'fleuve' 'riviere' 'torrent' 'effluves' 'source' 'tenebres' 'cocyte',
-        description "Des effluves nauséeuses parviennent jusqu'à vous de cette rivière
-            qui plonge dans les ténèbres.",
+        description "Des effluves nausÃ©euses parviennent jusqu'Ã  vous de cette riviÃ¨re
+            qui plonge dans les tÃ©nÃ¨bres.",
         found_in averne_lac averne_est averne_nord averne_ouest,
   has   scenery female;
 
@@ -209,24 +209,24 @@ Object  barque "barque vermoulue" averne_lac
   with  name 'barque' 'bateau' 'embarcation' 'miteuse' 'fortune' 'bois' 'frele' 'ebene'
             'rebord' 'echardes' 'echarde' 'acerees' 'aceree' 'planche' 'planches'
             'vermoulue' 'poreux',
-        description "Une frêle embarcation rongée par le temps autant que par les flots,
-            qui semble vouloir se disloquer à chaque instant, redevenir poussière sous
-            son propre poids. L'ébène est poreux et recouvert de poussière, et vous
+        description "Une frÃªle embarcation rongÃ©e par le temps autant que par les flots,
+            qui semble vouloir se disloquer Ã  chaque instant, redevenir poussiÃ¨re sous
+            son propre poids. L'Ã©bÃ¨ne est poreux et recouvert de poussiÃ¨re, et vous
             manquez de vous couper en promenant votre main le long du rebord aux
-            échardes acérées.",
+            Ã©chardes acÃ©rÃ©es.",
         before [;
-          Touch: "Vous faites glisser votre main sur l'ébène poreux et vous écorchez
-            au contact d'une écharde acérée qui provoque un léger saignement. Vous
-            plongez votre main dans l'eau glaciale après avoir expulsé l'acteur de
+          Touch: "Vous faites glisser votre main sur l'Ã©bÃ¨ne poreux et vous Ã©corchez
+            au contact d'une Ã©charde acÃ©rÃ©e qui provoque un lÃ©ger saignement. Vous
+            plongez votre main dans l'eau glaciale aprÃ¨s avoir expulsÃ© l'acteur de
             votre souffrance d'une pichenette dans les eaux profondes. Vous restez
-            ébranlé de frissons étranges pendant quelques secondes.";
-          Take: "C'est bien trop lourd pour être porté à la seule force de vos bras.";
-          Push,Pull,Turn: "Et vous séparer de votre seule moyen de transport ? Vous
-            préférez abandonner cette idée.";
+            Ã©branlÃ© de frissons Ã©tranges pendant quelques secondes.";
+          Take: "C'est bien trop lourd pour Ãªtre portÃ© Ã  la seule force de vos bras.";
+          Push,Pull,Turn: "Et vous sÃ©parer de votre seule moyen de transport ? Vous
+            prÃ©fÃ©rez abandonner cette idÃ©e.";
           PushDir:
             if (location == averne_est && second == nw_obj) {
               print "Vous tirez votre barque vers le nord-ouest et l'amarrez cette fois
-              à la rive nord du lac.^";
+              Ã  la rive nord du lac.^";
               move rame to averne_nord;
               move barque to averne_nord;
               averne_est.barque_la = 0;
@@ -236,7 +236,7 @@ Object  barque "barque vermoulue" averne_lac
             }
             else if (location == averne_nord && second == se_obj) {
               print "Vous tirez votre barque vers le sud-est et l'amarrez cette
-              fois à la rive est du lac.^";
+              fois Ã  la rive est du lac.^";
               move rame to averne_est;
               move barque to averne_est;
               averne_est.barque_la = 1;
@@ -246,27 +246,27 @@ Object  barque "barque vermoulue" averne_lac
             }
             else if ((location == averne_est && second == w_obj or sw_obj)
                      || (location == averne_nord && second == s_obj)) {
-              "Oui, bien sûr, et rester coincé sur la rive sans la barque...";
+              "Oui, bien sÃ»r, et rester coincÃ© sur la rive sans la barque...";
             }
             else {
               "Vous ne pouvez pas acheminer votre barque dans cette direction.";
             }
           Enter:
             if (dans_barque == 1) {
-              "Vous êtes manifestement déjà dans la barque, bien qu'elle ne vous
-              inspire guère confiance.";
+              "Vous Ãªtes manifestement dÃ©jÃ  dans la barque, bien qu'elle ne vous
+              inspire guÃ¨re confiance.";
             }
             else {
-              "Vous n'avez aucune envie de remonter dans cet édifice de planches
-              vermoulues mais décidez pourtant d'y poser le pied.";
+              "Vous n'avez aucune envie de remonter dans cet Ã©difice de planches
+              vermoulues mais dÃ©cidez pourtant d'y poser le pied.";
             }
           Tie:
             if (location ofclass AverneTerre || location == orme) {
               if (corde in player) {
-                "Vous arrimez solidement votre barque à une roche s'y prêtant, vous
-                servant de la corde que vous avez trouvée dans la barque.";
+                "Vous arrimez solidement votre barque Ã  une roche s'y prÃªtant, vous
+                servant de la corde que vous avez trouvÃ©e dans la barque.";
               }
-              else "Vous n'avez pas de corde et n'avez plus qu'à espérer que votre
+              else "Vous n'avez pas de corde et n'avez plus qu'Ã  espÃ©rer que votre
                 barque ne s'enfuira pas sans vous.";
             }
             else "Vous ne pouvez pas vous arrimer tout en naviguant.";
@@ -274,7 +274,7 @@ Object  barque "barque vermoulue" averne_lac
             if (corde.trouvee == 0) {
               move corde to player;
               corde.trouvee = 1;
-              "Vous découvrez une corde de mauvaise facture et rongée par le temps
+              "Vous dÃ©couvrez une corde de mauvaise facture et rongÃ©e par le temps
               qui trainait au fond de la barque.";
             }
             else "Il n'y a plus rien dans cette barque.";
@@ -283,29 +283,29 @@ Object  barque "barque vermoulue" averne_lac
 
 Object  rame "rame" averne_lac
   with  name 'rame' 'rames' 'pagaie' 'pagaies',
-        description "Une rame de bois noir, comme votre barque, et dont l'état de
-            conservation est tout aussi déplorable. Vous la maniez avec grande
-            précaution de peur qu'elle ne s'effrite au contact des flots.",
+        description "Une rame de bois noir, comme votre barque, et dont l'Ã©tat de
+            conservation est tout aussi dÃ©plorable. Vous la maniez avec grande
+            prÃ©caution de peur qu'elle ne s'effrite au contact des flots.",
         before [;
-          Take: "Vous saisissez fermement votre rame dans la main droite, prêt à
+          Take: "Vous saisissez fermement votre rame dans la main droite, prÃªt Ã 
             ramer.";
-          Touch: "La bois est rugueux mais léger.";
+          Touch: "La bois est rugueux mais lÃ©ger.";
         ],
   has   static female;
 
 Object  corde "corde"
   with  name 'corde' 'mauvaise' 'facture' 'cordelette' 'ficelle' 'fil' 'rouleau',
-        description "Une corde rongée par le temps qui semble sur le point de se
-            déchirer en plusieurs endroits.",
+        description "Une corde rongÃ©e par le temps qui semble sur le point de se
+            dÃ©chirer en plusieurs endroits.",
         trouvee 0,
   has   female;
 
 Object  averne_est "Est de la caverne" class AverneTerre AverneScenic
   with  name 'averne' 'caverne' 'grotte' 'sol' 'rocailleux' 'rive',
-        description "Vous êtes sur la rive est du lac dont les eaux noirâtres vous
-            répugnent de plus en plus. Le sol que vous foulez est rocailleux, et la
-            masse impressionnante de poussière que vous soulevez vient altérer un peu
-            plus l'air déjà vicié qui emplit vos poumons. A l'ouest vous retrouvez le
+        description "Vous Ãªtes sur la rive est du lac dont les eaux noirÃ¢tres vous
+            rÃ©pugnent de plus en plus. Le sol que vous foulez est rocailleux, et la
+            masse impressionnante de poussiÃ¨re que vous soulevez vient altÃ©rer un peu
+            plus l'air dÃ©jÃ  viciÃ© qui emplit vos poumons. A l'ouest vous retrouvez le
             lac tandis qu'au nord-ouest, vous longez la paroi de la caverne
             circulaire.",
         w_to [;
@@ -315,52 +315,52 @@ Object  averne_est "Est de la caverne" class AverneTerre AverneScenic
             self.barque_la = 0;
             return averne_lac;
           }
-          else "Vous préfèreriez retourner au milieu du lac avec votre barque.";
+          else "Vous prÃ©fÃ¨reriez retourner au milieu du lac avec votre barque.";
         ],
         nw_to averne_nord,
         sw_to [; 
           if (self.barque_la == 1) {
             if (cristal in player) {
               print "Tenant fermement votre cristal diaphane dans une main, vous
-                entreprenez d'approcher votre barque de la rivière qui s'étend au sud du
-                lac, et fermant les yeux, vous laissez votre embarcation dériver d'elle
-                même dans la pente douce.^";
+                entreprenez d'approcher votre barque de la riviÃ¨re qui s'Ã©tend au sud du
+                lac, et fermant les yeux, vous laissez votre embarcation dÃ©river d'elle
+                mÃªme dans la pente douce.^";
               KeyCharPrimitive();
               ClearScreen();
-              box "~Je te frapperai sans colère"
+              box "~Je te frapperai sans colÃ¨re"
                 "Et sans haine, comme un boucher,"
                 "Comme Moise le rocher !"
-                "Et je ferai de ta paupière,"
+                "Et je ferai de ta paupiÃ¨re,"
                 ""
                 "Pour abreuver mon Saharah,"
                 "Jaillir les eaux de la souffrance."
-                "Mon désir gonflé d'espérance"
-                "Sur tes pleurs salés nagera~";
+                "Mon dÃ©sir gonflÃ© d'espÃ©rance"
+                "Sur tes pleurs salÃ©s nagera~";
               move rame to cocyte_01;
               move barque to cocyte_01;
               PlayerTo(cocyte_01);
               return;
             }
             else {
-              "Plongeant votre regard dans les profondeurs glaciales où sillonne la
-              rivière, vous vous dites qu'il serait préférable de trouver un quelconque
-              objet pour vous éclairer avant de vous enfoncer dans les ténèbres.";
+              "Plongeant votre regard dans les profondeurs glaciales oÃ¹ sillonne la
+              riviÃ¨re, vous vous dites qu'il serait prÃ©fÃ©rable de trouver un quelconque
+              objet pour vous Ã©clairer avant de vous enfoncer dans les tÃ©nÃ¨bres.";
             }
           }
-          else "Vous ne pouvez manifestement pas aller vers la rivière à pied, et l'idée
-                d'y aller à la nage vous glace le sang.";
+          else "Vous ne pouvez manifestement pas aller vers la riviÃ¨re Ã  pied, et l'idÃ©e
+                d'y aller Ã  la nage vous glace le sang.";
         ];
 
 Object  averne_cristaux "cristaux"
   with  name 'cristal' 'violet' 'violace' 'bleu' 'bleute' 'cristaux' 'violets'
             'violaces' 'bleus' 'bleutes' 'couleur' 'bleue' 'violette',
-        description "La principale source de lumière du lieu réside en ces cristaux
-            bleutés et violacés dont est incrustée la paroi, et qui vous éclairent d'une
-            lumière blafarde.",
+        description "La principale source de lumiÃ¨re du lieu rÃ©side en ces cristaux
+            bleutÃ©s et violacÃ©s dont est incrustÃ©e la paroi, et qui vous Ã©clairent d'une
+            lumiÃ¨re blafarde.",
         before [;
-          Take: "Vous pensez évidemment qu'un de ces cristaux ferait un très bon
-            éclairage pour descendre la rivière, mais vous constatez vite que vous ne
-            pourrez les déloger de la paroi sans outillage. Vous allez chercher votre
+          Take: "Vous pensez Ã©videmment qu'un de ces cristaux ferait un trÃ¨s bon
+            Ã©clairage pour descendre la riviÃ¨re, mais vous constatez vite que vous ne
+            pourrez les dÃ©loger de la paroi sans outillage. Vous allez chercher votre
             rame et tentez d'en extraire un de la taille de votre poing, mais en vain.
             Il vous faudra trouver autre chose.";
         ],
@@ -369,12 +369,12 @@ Object  averne_cristaux "cristaux"
 
 Object  averne_nord "Nord de la caverne" class AverneTerre AverneScenic
   with  name 'averne' 'caverne' 'grotte' 'rive',
-        description "La rive nord du lac ne vous inspire guère plus de confiance que
-            le frêle amas de planches d'ébène qui vous sert d'embarcation. Vous foulez
+        description "La rive nord du lac ne vous inspire guÃ¨re plus de confiance que
+            le frÃªle amas de planches d'Ã©bÃ¨ne qui vous sert d'embarcation. Vous foulez
             le sol rocailleux de vos pieds incertains et commencez votre investigation.
-            Un détail retient votre attention : il s'agit d'une petite rigole qui
+            Un dÃ©tail retient votre attention : il s'agit d'une petite rigole qui
             ruisselle vers le sud-ouest, emplie d'un liquide violet opaque.^
-            Vous pouvez retrouver le lac au sud ou continuer à pied vers le sud-est,
+            Vous pouvez retrouver le lac au sud ou continuer Ã  pied vers le sud-est,
             ou encore en suivant la rigole, au sud-ouest.",
         s_to [;
           if (self.barque_la == 1) {
@@ -383,84 +383,84 @@ Object  averne_nord "Nord de la caverne" class AverneTerre AverneScenic
             self.barque_la = 0;
             return averne_lac;
           }
-          else "Vous préfèreriez retourner au milieu du lac avec votre barque.";
+          else "Vous prÃ©fÃ¨reriez retourner au milieu du lac avec votre barque.";
         ],
         sw_to averne_ouest,
         se_to averne_est;
 
 Object  averne_rigole "petite rigole"
   with  name 'rigole' 'petite' 'ruisseau' 'cours d^eau' 'liquide' 'opaque' 'violet',
-        description "Depuis la paroi de la caverne au nord du lac d'où elle jaillit à
+        description "Depuis la paroi de la caverne au nord du lac d'oÃ¹ elle jaillit Ã 
             hauteur d'homme, la rigole continue paisiblement son chemin au milieu des
-            roches dentées et des amas de poussière pour finalement déboucher sur la
-            grande rivière qui s'étend au sud. Alors que cet affluent vous semblait
-            contenir un étrange liquide violet, vous observez que c'est toujours de
-            l'eau sombre et nauséeuse qui coule ici mais qu'elle charrie des petits
-            cristaux violacés comme en sont incrustés les parois granitiques.",
+            roches dentÃ©es et des amas de poussiÃ¨re pour finalement dÃ©boucher sur la
+            grande riviÃ¨re qui s'Ã©tend au sud. Alors que cet affluent vous semblait
+            contenir un Ã©trange liquide violet, vous observez que c'est toujours de
+            l'eau sombre et nausÃ©euse qui coule ici mais qu'elle charrie des petits
+            cristaux violacÃ©s comme en sont incrustÃ©s les parois granitiques.",
         found_in averne_nord averne_ouest,
   has   scenery female;
 
 Object  averne_rigole_cristaux "cristaux"
   with  name 'cristaux' 'violets' 'violaces' 'bleus' 'bleutes' 'couleur' 'bleue'
             'violette' 'nuances' 'bleu' 'violet',
-        description "Des cristaux violacés avec des nuances de bleu, qui semblent de la
-            même espèce que ceux que vous pouvez admirer incrustés dans la paroi, bien
+        description "Des cristaux violacÃ©s avec des nuances de bleu, qui semblent de la
+            mÃªme espÃ¨ce que ceux que vous pouvez admirer incrustÃ©s dans la paroi, bien
             qu'ils soient beaucoup plus petits. Ils jaillissent de la paroi nord pour
-            être acheminés sans heurt jusqu'à la rivière qui s'étend au sud.",
+            Ãªtre acheminÃ©s sans heurt jusqu'Ã  la riviÃ¨re qui s'Ã©tend au sud.",
         before [;
           Take,Touch:
             "Vous glissez votre main dans la rigole mais les fins cristaux glissent
-            entre vos doigts, écorchant au passage vos doigts.";
+            entre vos doigts, Ã©corchant au passage vos doigts.";
         ],
         found_in averne_nord averne_ouest,
   has   scenery light pluralname;
 
 Object  averne_ouest "Ouest de la caverne" class AverneTerre AverneScenic
   with  name 'averne' 'caverne' 'grotte' 'rive',
-        description "En suivant la rigole, vous débouchez sur la rive ouest du lac,
-            dont le relief escarpé contraste grandement avec ce que vous avez pu voir
-            jusqu'alors. Le parterre poussiéreux a ici laissé place à des roches
-            aiguisées que vous n'osez effleurer de peur de vous couper. Non loin de
-            l'endroit où le petit ruisseau se jette dans la rivière, vous observez une
-            mince cavité.^
-            La seule issue de ce lieu désolé se profile au nord-est, d'où vous venez.",
+        description "En suivant la rigole, vous dÃ©bouchez sur la rive ouest du lac,
+            dont le relief escarpÃ© contraste grandement avec ce que vous avez pu voir
+            jusqu'alors. Le parterre poussiÃ©reux a ici laissÃ© place Ã  des roches
+            aiguisÃ©es que vous n'osez effleurer de peur de vous couper. Non loin de
+            l'endroit oÃ¹ le petit ruisseau se jette dans la riviÃ¨re, vous observez une
+            mince cavitÃ©.^
+            La seule issue de ce lieu dÃ©solÃ© se profile au nord-est, d'oÃ¹ vous venez.",
         e_to "Mieux vaudrait utiliser un autre chemin, vous n'avez vraiment pas
             envie de plonger dans ces eaux troubles et votre embarcation se trouve un
             peu plus loin.",
         ne_to averne_nord,
-        se_to "Vous ne pouvez manifestement pas aller vers la rivière à pied, et l'idée
-            d'y aller à la nage vous glace le sang.";
+        se_to "Vous ne pouvez manifestement pas aller vers la riviÃ¨re Ã  pied, et l'idÃ©e
+            d'y aller Ã  la nage vous glace le sang.";
 
-Object  averne_ouest_roches "roches aiguisées" averne_ouest
+Object  averne_ouest_roches "roches aiguisÃ©es" averne_ouest
   with  name 'roche' 'roches' 'pierre' 'pierres' 'aiguisee' 'aiguisees' 'dentee'
             'dentees' 'pointue' 'pointues' 'coupante' 'coupantes' 'aceree' 'acerees',
-        description "Des roches acérées qui vous paraissent, étrangement, menaçantes.
-            Elles vous intriguent mais vous préférez les éviter et vous concentrer
+        description "Des roches acÃ©rÃ©es qui vous paraissent, Ã©trangement, menaÃ§antes.
+            Elles vous intriguent mais vous prÃ©fÃ©rez les Ã©viter et vous concentrer
             sur votre objectif.",
         before [;
-          Take,Touch: "Vous laissez votre doigt danser sur les dents aiguisées d'une de
-            ces roches et évitez de justesse la blessure. Mieux vaudrait éviter de
+          Take,Touch: "Vous laissez votre doigt danser sur les dents aiguisÃ©es d'une de
+            ces roches et Ã©vitez de justesse la blessure. Mieux vaudrait Ã©viter de
             jouer avec ce qui semble dangereux.";
         ],
   has   scenery;
 
-Object  averne_cavite "cavité" averne_ouest
+Object  averne_cavite "cavitÃ©" averne_ouest
   with  name 'cavite' 'mince' 'trou',
         before [;
           Examine,Look,Search:
             if (cristal notin player) {
               move cristal to player;
               score = score + 1;
-              "Vous découvrez un somptueux cristal de la taille de votre paume, qui
-              reluit des couleurs de l'arc-en-ciel, éclairant brillamment le lieu de
-              ses rayons. La pierre diaphane apparaît comme être la meilleure solution
-              d'éclairage si vous souhaitez entreprendre de naviguer sur la rivière qui
-              s'enfonce dans les ténèbres.";
+              "Vous dÃ©couvrez un somptueux cristal de la taille de votre paume, qui
+              reluit des couleurs de l'arc-en-ciel, Ã©clairant brillamment le lieu de
+              ses rayons. La pierre diaphane apparaÃ®t comme Ãªtre la meilleure solution
+              d'Ã©clairage si vous souhaitez entreprendre de naviguer sur la riviÃ¨re qui
+              s'enfonce dans les tÃ©nÃ¨bres.";
             }
             else {
               "Vous avez beau plonger votre main dans ce trou incertain et l'observer
-              de toutes parts, vous ne découvrez rien d'autre que de l'eau opaque et
-              sombre, qui imbibe votre chair de son empreinte glacée.";
+              de toutes parts, vous ne dÃ©couvrez rien d'autre que de l'eau opaque et
+              sombre, qui imbibe votre chair de son empreinte glacÃ©e.";
             }
         ],
   has   scenery female;
@@ -468,22 +468,22 @@ Object  averne_cavite "cavité" averne_ouest
 Object  cristal "cristal diaphane"
   with  name 'cristal' 'diaphane' 'somptueux' 'arc-en-ciel' 'pierre',
         description "Un somptueux cristal diaphane de la taille de votre paume, qui
-            reluit des couleurs de l'arc-en-ciel, éclairant brillamment le lieu de ses
+            reluit des couleurs de l'arc-en-ciel, Ã©clairant brillamment le lieu de ses
             rayons.",
         before [;
-          Drop: "Vous n'osez imaginer ce que serait votre périple sans cette source de
-            lumière inespérée.";
+          Drop: "Vous n'osez imaginer ce que serait votre pÃ©riple sans cette source de
+            lumiÃ¨re inespÃ©rÃ©e.";
         ],
   has   light;
 
-Object  cocyte_01 "Source de la rivière" class Cocyte
-  with  description "Vous êtes désormais en train de voguer lentement sur les eaux
-            nauséabondes de la rivière. Les rives vous sont inaccessibles, le courant
-            vous forçant à suivre ses méandres, mais vous observez que pousse, sur la
-            terre noire et poussiéreuse, une allée de saules, d'ormes et de peupliers,
-            aux contours étrangement flous et inquiétants. La rivière continue à
+Object  cocyte_01 "Source de la riviÃ¨re" class Cocyte
+  with  description "Vous Ãªtes dÃ©sormais en train de voguer lentement sur les eaux
+            nausÃ©abondes de la riviÃ¨re. Les rives vous sont inaccessibles, le courant
+            vous forÃ§ant Ã  suivre ses mÃ©andres, mais vous observez que pousse, sur la
+            terre noire et poussiÃ©reuse, une allÃ©e de saules, d'ormes et de peupliers,
+            aux contours Ã©trangement flous et inquiÃ©tants. La riviÃ¨re continue Ã 
             l'ouest.",
-        n_to "Il vous est désormais impossible de faire marche arrière. La seule issue
+        n_to "Il vous est dÃ©sormais impossible de faire marche arriÃ¨re. La seule issue
             coule vers l'ouest.",
         w_to [;
           move rame to cocyte_02;
@@ -493,12 +493,12 @@ Object  cocyte_01 "Source de la rivière" class Cocyte
         cant_go "Le courant est trop important pour pouvoir accoster ici.";
 
 Object  cocyte_02 "Le Cocyte" class Cocyte
-  with  description "Les roches de la caverne vous semblent déjà fort lointaines, voguant
-            sur les flots de cette rivière nauséabonde au milieu d'un paysage désolé de
-            terre sombre et aride dont les seuls fruits sont une rangée d'arbres de
-            chaque côté de la rivière. Vous constatez que les courants évitent une
-            petite zone où les eaux vous semblent beaucoup plus claires, au sud. La
-            rivière continue son écoulement vers l'ouest.",
+  with  description "Les roches de la caverne vous semblent dÃ©jÃ  fort lointaines, voguant
+            sur les flots de cette riviÃ¨re nausÃ©abonde au milieu d'un paysage dÃ©solÃ© de
+            terre sombre et aride dont les seuls fruits sont une rangÃ©e d'arbres de
+            chaque cÃ´tÃ© de la riviÃ¨re. Vous constatez que les courants Ã©vitent une
+            petite zone oÃ¹ les eaux vous semblent beaucoup plus claires, au sud. La
+            riviÃ¨re continue son Ã©coulement vers l'ouest.",
         e_to [;
           move rame to cocyte_01;
           move barque to cocyte_01;
@@ -514,7 +514,7 @@ Object  cocyte_02 "Le Cocyte" class Cocyte
               ""
               "Ne suis-je pas un faux accord"
               "Dans la divine symphonie,"
-              "Grâce à la vorace Ironie"
+              "GrÃ¢ce Ã  la vorace Ironie"
               "Qui me secoue et qui me mord ?";
           }
           move rame to cocyte_03;
@@ -524,8 +524,8 @@ Object  cocyte_02 "Le Cocyte" class Cocyte
         s_to [;
           if (orme.visite == 0) {
             orme.visite = 1;
-            print "Intrigué, vous ramez jusqu'à cette zone plus claire et constatez
-              qu'elle est totalement dépourvue de courant, vous permettant d'approcher
+            print "IntriguÃ©, vous ramez jusqu'Ã  cette zone plus claire et constatez
+              qu'elle est totalement dÃ©pourvue de courant, vous permettant d'approcher
               sans emcombre de la rive.^";
             move rame to orme;
             move barque to orme;
@@ -535,11 +535,11 @@ Object  cocyte_02 "Le Cocyte" class Cocyte
         ],
         cant_go "Le courant est trop important pour pouvoir accoster ici.";
 
-Object  orme "Près de l'orme"
+Object  orme "PrÃ¨s de l'orme"
   with  description "Vous vous tenez au pied d'un orme majestueux qui se dresse dans
             toute sa splendeur sur cette terre aride et sombre. Bien que ce lieu vous
             semble intemporel, ses branches arborent les couleurs de l'automne et vous
-            distinguez au pied de l'arbre un petit écriteau. Au nord vous retournez sur
+            distinguez au pied de l'arbre un petit Ã©criteau. Au nord vous retournez sur
             le fleuve.",
         visite 0,
         n_to [;
@@ -553,20 +553,20 @@ Object  orme_orme "orme du sommeil" orme
             'racine' 'racines',
         description "Cet arbre vous procure une intense sensation de douceur, de par
             son feuillage automnal aux nuances d'ocre et de pourpre et par l'aura
-            revigorante qu'il émet. À son pied repose un écriteau qui semble solidement
-            ancré au milieu de ses racines.",
+            revigorante qu'il Ã©met. Ã€ son pied repose un Ã©criteau qui semble solidement
+            ancrÃ© au milieu de ses racines.",
         scenic_all
             'aura' 'lumiere' 'revigorante' 0 "Cette aura provient probablement de
-            l'arbre qui se trouve à quelques mètres de vous mais vous ne parvenez pas
-            à comprendre comment un arbre arrive à vous transmettre une telle impression
-            de bien-être.",
+            l'arbre qui se trouve Ã  quelques mÃ¨tres de vous mais vous ne parvenez pas
+            Ã  comprendre comment un arbre arrive Ã  vous transmettre une telle impression
+            de bien-Ãªtre.",
   has   scenery;
 
 Object  orme_feuillage "feuillage" orme
   with  name 'feuillages' 'feuillage' 'feuilles' 'branche' 'branches' 'ocre'
             'pourpre' 'branchages' 'branchage',
-        description "Les feuilles aux couleurs vives ondulent sous un vent léger, ne
-            semblant pas vouloir se détacher de l'orme qui les a vues naître.",
+        description "Les feuilles aux couleurs vives ondulent sous un vent lÃ©ger, ne
+            semblant pas vouloir se dÃ©tacher de l'orme qui les a vues naÃ®tre.",
         before [;
           Take,Touch:
             if (feuille.prise == 0) {
@@ -574,18 +574,18 @@ Object  orme_feuillage "feuillage" orme
               feuille.prise = 1;
               score = score + 1;
               "Vous glissez votre doigt sur une branche basse et en subtilisez en
-              douceur une feuille dorée.";
+              douceur une feuille dorÃ©e.";
             }
             else {
               if (feuille.prise == 1 && feuille notin player) {
                 move feuille to player;
                 feuille.prise = 2;
-                "Vous décrochez une seconde feuille des branches en vous persuadant que
-                vous ne perdrez pas celle là, évitant ainsi une crampe qui commence à se
+                "Vous dÃ©crochez une seconde feuille des branches en vous persuadant que
+                vous ne perdrez pas celle lÃ , Ã©vitant ainsi une crampe qui commence Ã  se
                 faire sentir.";
               }
               else {
-                "Vous avez déjà une feuille, celà vous semble amplement suffisant.";
+                "Vous avez dÃ©jÃ  une feuille, celÃ  vous semble amplement suffisant.";
               }
             }
         ],
@@ -593,53 +593,53 @@ Object  orme_feuillage "feuillage" orme
 
 Object  feuille "feuille doree"
   with  name 'feuille' 'seconde' 'doree',
-        description "Une magnifique feuille dorée de l'orme du sommeil.",
+        description "Une magnifique feuille dorÃ©e de l'orme du sommeil.",
         prise 0,
         before [;
           Drop: 
             if (self.prise == 1) {
-              print "Vous déposez votre feuille dorée qui s'envole sous l'action de
-                quelque vent et disparaît dans les ténèbres.^";
+              print "Vous dÃ©posez votre feuille dorÃ©e qui s'envole sous l'action de
+                quelque vent et disparaÃ®t dans les tÃ©nÃ¨bres.^";
               move feuille to neant;
               return true;
             }
             else {
-              "Vous ne referez pas deux fois la même erreur.";
+              "Vous ne referez pas deux fois la mÃªme erreur.";
             }
-          Touch: "Elle est douce et légère, une note de bonheur dans ce milieu
+          Touch: "Elle est douce et lÃ©gÃ¨re, une note de bonheur dans ce milieu
             infernal.";
           Eat:
-            print "Bien que l'idée soit saugrenue, vous tentez de mordre la feuille, dont
-              le goût sucré vous ravit. Vous vous endormez bientôt d'un sommeil infini.";
+            print "Bien que l'idÃ©e soit saugrenue, vous tentez de mordre la feuille, dont
+              le goÃ»t sucrÃ© vous ravit. Vous vous endormez bientÃ´t d'un sommeil infini.";
             deadflag = 1;
             return true;
         ],
   has   female;
 
-Object  orme_ecriteau "écriteau" orme
+Object  orme_ecriteau "Ã©criteau" orme
   with  name 'ecriteau' 'planche' 'planchette' 'pancarte' 'texte' 'message' 'ecrit',
-        description "C'est une épaisse planche de bois sur laquelle reluit un message en
-            lettres argentées. Vous observez simultanément votre barque au nord et
-            l'écriteau et supposez qu'ils sont fait du même bois. Le message suivant y
-            est écrit :^^
-            ~Non loin du lieu où se rejoignent Cocyte et Pyriphlégéthon pour donner vie
-            à l'Achéron se situe un arbre millénaire, l'orme du sommeil, qui recèle la
-            sagesse des héros.~",
+        description "C'est une Ã©paisse planche de bois sur laquelle reluit un message en
+            lettres argentÃ©es. Vous observez simultanÃ©ment votre barque au nord et
+            l'Ã©criteau et supposez qu'ils sont fait du mÃªme bois. Le message suivant y
+            est Ã©crit :^^
+            ~Non loin du lieu oÃ¹ se rejoignent Cocyte et PyriphlÃ©gÃ©thon pour donner vie
+            Ã  l'AchÃ©ron se situe un arbre millÃ©naire, l'orme du sommeil, qui recÃ¨le la
+            sagesse des hÃ©ros.~",
         before [;
-          Take: "Vous tentez d'arracher l'écriteau à l'étreinte des racines mais il vous
-            résiste. Alors que vous vous acharnez résonne au loin un cri qui vous glace
+          Take: "Vous tentez d'arracher l'Ã©criteau Ã  l'Ã©treinte des racines mais il vous
+            rÃ©siste. Alors que vous vous acharnez rÃ©sonne au loin un cri qui vous glace
             le sang.";
-          Touch: "L'ébène est poreux et à son contact s'évanouissent vos sentiments de
-            bien-être que vous procure l'arbre, et au loin retentit un cri strident.";
+          Touch: "L'Ã©bÃ¨ne est poreux et Ã  son contact s'Ã©vanouissent vos sentiments de
+            bien-Ãªtre que vous procure l'arbre, et au loin retentit un cri strident.";
         ],
   has   scenery;
 
 Object  cocyte_03 "Le Cocyte" class Cocyte
-  with  description "Vous continuez de voguer sur les eaux de la rivière en direction
-            d'un lieu où la température semble considérablement se réchauffer. Déjà
-            quelques vapeurs parviennent jusqu'à vous et vous écoeurent. Le courant
-            s'intensifie au fur et à mesure que vous allez vers le sud-ouest où se
-            poursuit la rivière.",
+  with  description "Vous continuez de voguer sur les eaux de la riviÃ¨re en direction
+            d'un lieu oÃ¹ la tempÃ©rature semble considÃ©rablement se rÃ©chauffer. DÃ©jÃ 
+            quelques vapeurs parviennent jusqu'Ã  vous et vous Ã©coeurent. Le courant
+            s'intensifie au fur et Ã  mesure que vous allez vers le sud-ouest oÃ¹ se
+            poursuit la riviÃ¨re.",
         visite 0,
         e_to [;
           move rame to cocyte_02;
@@ -656,37 +656,37 @@ Object  cocyte_03 "Le Cocyte" class Cocyte
 Object  acheron_01 "La confluence"
   with  name 'lieu' 'confluence',
         description "La sueur perle sur votre front et goutte par intermittence,
-            humidifiant un peu plus le bois de votre barque. Vous êtes désormais dans un
-            lieu où deux rivières semblent se joindre pour n'en former plus qu'une, ce
+            humidifiant un peu plus le bois de votre barque. Vous Ãªtes dÃ©sormais dans un
+            lieu oÃ¹ deux riviÃ¨res semblent se joindre pour n'en former plus qu'une, ce
             que vous indique un grand panneau de bois :^^
-            ~Là où la splendeur macabre du Cocyte s'unit aux remous embrasés du
-            Pyriphlégéthon naît l'Achéron, fleuve que seul Charon saura vous faire
-            apprécier, si son tribut vous avez.~^^
-            Vous estimez donc que le Pyriphlégéthon est la rivière de flammes qui se
-            rue depuis le nord, diffusant sa chaleur étouffante, tandis qu'ayant
-            navigué sur le Cocyte jusqu'alors, l'Achéron s'étend donc à l'ouest.",
+            ~LÃ  oÃ¹ la splendeur macabre du Cocyte s'unit aux remous embrasÃ©s du
+            PyriphlÃ©gÃ©thon naÃ®t l'AchÃ©ron, fleuve que seul Charon saura vous faire
+            apprÃ©cier, si son tribut vous avez.~^^
+            Vous estimez donc que le PyriphlÃ©gÃ©thon est la riviÃ¨re de flammes qui se
+            rue depuis le nord, diffusant sa chaleur Ã©touffante, tandis qu'ayant
+            naviguÃ© sur le Cocyte jusqu'alors, l'AchÃ©ron s'Ã©tend donc Ã  l'ouest.",
         scenic_look
              'panneau' 'ecriteau' 'pannonceau' 'pancarte' 'borne' 'pieu' 0 "Un simple
-             panneau de bois planté sur un pieu de même constitution, aborant cette
+             panneau de bois plantÃ© sur un pieu de mÃªme constitution, aborant cette
              simple phrase en grec :^^
-             ~Là où la splendeur macabre du Cocyte s'unit aux remous embrasés du
-             Pyriphlégéthon naît l'Achéron, fleuve que seul Charon saura vous faire
-             apprécier, si son tribut vous avez.~",
+             ~LÃ  oÃ¹ la splendeur macabre du Cocyte s'unit aux remous embrasÃ©s du
+             PyriphlÃ©gÃ©thon naÃ®t l'AchÃ©ron, fleuve que seul Charon saura vous faire
+             apprÃ©cier, si son tribut vous avez.~",
         scenic_look2
              'pyriphlegethon' 'phlegethon' 'phlegeton' 'pyriphlegeton' 'feu' 'flammes'
-             'incineres' 'corps' 'remous' 0 "Le Pyriphlégéthon, second
-             affluent de l'Acheron s'étend vers le nord, charriant dans ses remous les
-             cendres des corps incinérés. La chaleur qu'il diffuse emplit toute
-             l'atmosphère et vous avez du mal à respirer.",
+             'incineres' 'corps' 'remous' 0 "Le PyriphlÃ©gÃ©thon, second
+             affluent de l'Acheron s'Ã©tend vers le nord, charriant dans ses remous les
+             cendres des corps incinÃ©rÃ©s. La chaleur qu'il diffuse emplit toute
+             l'atmosphÃ¨re et vous avez du mal Ã  respirer.",
         scenic_look3
-             'cocyte' 0 "La rivière qui vous a porté jusqu'ici, dont les eaux hostiles
-             semblent se dérober à votre regard. Vous clignez des yeux, et la rivière
-             réintègre son lit. Vous mettez cela sur le compte de vos angoisses et de la
+             'cocyte' 0 "La riviÃ¨re qui vous a portÃ© jusqu'ici, dont les eaux hostiles
+             semblent se dÃ©rober Ã  votre regard. Vous clignez des yeux, et la riviÃ¨re
+             rÃ©intÃ¨gre son lit. Vous mettez cela sur le compte de vos angoisses et de la
              fatigue.",
         scenic_look4
-             'acheron' 'styx' 'fleuve' 0 "Le grand fleuve Achéron, dont les eaux
-             profondes sont mêlées de cendre et de vapeur, s'étend douloureusement vers
-             l'ouest, où il rejoint bien plus loin le Styx, fleuve qui entoure les
+             'acheron' 'styx' 'fleuve' 0 "Le grand fleuve AchÃ©ron, dont les eaux
+             profondes sont mÃªlÃ©es de cendre et de vapeur, s'Ã©tend douloureusement vers
+             l'ouest, oÃ¹ il rejoint bien plus loin le Styx, fleuve qui entoure les
              Enfers de ses neufs anneaux, dont il est le principal affluent.",
         ne_to [;
           move rame to cocyte_03;
@@ -696,14 +696,14 @@ Object  acheron_01 "La confluence"
         w_to [;
           if (acheron_02.visite == 0) {
             acheron_02.visite = 1;
-            print "Le courant vous force à laisser votre embarcation et à continuer à
-              pied, longeant l'Achéron par sa rive gauche.";
+            print "Le courant vous force Ã  laisser votre embarcation et Ã  continuer Ã 
+              pied, longeant l'AchÃ©ron par sa rive gauche.";
             KeyCharPrimitive();
             ClearScreen();
             box "Elle est dans ma voix, la criarde !"
               "C'est tout mon sang, ce poison noir !"
               "Je suis le sinistre miroir"
-              "Où la mégère se regarde."
+              "OÃ¹ la mÃ©gÃ¨re se regarde."
               ""
               "Je suis la plaie et le couteau !"
               "Je suis le soufflet et la joue !"
@@ -714,17 +714,17 @@ Object  acheron_01 "La confluence"
           else return acheron_02;
         ],
         n_to "On vous avait promis que vous bruleriez dans les flammes de l'Enfer mais
-            l'idée de naviguer sur un fleuve de feu avec votre embarcation de bois
-            vermoulu vous semble quelque peu déraisonnable.",
-        cant_go "Les terres qui s'étendent par là ne vous semblent guère plus engageantes
-            que celles qui sont déjà balisées.";
+            l'idÃ©e de naviguer sur un fleuve de feu avec votre embarcation de bois
+            vermoulu vous semble quelque peu dÃ©raisonnable.",
+        cant_go "Les terres qui s'Ã©tendent par lÃ  ne vous semblent guÃ¨re plus engageantes
+            que celles qui sont dÃ©jÃ  balisÃ©es.";
 
-Object  acheron_02 "Le long de l'Achéron"
+Object  acheron_02 "Le long de l'AchÃ©ron"
   with  name 'rive' 'berge' 'fleuve',
-        description "Vous continuez votre progression sur la rive de l'Achéron durant
-            plusieurs dizaines de mètres, vos pieds nus foulant avec peine les galets
-            noirs de la berge. La confluence du Cocyte et du Pyriphlégéthon se trouve à
-            l'est tandis que le fleuve continue à l'ouest.",
+        description "Vous continuez votre progression sur la rive de l'AchÃ©ron durant
+            plusieurs dizaines de mÃ¨tres, vos pieds nus foulant avec peine les galets
+            noirs de la berge. La confluence du Cocyte et du PyriphlÃ©gÃ©thon se trouve Ã 
+            l'est tandis que le fleuve continue Ã  l'ouest.",
         visite 0,
         e_to acheron_01,
         w_to acheron_03;
@@ -734,15 +734,15 @@ Object  acheron_galets "galets rugueux" acheron_02
         before [;
           Take: "Vous n'aviez alors aucune envie de vous encombrer de petites pierres
             aussi communes, et visiblement inutiles.";
-          Touch: "D'aspect rugueux, ces galets sont pourtant très doux au toucher.";
+          Touch: "D'aspect rugueux, ces galets sont pourtant trÃ¨s doux au toucher.";
           Smell: "Vous vous baissez et inspirez grandement, emplissant vos narines de
-            poussière noire. Vous vous relevez rapidement et éternuez deux ou trois fois
-            tout en frottant vos yeux irrités par la poudre soulevée par votre souffle.";
+            poussiÃ¨re noire. Vous vous relevez rapidement et Ã©ternuez deux ou trois fois
+            tout en frottant vos yeux irritÃ©s par la poudre soulevÃ©e par votre souffle.";
         ],
   has   scenery pluralname;
 
-Object  acheron_03 "Embarcadère du nocher Charon"
-  with  description "Vous débouchez à présent sur une petite plage de gravier.",
+Object  acheron_03 "EmbarcadÃ¨re du nocher Charon"
+  with  description "Vous dÃ©bouchez Ã  prÃ©sent sur une petite plage de gravier.",
         e_to acheron_02;
 
 !=======================================================================================
@@ -750,12 +750,12 @@ Object  acheron_03 "Embarcadère du nocher Charon"
 [ Initialise;
     lookmode = 2;
     location = averne_lac;
-    print "Une légère brise vient caresser votre visage, apportant à vos narines
-      des odeurs mêlées de cendres et d'encens. Peu à peu vous arrivez à sortir de
-      votre torpeur, apposant vos mains sur des surfaces de bois aux échardes
+    print "Une lÃ©gÃ¨re brise vient caresser votre visage, apportant Ã  vos narines
+      des odeurs mÃªlÃ©es de cendres et d'encens. Peu Ã  peu vous arrivez Ã  sortir de
+      votre torpeur, apposant vos mains sur des surfaces de bois aux Ã©chardes
       tranchantes. Une fois assis, vous contemplez l'espace environnant :
-      ^Vous êtes sur une barque de fortune, au bois sombre et vermoulu, rongé par
-      le temps dans un lieu où la notion même de temps vous échappe.^^";
+      ^Vous Ãªtes sur une barque de fortune, au bois sombre et vermoulu, rongÃ© par
+      le temps dans un lieu oÃ¹ la notion mÃªme de temps vous Ã©chappe.^^";
     KeyCharPrimitive();
     ClearScreen();
 ];
@@ -774,10 +774,10 @@ Object  acheron_03 "Embarcadère du nocher Charon"
 
 [ RamerSub;
     if (dans_barque == 1) {
-      "Vous lancez quelques coups de rame dans l'eau, mais sans objectif précis vous
+      "Vous lancez quelques coups de rame dans l'eau, mais sans objectif prÃ©cis vous
        n'avancez pas beaucoup.";
     }
-    else { "À quoi bon ramer hors d'une embarcation ?"; }
+    else { "Ã€ quoi bon ramer hors d'une embarcation ?"; }
 ];
 
 [ RamerGoSub;
@@ -800,7 +800,7 @@ Include "scenic5sens";
 
 Include "FrenchG";
 
-! Version 2.2 de la bibliothèque française.
+! Version 2.2 de la bibliothÃ¨que franÃ§aise.
 
 Verb 'ramer' 'pagayer' 'rame' 'pagaie'
     *                        -> Ramer
@@ -811,20 +811,20 @@ Verb 'ramer' 'pagayer' 'rame' 'pagaie'
 !    * 'vers' noun            -> RamerGo
 !    * 'vers' 'le' noun       -> RamerGo
 !    * 'vers' 'l^' noun       -> RamerGo;
-! (Stormi) J'ai simplifié les lignes précédentes :
-! - pas besoin de préciser les articles (l')
-! - plusieurs solutions séparées par des /
-! - ajout de 'à' sinon ce n'est pas reconnu dans la grammaire du verbe
-    * 'a'/'à'/'au'/'vers' noun -> RamerGo;
+! (Stormi) J'ai simplifiÃ© les lignes prÃ©cÃ©dentes :
+! - pas besoin de prÃ©ciser les articles (l')
+! - plusieurs solutions sÃ©parÃ©es par des /
+! - ajout de 'Ã ' sinon ce n'est pas reconnu dans la grammaire du verbe
+    * 'a'/'Ã '/'au'/'vers' noun -> RamerGo;
 
 Verb 'sautiller' 'sautille'
     *                        -> Sautiller;
 
 ! Extension de tirer pour qu'on puisse tirer dans une direction
 ! Cela renvoie en fait l'action PushDir car je ne crois pas 
-! Que PullDir existe (voir si à terme cette amélioration ne pourrait
-! pas être ajoutée à FrenchG.h directement)
+! Que PullDir existe (voir si Ã  terme cette amÃ©lioration ne pourrait
+! pas Ãªtre ajoutÃ©e Ã  FrenchG.h directement)
 Extend 'tirer'
-    * noun 'vers'/'à'/'a'/'au' noun  -> PushDir;
+    * noun 'vers'/'Ã '/'a'/'au' noun  -> PushDir;
 
 !=======================================================================================
