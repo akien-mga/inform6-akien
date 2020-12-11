@@ -1,0 +1,51 @@
+# Licensing details
+
+(French version below)
+
+The files in the I6 French Language Library / Bibliothèque francophone pour
+Inform 6 repository are distributed under the Artistic License 2.0 (see
+COPYING).
+
+This is in compliance with the licensing of the Inform 6 Library by Graham
+Nelson upon which the French Language Library was built. Here are the terms
+of the Inform 6 Library license:
+
+``` https://github.com/DavidGriffith/inform6lib/blob/master/COPYING
+The Inform 6 Library is licensed under either
+1) The traditional Inform license as described by the DM4, or
+2) The Artistic License 2.0 (see ARTISTIC).
+
+The user is free to choose which license to accept, i.e., free to choose
+either set of terms and conditions.
+
+Here is the relevant bit from the Inform Designer's Manual, 4th edition:
+
+      Copyright on Inform, the program and its source code, its example
+      games and documentation (including this book) is retained by Graham
+      Nelson, who asserts the moral right to be identified as the author
+      under the Copyrights, Designs and Patents Act 1988.  Having said
+      this, I am happy for it to be freely distributed to anybody who wants
+      a copy, provided that: (a) distributed copies are not substantially
+      different from those archived by the author, (b) this and other
+      copyright messages are always retained in full, and (c) no profit is
+      involved.  (Exceptions to these rules must be negotiated directly
+      with the author.)  However, a story file produced with the Inform
+      compiler (and libraries) then belongs to its author, and may be sold
+      for profit if desired, provided that its game banner contains the
+      information that it was compiled by Inform, and the Inform version
+      number.
+```
+
+-----------------------------------------------------------------------------
+
+# Détails sur la licence
+
+(version anglophone ci-dessus)
+
+Les fichiers de la bibliothèque francophone pour Inform 6 sont distribués
+sous la licence Artistic License 2.0 (cf. COPYING).
+
+Cette licence est compatible avec celle de la bibliothèque anglophone pour
+Inform 6 de Graham Nelson sur laquelle cette bibliothèque francophone est
+basée. Se référer au paragraph précédent en anglais pour les terms de licence
+d'Inform 6 Library.
