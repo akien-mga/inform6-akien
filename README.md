@@ -50,6 +50,10 @@ The two "finished" projects, Rats and Brume, are available under a
 Récits and Katabasis do not include license terms yet, so until I add one, they
 are proprietary.
 
+The cover images for Rats and Brume are derived from photos which are the
+property of their respective authors (unknown for Rats, Alex McCombie for
+Brume).
+
 -----
 
 # Fictions interactives en Inform 6 d'Akien
@@ -105,3 +109,7 @@ Les deux projets "finis", Rats et Brume, sont disponibles sous une licence
 
 Récits et Katabasis n'ont pas de licence définie, et sont donc pour l'instant
 propriétaires.
+
+Les images de couverture de Rats et Brume sont dérivées de photos qui sont la
+propriété de leurs auteurs respectifs (inconnu pour Rats, Alex McCombie pour
+Brume).
