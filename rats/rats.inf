@@ -43,7 +43,7 @@
 Constant Story "Rats";
 Constant Headline
             "^Une fiction interactive de Rémi Verschelde (Akien).^^";
-Release 1; Serial "270808";
+Release 2; Serial "081216";
 
 Constant TASKS_PROVIDED;
 Constant NUMBER_TASKS = 4;
