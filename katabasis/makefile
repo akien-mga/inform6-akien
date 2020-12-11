@@ -1,4 +1,4 @@
-NAME=recits
+NAME=katabasis
 
 INFORM=inform
 LANG=French
