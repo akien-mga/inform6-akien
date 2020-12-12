@@ -5,7 +5,7 @@ Constant Story "Récits de grand-père";
 Constant Headline
              "^Fiction interactive écrite par Rémi Verschelde (Akien),^
              pour la quatrième speed-if francophone.^^";
-Release 1;
+Release 1; Serial "081228";
 
 Constant NO_SCORE;
 
