@@ -5,7 +5,7 @@ Constant Story "Brume";
 Constant Headline
              "^Fiction interactive écrite par Rémi Verschelde (Akien),^
              pour la quatrième édition du concours francophone de jeux textuels.^^";
-Release 2; Serial "301208";
+Release 2; Serial "100424";
 
 Constant NO_SCORE;
 
