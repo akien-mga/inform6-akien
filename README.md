@@ -47,12 +47,17 @@ interpreter.
 The two "finished" projects, Rats and Brume, are available under a
 [BSD 4-Clause](https://spdx.org/licenses/BSD-4-Clause.html) license.
 
+The cover image for Rats is available under a Creative Commons Attribution -
+Non Commercial - Share Alike 2.0 ([CC BY-NC-SA 2.0](
+https://creativecommons.org/licenses/by-nc-sa/2.0/)) license, derived from the
+photo [*Rats !!!!* by Matthieu Aubry](https://www.flickr.com/photos/matthieu-aubry/440634859/).
+
+The cover image for Brume is derived from the photo [*Fire Fog* by Alex McCombie](
+https://www.flickr.com/photos/nylongbow/369355047/), all rights reserved, used
+with permission from the artist.
+
 Récits and Katabasis do not include license terms yet, so until I add one, they
 are proprietary.
-
-The cover images for Rats and Brume are derived from photos which are the
-property of their respective authors (unknown for Rats, Alex McCombie for
-Brume).
 
 -----
 
@@ -107,9 +112,14 @@ format `.z8` ou `.z5`. Je peux recommender l'élégant interpréteur
 Les deux projets "finis", Rats et Brume, sont disponibles sous une licence
 [BSD 4-Clause](https://spdx.org/licenses/BSD-4-Clause.html).
 
+L'image de couverture de Rats est disponible sous une license Creative Commons
+Paternité - Pas d'Utilisation Commerciale - Partage des Conditions Initiales à
+l'Identique 2.0 ([CC BY-NC-SA 2.0](https://creativecommons.org/licenses/by-nc-sa/2.0/)),
+dérivée de la photo [*Rats !!!!* de Matthieu Aubry](https://www.flickr.com/photos/matthieu-aubry/440634859/).
+
+L'image de couverture de Brume est dérivée de la photo [*Fire Fog* d'Alex McCombie](
+https://www.flickr.com/photos/nylongbow/369355047/), tous droits réservés, utilisée
+avec la permission de l'artiste.
+
 Récits et Katabasis n'ont pas de licence définie, et sont donc pour l'instant
 propriétaires.
-
-Les images de couverture de Rats et Brume sont dérivées de photos qui sont la
-propriété de leurs auteurs respectifs (inconnu pour Rats, Alex McCombie pour
-Brume).
