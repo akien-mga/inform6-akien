@@ -37,6 +37,8 @@ Constant NUMBER_TASKS = 4;
 Constant MAX_SCORE = 40;
 Array task_scores -> 8 5 3 4;
 
+Constant DEATH_MENTION_UNDO;
+
 Replace Identical; ! pour la gestion des adjectifs
 
 Include "Parser";
