@@ -24,9 +24,13 @@
 !==============================================================================
 
 Constant Story "Rats";
-Constant Headline
-        "^Une fiction interactive de Rémi Verschelde (Akien).^^";
-Release 2; Serial "081216";
+Constant Headline "^Une fiction interactive de Rémi Verschelde (Akien).^^";
+Release 2;
+Serial "081216";
+
+!--------------------------------------------
+! Configuration de la bibliothèque
+!--------------------------------------------
 
 Constant TASKS_PROVIDED;
 Constant NUMBER_TASKS = 4;
@@ -201,13 +205,22 @@ Include "VerbLib";
 
 !==============================================================================
 
+!--------------------------------------------
+! Classes
+!--------------------------------------------
+
 Class   Entree
   with  before [;
-          Taste,Eat,Smell,Attack,Take,Touch,PutOn,Remove,Search,SwitchOff,SwitchOn,Transfer,Wear: "C'est trop loin.";
+          Taste,Eat,Smell,Attack,Take,Touch,PutOn,Remove,Search,SwitchOff,SwitchOn,Transfer,Wear:
+            "C'est trop loin.";
         ],
   has   scenery concealed;
 
 !==============================================================================
+
+!--------------------------------------------
+! Objets
+!--------------------------------------------
 
 Object  trou_dortoirs "Dortoirs du palais"
   with  name 'dortoirs' 'dortoir' 'trou' 'piece',
@@ -239,13 +252,20 @@ Object  trou_dortoirs "Dortoirs du palais"
         ],
         before [;
           Sleep:
-            if (trou_trone has visited) "Le devoir vous appelle, et le repos en journée y
-              serait un manquement.";
-            else "Mieux vaut ne pas faire attendre le roi.";
+            if (trou_trone has visited) {
+              "Le devoir vous appelle, et le repos en journée y serait un manquement.";
+            }
+            else {
+              "Mieux vaut ne pas faire attendre le roi.";
+            }
           Listen: 
-            if (noun == 0) { "La salle du trône à l'ouest semble plutôt animée."; }
+            if (noun == 0) {
+              "La salle du trône à l'ouest semble plutôt animée.";
+            }
           Smell:
-            if (noun == 0) { "Le manque d'aération fait régner ici une odeur amère perpétuelle."; }
+            if (noun == 0) {
+              "Le manque d'aération fait régner ici une odeur amère perpétuelle.";
+            }
         ],
         w_to trou_trone,
         out_to trou_trone,
@@ -272,57 +292,74 @@ Object  heros "vous" trou_dortoirs
         capacity 8,
         description [;
           if (foulard hasnt worn && heros.peint == 1 && (papier_toilette hasnt worn ||
-            papier_toilette notin player)) {
-            "Vous êtes noir de la tête aux pattes - dents exceptées - grâce à votre plongeon
-            dans le pot de peinture noire, même votre hotte est peinte."; }
+              papier_toilette notin player)) {
+            "Vous êtes noir de la tête aux pattes - dents exceptées - grâce à votre
+            plongeon dans le pot de peinture noire, même votre hotte est peinte.";
+          }
           else if (foulard has worn && heros.peint == 0 && (papier_toilette hasnt worn ||
-            papier_toilette notin player)) {
+              papier_toilette notin player)) {
             "Ce foulard noir que vous portez noué devant la bouche vous donne un air de
-            gangster, bien que la hotte jaune pétant pêche un peu."; }
+            gangster, bien que la hotte jaune pétant pêche un peu.";
+          }
           else if (foulard has worn && heros.peint == 1 && (papier_toilette hasnt worn ||
-            papier_toilette notin player)) {
+              papier_toilette notin player)) {
             "Votre corps et votre hotte peints associés au foulard noir noué devant votre
-            bouche, vous ressemblez vraiment à un gangster ou un agent secret."; }
+            bouche, vous ressemblez vraiment à un gangster ou un agent secret.";
+          }
           else if (papier_toilette has worn && papier_toilette in player && (foulard hasnt
-            worn || heros.peint == 0)) {
+              worn || heros.peint == 0)) {
             "Vous êtes entièrement recouvert de papier toilette et parfaitement ridicule
-            mais vous pouvez néanmoins marcher et voir où vous vous déplacez."; }
+            mais vous pouvez néanmoins marcher et voir où vous vous déplacez.";
+          }
           else if (papier_toilette has worn && papier_toilette in player && foulard has
-            worn && heros.peint == 1) {
+              worn && heros.peint == 1) {
             "Vous êtes entièrement recouvert de papier toilette, mais si vous l'enlevez
-            vous serez alors entièrement noir, foulard et peinture aidant."; }
+            vous serez alors entièrement noir, foulard et peinture aidant.";
+          }
           else {
             "C'est bien vous, Chevalier du roi Mice VII, qui servez sous ses ordres
-            depuis son accession au trône puisque vous avez toujours été de grands
-            amis. Vous portez sur le dos une hotte de plastique jaune. Un jouet sur lequel
-            vous êtes tombé lors de l'une de vos escapades, probablement associé jadis à une
-            figurine de père Noël ; toujours est-il que sa forme est parfaitement adaptée aux
-            objets que vous pourriez transporter."; }
+            depuis son accession au trône puisque vous avez toujours été de grands amis.
+            Vous portez sur le dos une hotte de plastique jaune. Un jouet sur lequel vous
+            êtes tombé lors de l'une de vos escapades, probablement associé jadis à une
+            figurine de père Noël ; toujours est-il que sa forme est parfaitement adaptée
+            aux objets que vous pourriez transporter.";
+          }
         ],
         each_turn [;
           if (foulard has worn && heros.peint == 0 && (papier_toilette hasnt worn ||
-            papier_toilette notin player)) {
-            self.etat = 1; }
+              papier_toilette notin player)) {
+            self.etat = 1;
+          }
           else if (foulard hasnt worn && heros.peint == 1 && (papier_toilette hasnt worn ||
-            papier_toilette notin player)) {
-            self.etat = 2; }
+              papier_toilette notin player)) {
+            self.etat = 2;
+          }
           else if (foulard has worn && heros.peint == 1 && (papier_toilette hasnt worn ||
             papier_toilette notin player)) {
-            self.etat = 3; }
+            self.etat = 3;
+          }
           else if (papier_toilette has worn && papier_toilette in player && (foulard hasnt
-            worn || heros.peint == 0)) {
-            self.etat = 4; }
+              worn || heros.peint == 0)) {
+            self.etat = 4;
+          }
           else if (papier_toilette has worn && papier_toilette in player && foulard has
-            worn && heros.peint == 1) {
-            self.etat = 5; }
-          else { self.etat = 0; }
+              worn && heros.peint == 1) {
+            self.etat = 5;
+          }
+          else {
+            self.etat = 0;
+          }
         ],
   has   concealed animate proper transparent light;
 
 Object  heros_poils "poils"
   with  name 'poils' 'poil' 'pilosite' 'moustache' 'moustaches' 'peau' 'fourrure',
         article "vos",
-        description "Votre pilosité est fine et lissée, digne d'un haut dignitaire de la cour, avec des poils d'une douceur que vous envient nombre de vos semblables. Vos moustaches, elles, glissent le long de vos joues pour courir sur vos côtés, vous prévenant de tout obstacle que vos yeux auraient omis.",
+        description
+            "Votre pilosité est fine et lissée, digne d'un haut dignitaire de la cour,
+            avec des poils d'une douceur que vous envient nombre de vos semblables.
+            Vos moustaches, elles, glissent le long de vos joues pour courir sur vos
+            côtés, vous prévenant de tout obstacle que vos yeux auraient omis.",
         found_in [; rtrue; ],
         before [;
           Take,Touch:
@@ -332,17 +369,23 @@ Object  heros_poils "poils"
             else {
               "Vos poils recouverts de peinture sont devenus drus et secs.";
             }
-          Taste,Drink: "Soyons idiot. Non mais vraiment...";
-          Listen: "L'air crépite au contact de votre peau. Enfin il crépiterait si vous aviez une meilleure ouïe, probablement.";
+          Taste,Drink:
+            "Soyons idiot. Non mais vraiment...";
+          Listen:
+            "L'air crépite au contact de votre peau. Enfin il crépiterait si vous aviez
+            une meilleure ouïe, probablement.";
           Smell:
             if (heros.peint == 0) {
-              "Vous sentez quelque peu la poussière, mais rien de très gênant en société. Enfin un bon bain ne serait pas de refus tout de même.";
+              "Vous sentez quelque peu la poussière, mais rien de très gênant en société.
+              Enfin un bon bain ne serait pas de refus tout de même.";
             }
             else {
-              "L'odeur de la peinture est âcre, et vous fait tourner la tête. Mais cela reste supportable.";
+              "L'odeur de la peinture est âcre, et vous fait tourner la tête. Mais cela
+              reste supportable.";
             }
           Attack,Tie:
-            "Ce serait vous privez d'un organe essentiel dans votre relation au monde extérieur.";
+            "Ce serait vous privez d'un organe essentiel dans votre relation au monde
+            extérieur.";
           Pull,Push,PushDir:
             "De toute évidence, inutile.";
         ],
@@ -429,14 +472,17 @@ Object  trou_trone "Palais du roi Mice"
         ],
         e_to trou_dortoirs,
         n_to buffet_dessous,
-        out_to [; <<Go n_obj>>; ];
+        out_to [;
+          <<Go n_obj>>;
+        ];
 
 Object  trou_trone_dortoirs "dortoirs" trou_trone class Entree
   with  name 'dortoirs' 'chambres' 'chambre' 'dortoir',
         description "Les dortoirs du palais du roi Mice sont à l'est.",
         before [;
           Go,GoIn,Enter:
-            PlayerTo(trou_dortoirs); rtrue;
+            PlayerTo(trou_dortoirs);
+            rtrue;
         ],
   has   scenery concealed;
 
@@ -458,7 +504,9 @@ Object  buffet_dessous "Sous le vieux buffet"
         n_to [; SalonChoupinette(); rtrue; ],
         u_to [;
           if (paille in player || paille in buffet_dessous) {
-            if (buffet_interieur has visited) { return buffet_interieur; }
+            if (buffet_interieur has visited) {
+              return buffet_interieur;
+            }
             else {
               move paille to buffet_dessous;
               print "Vous agrandissez la paille rétractable en accordéon et l'installez en
@@ -467,8 +515,10 @@ Object  buffet_dessous "Sous le vieux buffet"
               rtrue;
             }
           }
-          else "Vous n'êtes pas assez fort pour sauter jusqu'au trou et vous y hisser
-            à la seule force de vos maigres bras.";
+          else {
+            "Vous n'êtes pas assez fort pour sauter jusqu'au trou et vous y hisser à la
+            seule force de vos maigres bras.";
+          }
         ];
 
 Object  _buffet "buffet en acajou" buffet_dessous
@@ -490,7 +540,8 @@ Object  buffet_dessous_palais "entrée du palais" buffet_dessous class Entree
             architectural est des plus classiques : une arcade en demi-ovale permettant de faire
             passer deux sujets de front.",
         before [;
-          Go,GoIn,Enter: <<Go in_obj>>;
+          Go,GoIn,Enter:
+            <<Go in_obj>>;
         ];
 
 Object  buffet_interieur "Dans le vieux buffet"
@@ -513,10 +564,14 @@ Object  buffet_interieur "Dans le vieux buffet"
           PlayerTo(buffet_dessous);
           rtrue;
         ],
-        out_to [; <<Go d_obj>>; ],
+        out_to [;
+          <<Go d_obj>>;
+        ],
         before [;
           Smell:
-            if (noun == 0) { "La poussière vous fait éternuer."; }
+            if (noun == 0) {
+              "La poussière vous fait éternuer.";
+            }
         ];
 
 Object  televiseur "Près du poste de télévision"
@@ -566,7 +621,10 @@ Object  televiseur "Près du poste de télévision"
 
 Object  _televiseur "téléviseur" televiseur
   with  name 'poste' 'televiseur' 'tele' 'television' 'tv',
-        description "L'énorme téléviseur à écran cathodique vous inspire une crainte démesurée depuis votre prise de conscience du danger qu'il représente pour une souris. Il ne comprend pas de magnétoscope ou autre lecteur DVD, mais une rangée de boutons se trouve sur son côté droit.",
+        description "L'énorme téléviseur à écran cathodique vous inspire une crainte
+            démesurée depuis votre prise de conscience du danger qu'il représente pour une
+            souris. Il ne comprend pas de magnétoscope ou autre lecteur DVD, mais une
+            rangée de boutons se trouve sur son côté droit.",
         before [;
           SwitchOff:
             "Vous appréciez trop la demoiselle pour lui faire l'affront d'éteindre le téléviseur.";
@@ -602,16 +660,23 @@ Object  balcon "Sur le balcon"
         u_to arbuste,
         in_to televiseur,
         before [;
-          Climb: if (noun == 0) { PlayerTo(arbuste); rtrue; }
+          Climb:
+            if (noun == 0) {
+              PlayerTo(arbuste);
+              rtrue;
+            }
           Smell: 
-            if (noun == 0) { "L'odeur âcre de la peinture se mêle aux fragrances horticoles."; }
+            if (noun == 0) {
+              "L'odeur âcre de la peinture se mêle aux fragrances horticoles.";
+            }
         ];
 
 Object  balcon_televiseur "porte vers le salon" balcon class Entree
   with  name 'entree' 'porte' 'vers' 'salon' 'televiseur' 'tele' 'tv',
         description "La porte derrière vous mene au salon où se trouve le televiseur.",
         before [;
-          Go,GoIn,Enter: <<Go in_obj>>;
+          Go,GoIn,Enter:
+            <<Go in_obj>>;
         ];
 
 Object  arbuste "Au sommet de l'arbuste"
@@ -642,9 +707,13 @@ Object  arbuste "Au sommet de l'arbuste"
               PlayerTo(balcon);
               rtrue;
             }
-            else { "Un seul bain vous suffit."; }
+            else {
+              "Un seul bain vous suffit.";
+            }
           Smell:
-            if (noun == 0) { "Une délicieuse odeur de verdure."; }
+            if (noun == 0) {
+              "Une délicieuse odeur de verdure.";
+            }
         ];
 
 Object  ordinateur "Sous le bureau de l'ordinateur"
@@ -670,10 +739,13 @@ Object  ordinateur "Sous le bureau de l'ordinateur"
             if (noun == 0) {
               style underline; print "Clic, clic, clic. ";
               style roman; print "Le cri d'agonie de votre congénère mécanique torturée vous
-              fait frémir.^"; rtrue;
+              fait frémir.^";
+              rtrue;
             }
           Smell: 
-            if (noun == 0) { "L'odeur de poussière chaude vient chatouiller votre museau."; }
+            if (noun == 0) {
+              "L'odeur de poussière chaude vient chatouiller votre museau.";
+            }
         ],
         w_to buffet_dessous,
         e_to couloir_salon,
@@ -763,7 +835,8 @@ Object  chambre_parents "Chambre des parents"
             print "^Un cri de stupeur retentit lorsque la femme se détourne de la
             fenêtre, sa cigarette consumée, et vous comprenez que vous en êtes le
             motif. Affolée, elle court vers le couloir et vous écrase au passage.";
-            deadflag = 4; rtrue;
+            deadflag = 4;
+            rtrue;
           }
         ],
         w_to couloir_chambres,
@@ -808,10 +881,17 @@ Object  cuisine "La cuisine"
         e_to "Sortir de ce lieu signifierait probablement la mort, et si vous surviviez,
             le reniement de toutes les valeurs monarchiques en lesquelles vous croyez et
             une injure à votre roi.",
-        out_to [; <<Go e_obj>>; ],
+        out_to [;
+          <<Go e_obj>>;
+        ],
         w_to [;
-          if (self.count >= 5) { PlayerTo(cave); rtrue; }
-          else { "La porte est malheureusement fermée."; }
+          if (self.count >= 5) {
+            PlayerTo(cave);
+            rtrue;
+          }
+          else {
+            "La porte est malheureusement fermée.";
+          }
         ];
 
 Object  cave "Au plus profond de la cave"
@@ -877,7 +957,8 @@ Object  cave "Au plus profond de la cave"
           if (heros.etat == 3 && self.passe == 2) {
             if (lampe in player && lampe has light) {
               print "La lumière de votre lampe vous trahit.";
-              deadflag = 5; rtrue;
+              deadflag = 5;
+              rtrue;
             }
             else {
               print "Toujours aussi discret, vous vous faufilez à l'intérieur.^";
@@ -888,7 +969,8 @@ Object  cave "Au plus profond de la cave"
           if (heros.etat == 3 && self.passe == 1) {
             if (lampe in player && lampe has light) {
               print "La lumière de votre lampe vous trahit.";
-              deadflag = 5; rtrue;
+              deadflag = 5;
+              rtrue;
             }
             else {
               print "Avançant précautionneusement dans l'ombre, vous vous faufilez
@@ -903,7 +985,8 @@ Object  cave "Au plus profond de la cave"
           if (heros.etat == 2) {
             if (lampe in player && lampe has light) {
               print "La lumière de votre lampe vous trahit.";
-              deadflag = 5; rtrue;
+              deadflag = 5;
+              rtrue;
             }
             else {
               print "Vous parvenez à vous faufiler dans l'ombre grâce à votre teinture
@@ -916,7 +999,8 @@ Object  cave "Au plus profond de la cave"
           if (heros.etat == 1) {
             if (lampe in player && lampe has light) {
               print "La lumière de votre lampe vous trahit.";
-              deadflag = 5; rtrue;
+              deadflag = 5;
+              rtrue;
             }
             else {
               print "Malgré votre allure de gangster, votre pelage gris clair ne trompe pas
@@ -943,7 +1027,8 @@ Object  cave_repaire "repair de Kay" cave class Entree
         description "Sombre, l'entrée du repaire de Kay semble s'enfoncer dans les profondeurs,
             et est bien gardée.",
         before [;
-          Go,GoIn,Enter: <<Go in_obj>>;
+          Go,GoIn,Enter:
+            <<Go in_obj>>;
         ];
 
 Object  kay_hall "Hall du repaire de Kay"
@@ -986,10 +1071,12 @@ Object  kay_hall "Hall du repaire de Kay"
             l'obscurité qu'un autre rat. Mais il détourne son regard torve et inexpressif."
             'diodes' 'diode' 'lampe' 'lampes' 'lumiere' 'lumieres' 0 [;
               if (dynamo.cassee == 0) {
-              "Des diodes électroluminescentes rouges et vertes, qui pulsent parfois sous
-              l'action irrégulière du vieux rat.";
+                "Des diodes électroluminescentes rouges et vertes, qui pulsent parfois sous
+                l'action irrégulière du vieux rat.";
               }
-              else { "Certaines brillent encore, la plupart sont néanmoins éteintes."; }
+              else {
+                "Certaines brillent encore, la plupart sont néanmoins éteintes.";
+              }
             ],
         before [;
           Smell:
@@ -1021,7 +1108,8 @@ Object  kay_hall "Hall du repaire de Kay"
           if (heros.etat == 3 && cave.passe == 2) {
             if (lampe in player && lampe has light) {
               print "La lumière de votre lampe vous trahit.";
-              deadflag = 5; rtrue;
+              deadflag = 5;
+              rtrue;
             }
             else {
               print "Toujours aussi discret, vous vous faufilez à l'extérieur.^";
@@ -1032,7 +1120,8 @@ Object  kay_hall "Hall du repaire de Kay"
           if (heros.etat == 3 && cave.passe == 1) {
             if (lampe in player && lampe has light) {
               print "La lumière de votre lampe vous trahit.";
-              deadflag = 5; rtrue;
+              deadflag = 5;
+              rtrue;
             }
             else {
               print "Noir de patte en cap, vous vous faufilez dans l'ombre et sortez du repaire
@@ -1043,9 +1132,13 @@ Object  kay_hall "Hall du repaire de Kay"
           }
         ],
         n_to [;
-          if (entrepot has visited) return couloir_reunion;
-          else "Il est possible que le blason soit simplement dans l'entrepot a l'est,
-              autant ne pas prendre de risques inutiles.";
+          if (entrepot has visited) {
+            return couloir_reunion;
+          }
+          else {
+            "Il est possible que le blason soit simplement dans l'entrepot a l'est,
+            autant ne pas prendre de risques inutiles.";
+          }
         ],
         e_to couloir_prisons,
         w_to couloir_dortoirs,
@@ -1156,12 +1249,15 @@ Object  couloir_dortoirs "Couloir des dortoirs"
         ],
         before [;
           Smell: 
-            if (noun == 0) { "Le sang et la sueur..."; }
+            if (noun == 0) {
+              "Le sang et la sueur...";
+            }
           Listen:
             if (noun == 0) {
               print "Les éclats de rire gras se mêlent au thème de la "; style underline;
               print "Lettre à Élise"; style roman; print " et du choc des dés sur la table,
-              au nord."; rtrue;
+              au nord.";
+              rtrue;
             }
         ],
         n_to [;
@@ -1171,7 +1267,8 @@ Object  couloir_dortoirs "Couloir des dortoirs"
           la moitié de la salle à lui seul. La lumière y abonde et vous doutez que votre
           déguisement y soit du meilleur effet, de plus, un cure-dent métallique taillé en
           pointe reluit au côté de l'un des rats.^^
-          Vous préférez donc ne pas rentrer.^"; rtrue;
+          Vous préférez donc ne pas rentrer.^";
+          rtrue;
         ],
         e_to kay_hall,
         s_to kay_dortoir;
@@ -1223,7 +1320,9 @@ Object  couloir_reunion "Couloir vers la salle de réunion"
             PlayerTo(salle_reunion);
             rtrue;
           }
-          else { "~Tu passes pas, c'est m'sieur Kay qui me l'a dit.~"; }
+          else {
+            "~Tu passes pas, c'est m'sieur Kay qui me l'a dit.~";
+          }
         ];
 
 Object  kay_chambre "Chambre de Kay"
@@ -1258,7 +1357,9 @@ Object  kay_chambre "Chambre de Kay"
             la vulgarité dans toute sa splendeur, pour parler clairement.",
         before [;
           Look,Take,Touch,Open,Close,Examine:
-            if (self.voir == 0) { "Vous n'y voyez strictement rien."; }
+            if (self.voir == 0) {
+              "Vous n'y voyez strictement rien.";
+            }
         ],
         e_to couloir_reunion,
         out_to couloir_reunion;
@@ -1272,7 +1373,9 @@ Object  salle_reunion "Antichambre de la salle de réunion"
         vu 0,
         time_left,
         time_out [;
-          if (location == cave) { StopTimer(self); }
+          if (location == cave) {
+            StopTimer(self);
+          }
           else {
             print "^^Haletant, Kay vous ratrappe avec une joie sadique non feinte.";
             deadflag = 5;
@@ -1314,7 +1417,8 @@ Object  salle_reunion "Antichambre de la salle de réunion"
                 la salle de réunion. Jouant des reflets sur les miroirs, vous vous
                 éblouissez vous même autant que les trois rats et chancellez, si bien que
                 Kay pose sa patte sur votre épaule...^";
-                deadflag = 5; rtrue;
+                deadflag = 5;
+                rtrue;
               }
             }
             else if ((heros.etat == 4 || heros.etat == 5) && dynamo.cassee == 0) {
@@ -1345,10 +1449,13 @@ Object  salle_reunion "Antichambre de la salle de réunion"
             else {
               print "Vous faites trois pas dans la salle de réunion, et êtes démasqué à la
               lumière blâfarde du lieu.";
-              deadflag = 5; rtrue;
+              deadflag = 5;
+              rtrue;
             }
           }
-          else if (self.vu == 2) { "Il faut se dépêcher de s'enfuir !"; }
+          else if (self.vu == 2) {
+            "Il faut se dépêcher de s'enfuir !";
+          }
         ];
 
 !==============================================================================
@@ -1388,7 +1495,8 @@ Object  paille "paille de plastique"
               "Vous n'en aurez sûrement plus intérêt, autant la laisser là pour de
               futures intrusions dans le buffet.";
             }
-          Wear: "Ce serait un accoutrement idiot.";
+          Wear:
+            "Ce serait un accoutrement idiot.";
         ],
   has   female;
 
@@ -1401,9 +1509,9 @@ Object  _sujets "sujets de la cour" trou_trone
             miroirs, qui doivent exprimer une dissymétrie si parfaite, pour la
             satisfaction du roi, qu'elle en est presque mathématique.",
         life [;
-          Tell,Ask,AskFor,Answer,ParlerSansPrecision: "Malgré le respect qu'ils ont pour votre
-            personne, vous voir traîner ici plutôt que d'être à la recherche du blason les fait vous
-            dédaigner.";
+          Tell,Ask,AskFor,Answer,ParlerSansPrecision:
+            "Malgré le respect qu'ils ont pour votre personne, vous voir traîner ici
+            plutôt que d'être à la recherche du blason les fait vous dédaigner.";
         ],
   has   animate pluralname;
 
@@ -1607,8 +1715,8 @@ Object  roi "roi Mice VII" trou_trone
           }
         ],
         life [;
-          Tell,Ask,AskFor,Answer,ParlerSansPrecision: "Vous obtenez pour seule réponse : ~Va, cours,
-            vole et me venge !~";
+          Tell,Ask,AskFor,Answer,ParlerSansPrecision:
+            "Vous obtenez pour seule réponse : ~Va, cours, vole et me venge !~";
         ],
   has   animate male;
 
@@ -1650,7 +1758,9 @@ Object  foulard "foulard noir" buffet_interieur
               score = score + 1;
               rfalse;
             }
-            else { rfalse; }
+            else {
+              rfalse;
+            }
         ],
   has   clothing;
 
@@ -1663,17 +1773,22 @@ Object  fille "fille" televiseur
             semble vous affectionner et dépose parfois quelques pop-corn devant le sofa...
             Vos semblables se font une joie de les récupérer pour festoyer au palais.",
         before [;
-          Smell: "Un trop plein de parfum vient embrumer votre esprit. La jeune
-            demoiselle pourrait avoir un certain charme si elle évitait de vider son
-            flacon dans son cou, pensez-vous.";
-          Listen: "Un silence captivé, ponctué parfois de ~Non, Stecy ne quitte pas
-            Brandon, sinon il te trompera avec Vanessa !~";
-          Search: "Elle est un peu grande pour que vous puissiez la fouiller.";
-          Attack: "Fou... Non, vous ne l'êtes pas encore.";
+          Smell:
+            "Un trop plein de parfum vient embrumer votre esprit. La jeune demoiselle
+            pourrait avoir un certain charme si elle évitait de vider son flacon dans son
+            cou, pensez-vous.";
+          Listen:
+            "Un silence captivé, ponctué parfois de ~Non, Stecy ne quitte pas Brandon,
+            sinon il te trompera avec Vanessa !~";
+          Search:
+            "Elle est un peu grande pour que vous puissiez la fouiller.";
+          Attack:
+            "Fou... Non, vous ne l'êtes pas encore.";
         ],
         life [;
-          Tell,Ask,AskFor,Answer,ParlerSansPrecision: "Si encore vous saviez parler, je ne suis
-            pas sûr que ce serait du meilleur effet. Pendant sa série en plus...";
+          Tell,Ask,AskFor,Answer,ParlerSansPrecision:
+            "Si encore vous saviez parler, je ne suis pas sûr que ce serait du meilleur
+            effet. Pendant sa série en plus...";
         ],
   has   animate female;
 
@@ -1682,7 +1797,9 @@ Object  _arbuste "arbuste" balcon
         description "Vous pourriez presque monter jusqu'à cet arbuste en grimpant le long de sa
             branche qui vient mourir à vos pieds.",
         before [;
-          Climb: PlayerTo(arbuste); rtrue;
+          Climb:
+            PlayerTo(arbuste);
+            rtrue;
         ],
   has   scenery concealed;
 
@@ -1695,11 +1812,14 @@ Object  _pot1 "pot de peinture" balcon
             Divers pinceaux de formes variées encombrent le sol.",
         before [;
           Enter,Go: 
-            "Vous ne pouvez pas entrer dans les pots de peinture, cependant vous remarquez un arbuste dont une des branches vient mourir à vos pieds tandis qu'une de ses feuilles descend jusqu'à un pot de peinture noire.";
+            "Vous ne pouvez pas entrer dans les pots de peinture, cependant vous remarquez
+            un arbuste dont une des branches vient mourir à vos pieds tandis qu'une de ses
+            feuilles descend jusqu'à un pot de peinture noire.";
           Smell: 
             "Une odeur âcre de peinture.";
           Take,Touch:
-            "Vous posez la main sur un des pots. Vous n'avez malheureusement aucune communion avec les cylindres de métal, et rien ne se produit.";
+            "Vous posez la main sur un des pots. Vous n'avez malheureusement aucune
+            communion avec les cylindres de métal, et rien ne se produit.";
           EmptyT,ThrowAt,Push,Pull,PushDir:
             "Vous n'avez pas la force requise pour déplacer un tel objet.";
         ],
@@ -1725,7 +1845,9 @@ Object  _pot2 "pot de peinture" arbuste
               PlayerTo(balcon);
               rtrue;
             }
-            else { "Un seul bain vous suffit."; }
+            else {
+              "Un seul bain vous suffit.";
+            }
           Take,Touch:
             "Vous êtes manifestement trop loin du pot pour le toucher.";
            EmptyT,ThrowAt,Push,Pull,PushDir:
@@ -1759,9 +1881,12 @@ Object  _ordinateur "ordinateur" ordinateur
               profite pour s'éclipser aux toilettes, dont il laisse la porte
               entrouverte en sortant.";
             }
-            else { "Il ne faut pas abuser des bonnes choses."; }
-          Smell: "Une inspiration et vous éternuez, il vous faudra retenir votre
-            respiration pour passer.";
+            else {
+              "Il ne faut pas abuser des bonnes choses.";
+            }
+          Smell:
+            "Une inspiration et vous éternuez, il vous faudra retenir votre respiration
+            pour passer.";
           SwitchOn:
             "L'ordinateur est déjà allumé.";
         ],
@@ -1773,7 +1898,8 @@ Object  _cables "câbles" ordinateur
         description "Des fils et câbles entremêlés, entortillés, empêtrés, qui assurent le bon
             fonctionnement de l'engin.",
         before [;
-          Push,Pull,Touch,Take,Attack: <<SwitchOff _ordinateur>>;
+          Push,Pull,Touch,Take,Attack:
+            <<SwitchOff _ordinateur>>;
         ],
   has   scenery concealed;
 
@@ -1796,15 +1922,19 @@ Object  fils "fils" ordinateur
           }
         ],
         before [;
-          Smell: "Des relents de sueur mêlés à diverses odeurs nauséabondes, un
-            adolescent, un vrai !";
-          Listen: "~Gn... Prends-ça ! Headshot... Yes ! Rah le noob... Ghh...~^^
+          Smell:
+            "Des relents de sueur mêlés à diverses odeurs nauséabondes, un adolescent,
+            un vrai !";
+          Listen:
+            "~Gn... Prends-ça ! Headshot... Yes ! Rah le noob... Ghh...~^^
             Force est d'avouer que sa conversation est passionnante.";
-          Attack: "Fou... Non, vous ne l'êtes pas encore.";
+          Attack:
+            "Fou... Non, vous ne l'êtes pas encore.";
         ],
         life [;
-          Tell,Ask,AskFor,Answer,ParlerSansPrecision: "Si encore vous saviez parler, je ne suis
-            pas sûr que ce serait du meilleur effet. Pendant sa partie en plus...";
+          Tell,Ask,AskFor,Answer,ParlerSansPrecision:
+            "Si encore vous saviez parler, je ne suis pas sûr que ce serait du meilleur
+            effet. Pendant sa partie en plus...";
         ],
   has   animate male;
 
@@ -1814,12 +1944,20 @@ Object  porte_toilettes "porte des toilettes"
         description "Une porte de bois peinte en blanche, à poignée d'acier.",
         found_in toilettes couloir_salon,
         door_dir [;
-          if (location == toilettes) { return w_to; }
-          else { return e_to; }
+          if (location == toilettes) {
+            return w_to;
+          }
+          else {
+            return e_to;
+          }
         ],
         door_to [;
-          if (location == toilettes) { return couloir_salon; }
-          else { return toilettes; }
+          if (location == toilettes) {
+            return couloir_salon;
+          }
+          else {
+            return toilettes;
+          }
         ],
   has   ~open door scenery female;
 
@@ -1847,7 +1985,9 @@ Object  _papier_toilette "feuilles de papier toilette" toilettes
               empêtrez dans les feuilles de papier qui vous recouvrent presque
               entièrement.";
             }
-            else { "Avoir été enseveli une fois sous le papier vous suffit."; }
+            else {
+              "Avoir été enseveli une fois sous le papier vous suffit.";
+            }
         ],
   has   scenery pluralname female;
 
@@ -1868,7 +2008,9 @@ Object  papier_toilette "feuilles de papier toilette"
               déguisement noir, que de vous balader couvert de papier toilette.^";
               rfalse;
             }
-            else { rfalse; }
+            else {
+              rfalse;
+            }
         ],
   has   clothing worn pluralname female;
 
@@ -1894,12 +2036,20 @@ Object  porte_parents "porte de la chambre des parents"
         description "Une porte blanche, et neutre.",
         found_in couloir_chambres chambre_parents,
         door_dir [;
-          if (location == chambre_parents) { return w_to; }
-          else { return e_to; }
+          if (location == chambre_parents) {
+            return w_to;
+          }
+          else {
+            return e_to;
+          }
         ],
         door_to [;
-          if (location == chambre_parents) { return couloir_chambres; }
-          else { return chambre_parents; }
+          if (location == chambre_parents) {
+            return couloir_chambres;
+          }
+          else {
+            return chambre_parents;
+          }
         ],
   has   open door scenery female;
 
@@ -1916,7 +2066,9 @@ Object  _armoire "armoire en noyer" chambre_parents
               "Vous prenez un morceau de parchemin qui était coincé sous la porte droite de
               l'armoire.";
             }
-            else rfalse;
+            else {
+              rfalse;
+            }
         ],
   has   scenery concealed transparent;
 
@@ -1941,7 +2093,8 @@ Object  papier "morceau de parchemin" _armoire
               a à voir avec cette intrigue ? Dans quelle mesure ces mots impliquent-ils Stan ?^^
               Stanley était un de vos amis d'enfance. Le roi actuel, lui et vous formiez un
               trio inséparable, mais il y a peu Stanley a disparu sans laisser de nouvelles.
-              Serait-ce possible que... que Stanley soit véritablement le voleur ?^"; rtrue;
+              Serait-ce possible que... que Stanley soit véritablement le voleur ?^";
+              rtrue;
             }
             else {
               self.vu = 1;
@@ -1964,7 +2117,9 @@ Object  papier "morceau de parchemin" _armoire
               "Vous prenez un morceau de parchemin qui était coincé sous la porte droite de
               l'armoire.";
             }
-            else { rfalse; };
+            else {
+              rfalse;
+            };
           Drop,ThrowAt,ThrowDir:
             "Mieux vaudrait le conserver comme preuve pour le roi.";
         ];
@@ -1975,7 +2130,9 @@ Object  mere "mère" chambre_parents
         description "Tirant sur sa cigarette sans filtre à intervalles réguliers, cette
             femme d'une quarantaine d'années semble plongée dans ses rêves.",
         life [;
-          Tell,Ask,AskFor,Answer,ParlerSansPrecision: "Si encore vous saviez parler, je ne suis pas sûr que ce serait du meilleur effet. Pendant sa cigarette en plus...";
+          Tell,Ask,AskFor,Answer,ParlerSansPrecision:
+            "Si encore vous saviez parler, je ne suis pas sûr que ce serait du meilleur
+            effet. Pendant sa cigarette en plus...";
         ],
   has   animate female;
 
@@ -1985,8 +2142,9 @@ Object  pere "père"
         description "Le maître de maison est un homme de haute taille au regard fier et
             intelligent, pour lequel vous avez un grand respect.",
         life [;
-          Tell,Ask,AskFor,Answer,ParlerSansPrecision: "Si encore vous saviez parler, je ne suis pas
-            sûr que ce serait du meilleur effet. Pendant qu'il câline sa femme en plus...";
+          Tell,Ask,AskFor,Answer,ParlerSansPrecision:
+            "Si encore vous saviez parler, je ne suis pas sûr que ce serait du meilleur
+            effet. Pendant qu'il câline sa femme en plus...";
         ],
   has   animate male;
 
@@ -2010,14 +2168,17 @@ Object  garde_entrepot "gardien endormi" couloir_entrepots
             else {
               "Sans arme c'est du suicide. Et tuer un rat dans son sommeil vous répugne.";
             }
-          Search: "Vous repérez une clef dorée mal acrochée dans la poche intérieure de la veste du
+          Search:
+            "Vous repérez une clef dorée mal acrochée dans la poche intérieure de la veste du
             gardien. Peut-être pourriez-vous la subtiliser si vous êtes assez discret.";
-          WakeOther: "Le réveiller directement vous ferait repérer, mais si vous l'attiriez vers
-            un autre lieu ? La clef est si mal attachée qu'en se déplaçant, il la ferait peut-être
-            tomber.";
+          WakeOther:
+            "Le réveiller directement vous ferait repérer, mais si vous l'attiriez vers
+            un autre lieu ? La clef est si mal attachée qu'en se déplaçant, il la ferait
+            peut-être tomber.";
         ],
         life [;
-          Tell,Ask,AskFor,Answer,ParlerSansPrecision: "Il dort. Le réveiller ainsi vous dévoilerait.";
+          Tell,Ask,AskFor,Answer,ParlerSansPrecision:
+            "Il dort. Le réveiller ainsi vous dévoilerait.";
         ],
   has   animate male transparent;
 
@@ -2027,19 +2188,25 @@ Object  garde_entrepot_mort "cadavre du gardien de l'entrepôt"
         description "La charogne git là, à vos pieds, et vous rappelle votre geste lâche et
             sanguinaire. Peut-être ne valez-vous pas mieux que Kay finalement...",
         before [;
-          Smell: "Pas encore d'odeur de décomposition, mais cela viendra bien assez vite.";
-          Attack: "Souiller un cadavre ? Peut-être ne faudrait-il pas pousser le vice.";
-          Taste,Eat,Drink: "Croque-mort n'a jamais été votre vocation.";
-          Listen: "Le silence de la mort n'a jamais été aussi inquiétant.";
-          Take,Push,Pull,PushDir: "Aucun intérêt de déplacer le corps.";
-          Touch: "Vos pattes sont déjà trop tachées de sang...";
+          Smell:
+            "Pas encore d'odeur de décomposition, mais cela viendra bien assez vite.";
+          Attack:
+            "Souiller un cadavre ? Peut-être ne faudrait-il pas pousser le vice.";
+          Taste,Eat,Drink:
+            "Croque-mort n'a jamais été votre vocation.";
+          Listen:
+            "Le silence de la mort n'a jamais été aussi inquiétant.";
+          Take,Push,Pull,PushDir:
+            "Aucun intérêt de déplacer le corps.";
+          Touch:
+            "Vos pattes sont déjà trop tachées de sang...";
           Search:
             if (clef_entrepot notin player) {
               move clef_entrepot to player;
               "Vous soulevez non sans dégoût la veste tachée de sang du rat gisant et y
               prenez la clef de l'entrepôt.";
             }
-          ],
+        ],
   has   static transparent;
 
 Object  _poignard "poignard d'acier trempé" kay_dortoir
@@ -2063,31 +2230,41 @@ Object  _poignard "poignard d'acier trempé" kay_dortoir
               angle quand vous avez inspecté la salle. En croisant son regard inquisiteur
               vous pensez qu'il vaut mieux coopérer jusqu'à ce qu'une occasion se
               présente d'elle-même.^";
-              if (heros.etat == 4) { "Vous vous dépétrez non sans mal de l'amas de feuilles
-              de papier qui vous recouvre tandis que le visage du rat s'éclaire.^^
-              ~Un moment j'ai eu un doute mais je vois que c'est bien toi Stan !~ Et
-              l'autre de s'esclaffer bêtement. ~C'est vrai que des petiots comme toi y'en
-              a pas des masses. Fallait bien ça pour le blason, hein ?~^
-              Le rat vous tapote l'épaule et repart, rieur."; }
-              else if (heros.etat == 5) { "Vous vous dépétrez non sans mal de l'amas de
-              feuilles de papier qui vous recouvre et retirez le foulard noir qui vous
-              masque le museau, tandis que le visage du rat s'éclaire.^^
-              ~Un moment j'ai eu un doute mais je vois que c'est bien toi Stan !~ Et
-              l'autre de s'esclaffer bêtement. ~C'est vrai que des petiots comme toi y'en
-              a pas des masses. Fallait bien ça pour le blason, hein ?~^
-              Le rat vous tapote l'épaule et repart, rieur."; }
-              else if (heros.etat == 3) { "Vous dénouez le foulard noir qui vous masque le
-              museau et affichez un sourire gauche, tandis que le visage du rat
-              s'éclaire.^^
-              ~Un moment j'ai eu un doute mais je vois que c'est bien toi Stan !~ Et
-              l'autre de s'esclaffer bêtement. ~C'est vrai que des petiots comme toi y'en
-              a pas des masses. Fallait bien ça pour le blason, hein ?~^
-              Le rat vous tapote l'épaule et repart, rieur."; }
+              if (heros.etat == 4) {
+                "Vous vous dépétrez non sans mal de l'amas de feuilles de papier qui vous
+                recouvre tandis que le visage du rat s'éclaire.^^
+                ~Un moment j'ai eu un doute mais je vois que c'est bien toi Stan !~
+                Et l'autre de s'esclaffer bêtement.
+                ~C'est vrai que des petiots comme toi y'en a pas des masses. Fallait bien
+                ça pour le blason, hein ?~^
+                Le rat vous tapote l'épaule et repart, rieur.";
+              }
+              else if (heros.etat == 5) {
+                "Vous vous dépétrez non sans mal de l'amas de feuilles de papier qui vous
+                recouvre et retirez le foulard noir qui vous masque le museau, tandis que
+                le visage du rat s'éclaire.^^
+                ~Un moment j'ai eu un doute mais je vois que c'est bien toi Stan !~
+                Et l'autre de s'esclaffer bêtement.
+                ~C'est vrai que des petiots comme toi y'en a pas des masses. Fallait bien
+                ça pour le blason, hein ?~^
+                Le rat vous tapote l'épaule et repart, rieur.";
+              }
+              else if (heros.etat == 3) {
+                "Vous dénouez le foulard noir qui vous masque le museau et affichez un
+                sourire gauche, tandis que le visage du rat s'éclaire.^^
+                ~Un moment j'ai eu un doute mais je vois que c'est bien toi Stan !~
+                Et l'autre de s'esclaffer bêtement.
+                ~C'est vrai que des petiots comme toi y'en a pas des masses. Fallait bien
+                ça pour le blason, hein ?~^
+                Le rat vous tapote l'épaule et repart, rieur.";
+              }
             }
             else if (poignard notin player && _poignard.vu == 0) {
               "Vous ne voyez rien de tel, à moins que cela ne soit sans grande importance.";
             }
-            else { <<Take poignard>>; }
+            else {
+              <<Take poignard>>;
+            }
           Touch:
             "Un ouvrage délicat, mais assez aiguisé pour trancher à vif une patte de rat,
             sans aucun doute.";
@@ -2105,7 +2282,8 @@ Object  poignard "poignard d'acier trempé"
           Touch:
             "Un ouvrage délicat, mais assez aiguisé pour trancher à vif une patte de rat,
             sans aucun doute.";
-          Drop,ThrowAt,ThrowDir: "Il vaudrait mieux le garder pour le montrer au roi.";
+          Drop,ThrowAt,ThrowDir:
+            "Il vaudrait mieux le garder pour le montrer au roi.";
         ],
   has   clothing;
 
@@ -2117,12 +2295,20 @@ Object  porte_prison "porte de la prison"
             ferme que de l'extérieur.",
         found_in couloir_prisons prison,
         door_dir [;
-          if (location == prison) { return s_to; }
-          else { return n_to; }
+          if (location == prison) {
+            return s_to;
+          }
+          else {
+            return n_to;
+          }
         ],
         door_to [;
-          if (location == prison) { return couloir_prisons; }
-          else { return prison; }
+          if (location == prison) {
+            return couloir_prisons;
+          }
+          else {
+            return prison;
+          }
         ],
         before [;
           Open,Close:
@@ -2137,7 +2323,8 @@ Object  clef_entrepot "clef de l'entrepôt" garde_entrepot
         article "la",
         description "Une petite clef dorée qui ouvre la porte de l'entrepôt.",
         before [;
-          Give: "Ce serait idiot.";
+          Give:
+            "Ce serait idiot.";
           Steal:
             if (self in garde_entrepot) {
               if (heros.etat == 4 || heros.etat == 5) {
@@ -2145,7 +2332,8 @@ Object  clef_entrepot "clef de l'entrepôt" garde_entrepot
                 moustaches, vous éveillez le rat qui, lorsque son regard nauséeux croise
                 votre accoutrement immaculé et ridicule, se remet rapidement sur pied et
                 sonne l'alarme.";
-                deadflag = 5; rtrue;
+                deadflag = 5;
+                rtrue;
               }
               if (heros.etat == 3) {
                 print "Vous approchez du garde et tendez votre patte, mais en frolant ses
@@ -2153,10 +2341,13 @@ Object  clef_entrepot "clef de l'entrepôt" garde_entrepot
                 grâce à votre teinture noire, et se rendort. Vous subtilisez la clef de
                 l'entrepot au garde endormi.^";
                 move clef_entrepot to player;
-                score = score - 1; rtrue;
+                score = score - 1;
+                rtrue;
               }
-              else "Veuillez signaler au concepteur que vous êtes parvenus à vous balader
-                dans le repaire de Kay sans ressembler à un fantôme ou être tout noir.";
+              else {
+                "Veuillez signaler au concepteur du jeu que vous êtes parvenu à vous balader
+                dans le repaire de Kay sans ressembler à un fantôme ou être tout noir!";
+              }
             }
           Take:
             if (self in garde_entrepot_mort) {
@@ -2165,20 +2356,22 @@ Object  clef_entrepot "clef de l'entrepôt" garde_entrepot
             else if (self in garde_entrepot) {
               <<Steal self>>;
             }
-            else rfalse;
+            else {
+              rfalse;
+            }
         ],
   has   female;
 
 Object  conserve "boîte de conserve vide" prison
   with  name 'boite' 'conserve' 'vide' 'metal',
         description "Une boîte de métal de tout petit format, qui reste tout de même
-            imposante à votre échelle, mais probablement transportable. Lancée au loin, elle devrait
-            faire du bruit.",
+            imposante à votre échelle, mais probablement transportable. Lancée au loin,
+            elle devrait faire du bruit.",
         jete 0,
         before [;
           ThrowDir:
             if (second == w_obj && location == couloir_entrepots && garde_entrepot in
-            location) {
+                location) {
               if (self.jete == 0) {
                 move conserve to couloir_prisons;
                 move clef_entrepot to couloir_entrepots;
@@ -2202,7 +2395,7 @@ Object  conserve "boîte de conserve vide" prison
               }
             }
             else if (second == w_obj && location == couloir_entrepots && garde_entrepot notin
-            location) {
+                location) {
               move conserve to couloir_prisons;
               "Vous lancez la conserve de toutes vos forces vers les prisons, qui s'abat dans
               un fracas monstrueux, mais personne ne vient admirer le cadavre à vos pieds.";
@@ -2212,13 +2405,15 @@ Object  conserve "boîte de conserve vide" prison
               print "Vous jetez la conserve qui s'écrase au sol dans un bruit assourdissant,
               réveillant alors le gardien qui lève lentement son nez sur vous et donne
               l'alerte.";
-              deadflag = 5; rtrue;
+              deadflag = 5;
+              rtrue;
             }
             else {
               move conserve to location;
               "Vous jetez la conserve qui s'écrase au sol dans un bruit assourdissant.";
             }
-          Search: "Elle est vide depuis bien longtemps.";
+          Search:
+            "Elle est vide depuis bien longtemps.";
         ],
   has   female;
 
@@ -2227,12 +2422,20 @@ Object  porte_entrepot "porte de l'entrepôt"
         article "la",
         description "Une lourde porte de bois munie d'une serrure dorée.",
         door_to [;
-          if (location == entrepot) return couloir_entrepots;
-          else return entrepot;
+          if (location == entrepot) {
+            return couloir_entrepots;
+          }
+          else {
+            return entrepot;
+          }
         ],
         door_dir [;
-          if (location == entrepot) return w_to;
-          else return e_to;
+          if (location == entrepot) {
+            return w_to;
+          }
+          else {
+            return e_to;
+          }
         ],
         before [;
           Open,Unlock:
@@ -2248,8 +2451,8 @@ Object  porte_entrepot "porte de l'entrepôt"
 
 Object  _caisses "caisses" entrepot
   with  name 'boites' 'boite' 'carton' 'vivres' 'pain' 'rassis' 'caisse' 'caisses',
-        description "Les boîtes emplies de fromage vous intéressent tout particulièrement
-            : vous y repérez reblochon fondant, camembert bien fait et fromage de chèvre,
+        description "Les boîtes emplies de fromage vous intéressent tout particulièrement :
+            vous y repérez reblochon fondant, camembert bien fait et fromage de chèvre,
             mais surtout, et c'est à déplorer, un gruyère... avec trous.",
         before [;
           Smell:
@@ -2285,8 +2488,12 @@ Object  fromage "morceaux de fromage" _caisses
                 2: print "Pas meilleur que le précédent.^";
                 3: print "Celui-ci à un goût qui rentre dans les clauses du ~correct~.^";
               }
-              if (self.eat_fromage == 3) { self.eat_fromage = 1; }
-              else { self.eat_fromage++; }
+              if (self.eat_fromage == 3) {
+                self.eat_fromage = 1;
+              }
+              else {
+                self.eat_fromage++;
+              }
             }
             rtrue;
           Show,Give:
@@ -2340,7 +2547,9 @@ Object  dynamo "dynamo" kay_hall
             à sa taille, qui actionne une dynamo et produit l'électricité nécessaire pour
             alimenter la plupart du repaire.";
           }
-          else "L'engin brisé fûme encore...";
+          else {
+            "L'engin brisé fûme encore...";
+          }
         ],
         cassee 0,
         before [;
@@ -2362,8 +2571,8 @@ Object  garde_idiot "garde idiot" couloir_reunion
             la porte avec fermeté, et passer ne sera pas aussi facile qu'il est idiot.",
         from 0,
         life [;
-          Tell,Ask,AskFor,Answer,ParlerSansPrecision: "~On m'a dit de garder la porte, pas de
-            parler aux gens.~";
+          Tell,Ask,AskFor,Answer,ParlerSansPrecision:
+            "~On m'a dit de garder la porte, pas de parler aux gens.~";
         ],
   has   animate male;
 
@@ -2374,8 +2583,10 @@ Object  _boite_musique "boîte à musique" kay_chambre
             manivelle sur son côté droit, vers le lit. Trois crânes d'oisillons sont posés
             sur le couvercle de la boîte, presque contre le mur.",
         before [;
-          Take: "Cela n'a visiblement aucun intérêt.";
-          Open,Close,Search: <<Turn _manivelle>>;
+          Take:
+            "Cela n'a visiblement aucun intérêt.";
+          Open,Close,Search:
+            <<Turn _manivelle>>;
         ],
   has   scenery female openable container ~open;
 
@@ -2437,7 +2648,8 @@ Object  journal_kay "journal de Kay" _manivelle
             Stanley dans le vol du blason royal."; }
         ],
         before [;
-          Drop,ThrowDir,ThrowAt: "Il serait bête de se séparer d'une de vos preuves.";
+          Drop,ThrowDir,ThrowAt:
+            "Il serait bête de se séparer d'une de vos preuves.";
         ];
 
 Object  lampe "petite lampe pour bicyclette" kay_chambre
@@ -2448,7 +2660,9 @@ Object  lampe "petite lampe pour bicyclette" kay_chambre
         allume 0,
         before [;
           SwitchOn:
-            if (self.allume == 20) { "Plus d'énergie..."; }
+            if (self.allume == 20) {
+              "Plus d'énergie...";
+            }
             else if (self hasnt on) {
               give self light;
               give self on;
@@ -2456,7 +2670,9 @@ Object  lampe "petite lampe pour bicyclette" kay_chambre
               "Vous allumez la lampe qui éclaire brillament le lieu.";
             }
           SwitchOff:
-            if (self.allume == 20) { "Pourquoi éteindre ce qui l'est déjà ?"; }
+            if (self.allume == 20) {
+              "Pourquoi éteindre ce qui l'est déjà ?";
+            }
             else if (self has on) { 
               give self ~light;
               give self ~on;
@@ -2499,6 +2715,10 @@ Object  blason "blason de la famille royale"
 
 !==============================================================================
 
+!--------------------------------------------
+! Routines
+!--------------------------------------------
+
 [ Initialise;
   lookmode = 2;
   ChangePlayer(heros);
@@ -2509,17 +2729,23 @@ Object  blason "blason de la famille royale"
 
 [ PrintTaskName task_number;
   switch (task_number) {
-      0: "points - s'introduire chez le rat Kay";
-      1: "points - récupérer le blason royal";
-      2: "points - rapporter le blason au roi Mice VII";
-      3: "points - identifier le voleur (facultatif)";
+    0: "points - s'introduire chez le rat Kay";
+    1: "points - récupérer le blason royal";
+    2: "points - rapporter le blason au roi Mice VII";
+    3: "points - identifier le voleur (facultatif)";
   }
 ];
 
 [ DeathMessage;
-  if (deadflag == 3) print "Vous êtes dévoré par la sanguinaire Choupinette.";
-  if (deadflag == 4) print "Vous gisez au sol, et décédez suite à une longue agonie.";
-  if (deadflag == 5) print "Vous finissez vos jours au fond d'une oubliette.";
+  if (deadflag == 3) {
+    print "Vous êtes dévoré par la sanguinaire Choupinette.";
+  }
+  if (deadflag == 4) {
+    print "Vous gisez au sol, et décédez suite à une longue agonie.";
+  }
+  if (deadflag == 5) {
+    print "Vous finissez vos jours au fond d'une oubliette.";
+  }
 ];
 
 [ SalonChoupinette;
@@ -2541,17 +2767,32 @@ Object  blason "blason de la famille royale"
 ];
 
 [ HelpMenu;
-  if (menu_item==0) { item_name="Informations";return 6; }
-  if (menu_item==1) { item_name="Aide"; }
-  if (menu_item==2) { item_name="Solution"; }
-  if (menu_item==3) { item_name="Auteur"; }
-  if (menu_item==4) { item_name="Remerciements"; }
-  if (menu_item==5) { item_name="Licence"; }
-  if (menu_item==6) { item_name="Rien, finalement."; }
+  if (menu_item == 0) {
+    item_name = "Informations";
+    return 6;
+  }
+  if (menu_item == 1) {
+    item_name = "Aide";
+  }
+  if (menu_item == 2) {
+    item_name = "Solution";
+  }
+  if (menu_item == 3) {
+    item_name = "Auteur";
+  }
+  if (menu_item == 4) {
+    item_name = "Remerciements";
+  }
+  if (menu_item == 5) {
+    item_name = "Licence";
+  }
+  if (menu_item == 6) {
+    item_name = "Rien, finalement.";
+  }
 ];
 
 [ HelpInfo;
-  if (menu_item==1) {
+  if (menu_item == 1) {
     print "Ce programme est un jeu d'aventure textuel, ou "; style underline; print
     "fiction interactive"; style roman; print " et se base donc sur un dialogue entre
     le joueur, vous, et sa machine. Ainsi vous pouvez interagir avec le milieu
@@ -2578,11 +2819,21 @@ Object  blason "blason de la famille royale"
     Enfin le site "; style underline; print "http://www.fiction-interactive.fr"; style roman;
     print " et toute la communauté française de fiction interactive sont à votre disposition.^";
   }
-  if (menu_item==2) { SoluceSub(); }
-  if (menu_item==3) { AuthorSub(); }
-  if (menu_item==4) { ThanksSub(); }
-  if (menu_item==5) { LicenseSub(); }
-  if (menu_item==6) { return 3; }
+  if (menu_item == 2) {
+    SoluceSub();
+  }
+  if (menu_item == 3) {
+    AuthorSub();
+  }
+  if (menu_item == 4) {
+    ThanksSub();
+  }
+  if (menu_item == 5) {
+    LicenseSub();
+  }
+  if (menu_item == 6) {
+    return 3;
+  }
 ];
 
 
@@ -2627,17 +2878,32 @@ Object  blason "blason de la famille royale"
 ];
 
 [ SoluceMenu;
-  if (menu_item==0) { item_name="Solution du jeu ~Rats~";return 6; }
-  if (menu_item==1) { item_name="Entrer dans le repaire de Kay"; }
-  if (menu_item==2) { item_name="Obtenir la clef de l'entrepôt"; }
-  if (menu_item==3) { item_name="Passer le garde idiot"; }
-  if (menu_item==4) { item_name="Récupérer le blason"; }
-  if (menu_item==5) { item_name="Quête optionnelle : démasquer le voleur"; }
-  if (menu_item==6) { item_name="Rien, finalement.^"; }
+  if (menu_item == 0) {
+    item_name = "Solution du jeu ~Rats~";
+    return 6;
+  }
+  if (menu_item == 1) {
+    item_name = "Entrer dans le repaire de Kay";
+  }
+  if (menu_item == 2) {
+    item_name = "Obtenir la clef de l'entrepôt";
+  }
+  if (menu_item == 3) {
+    item_name = "Passer le garde idiot";
+  }
+  if (menu_item == 4) {
+    item_name = "Récupérer le blason";
+  }
+  if (menu_item == 5) {
+    item_name = "Quête optionnelle : démasquer le voleur";
+  }
+  if (menu_item == 6) {
+    item_name = "Rien, finalement.^";
+  }
 ];
 
 [ SoluceInfo;
-  if (menu_item==1) {
+  if (menu_item == 1) {
     print "Pour pénétrer dans le repaire de Kay, deux solutions s'offrent à vous :^^";
     style bold; print "Solution 1"; style roman; print "^Sur le balcon se trouve un arbuste
     sur lequel vous pouvez grimper, avant de sauter dans un pot de peinture noire, ce qui
@@ -2651,7 +2917,7 @@ Object  blason "blason de la famille royale"
     maladresse vous fera recouvrir de papier toilette, vous conférant pour les rats une
     apparence fantômatique.^";
   }
-  if (menu_item==2) {
+  if (menu_item == 2) {
     print "Encore une fois, plusieurs possibilités permettent de récupérer la clef de
     l'entrepôt.^^";
     style bold; print "Solution de l'assassin"; style roman; print "^Vous trouverez dans un
@@ -2665,10 +2931,10 @@ Object  blason "blason de la famille royale"
     lancez-la à l'ouest. Le vacarme réveillera le garde qui fera tomber la clef en se
     déplaçant.^";
   }
-  if (menu_item==3) {
+  if (menu_item == 3) {
     "Pour amadouer le garde idiot, donnez-lui un morceau de fromage trouvé dans l'entrepôt.";
   }
-  if (menu_item==4) {
+  if (menu_item == 4) {
     print "À nouveau trois solutions s'offrent à vous :^^";
     style bold; print "Solution 1"; style roman; print "^Si vous êtes recouvert de papier
     toilette, faites directement irruption dans la salle. Stupide, Kay ne réagira pas tout
@@ -2680,7 +2946,7 @@ Object  blason "blason de la famille royale"
     dynamo dans le hall du repaire et priver ainsi une partie des lieux de lumière. Grâce à
     ce subterfuge, vous aurez le temps de prendre le blason avant d'être repéré et de fuir.^";
   }
-  if (menu_item==5) {
+  if (menu_item == 5) {
     print "La quête optionnelle vous permet de découvrir que c'est la souris Stanley qui a
     trahi la couronne, grâce à trois objets :^^";
     style underline; print "Le journal de Kay"; style roman; print ", qui est la seule vraie preuve
@@ -2691,7 +2957,9 @@ Object  blason "blason de la famille royale"
     style underline; print "Un morceau de parchemin"; style roman; print " est caché dans l'armoire de
     la chambre des parents, et nomme lui aussi Stanley.^";
   }
-  if (menu_item==6) { return 3; }
+  if (menu_item == 6) {
+    return 3;
+  }
 ];
 
 [ AuthorSub;
@@ -2779,6 +3047,10 @@ Object  blason "blason de la famille royale"
 
 !==============================================================================
 
+!--------------------------------------------
+! Grammaire
+!--------------------------------------------
+
 Global ScenicFlag = 4;
 
 Constant ScenicErrorOther = "Vous n'y voyez aucune utilité.";
@@ -2786,14 +3058,14 @@ Constant ScenicErrorLook = NULL; ! utiliser le message par défaut Miscellany 39
 Constant ScenicErrorSmell = NULL; ! utiliser le message par défaut pour "Smell"
 Constant ScenicErrorListen = NULL; ! utiliser le message par défaut pour "Listen"
 Constant ScenicErrorTouch = "Vous n'y voyez aucune utilité.";
-Constant ScenicErrorTaste = "C'est non comestible, selon toute évidence."; ! utiliser le message par défaut pour "Taste"
+Constant ScenicErrorTaste = "C'est non comestible, selon toute évidence.";
 Include "scenic5sens";
-
-! Version 1.0
 
 Include "FrenchG";
 
-! Version 2.3 des bibliothèques francophones
+!--------------------------------------------
+! Verbes nouveaux ou étendus
+!--------------------------------------------
 
 Verb "help" "aide" "manuel" "manual" "info" "information" "menu"
     *               -> Help;
