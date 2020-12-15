@@ -221,7 +221,7 @@ Class   Entree
 !==============================================================================
 
 !--------------------------------------------
-! Objets
+! Lieux
 !--------------------------------------------
 
 Object  trou_dortoirs "Dortoirs du palais"
@@ -235,7 +235,7 @@ Object  trou_dortoirs "Dortoirs du palais"
             trône est à l'ouest.",
         scenic_look 'couche' 'couches' 'lit' 'lits' 'couchette' 'couchettes'
             'couchettes' 'matelas' 0 "Toutes plus ou moins
-            identiques à la votre, bien que cette dernière ait la particularité d'être nouée
+            identiques à la vôtre, bien que cette dernière ait la particularité d'être nouée
             à l'aide de poils longs de Choupinette, dont la conquête est l'exploit qui a fait
             votre renommée et vous a valu d'être Chevalier du roi.",
         visite 0,
@@ -355,7 +355,7 @@ Object  heros "vous" trou_dortoirs
   has   concealed animate proper transparent light;
 
 Object  heros_poils "poils"
-  with  name 'poils' 'poil' 'pilosite' 'moustache' 'moustaches' 'peau' 'fourrure',
+  with  name 'poils' 'poil' 'pilosite' 'moustache' 'moustaches' 'peau' 'fourrure' 'pelage',
         article "vos",
         description
             "Votre pilosité est fine et lissée, digne d'un haut dignitaire de la cour,
@@ -436,7 +436,7 @@ Object  trou_trone "Palais du roi Mice"
             sans eux, serait plongé dans d'obscures ténèbres.",
         scenic_look2 'arcade' 'entree' 'porte' 'buffet' 0 "L'entrée est un simple trou dans le
             mur dont le style architectural est des plus classiques : une arcade en demi-ovale
-            permettant de faire passer deux sujets de front, vers le buffet.."
+            permettant de faire passer deux sujets de front, qui débouche sous le buffet."
             'embleme' 'armes' 'armoiries' 'sceau' 'blason' 'ecu' 'bouclier' 'symbole'
             'emplacement' 'circulaire' 'cercle' 'trou' 0 "L'emplacement qui contient
             habituellement le blason décoré du gruyère sans trous, emblême de la famille
@@ -453,23 +453,26 @@ Object  trou_trone "Palais du roi Mice"
         initial [;
           if (trou_trone hasnt visited) {
             move parchemin to player;
-            "~Te voilà enfin, mon cher Chevalier. Je t'ai fait quérir car je dois te
+            print "~Te voilà enfin, mon cher Chevalier. Je t'ai fait quérir car je dois te
             faire part d'une requête importante...~^^
             Le roi s'arrête un instant, refoulant un éternuement, et poursuit son
-            discours, non sans bégayer.^^
-            ~Peut-être l'as-tu remarqué, le blason de la famille royale nous a été volé.
+            discours, non sans bégayer.^^";
+            KeyCharPrimitive();
+            print "~Peut-être l'as-tu remarqué, le blason de la famille royale nous a été volé.
             La bande de Kay, les rats qui vivent dans la cave de la maison, a déjà
             revendiqué le crime, bien que j'aie toujours du mal à imaginer comment ils
             ont pu procéder, étant trop grands pour pénétrer notre palais.^
             Toujours est-il que...~^^
             Le roi s'interrompt à nouveau, toussant violemment si bien que vous n'avez
             d'autre recours que d'aller lui tapoter gentiment le dos de votre patte
-            agile jusqu'à ce qu'il retrouve une respiration correcte.^^
-            ~Hu... Excuse-moi... Bref, je disais que j'ai besoin de toi pour récupérer
+            agile jusqu'à ce qu'il retrouve une respiration correcte.^^";
+            KeyCharPrimitive();
+            print "~Hu... Excuse-moi... Bref, je disais que j'ai besoin de toi pour récupérer
             cet artefact de valeur inestimable, rongé dans une plaque de PVC par mon
             arrière-grand-oncle, et gravé par sa soeur et deux jeunes vierges.^
             Voici tes ordres de mission. J'ai confiance en toi, mon meilleur Chevalier.
-            Je sais que tu ne me décevras pas. Maintenant, va !~";
+            Je sais que tu ne me décevras pas. Maintenant, va !~^";
+            KeyCharPrimitive();
           }
         ],
         e_to trou_dortoirs,
@@ -493,7 +496,7 @@ Object  buffet_dessous "Sous le vieux buffet"
             salon, sous le vieux buffet qui siège entre l'ordinateur à l'est et le
             téléviseur à l'ouest. Au nord vous êtes au beau milieu de la pièce, à
             découvert, et à la merci de Choupinette.",
-        scenic_look 'ordi' 'ordinateur' 'pc' 'tele' 'tv' 'televesion' 'televiseur' 0 "Le televiseur
+        scenic_look 'ordi' 'ordinateur' 'pc' 'tele' 'tv' 'televesion' 'televiseur' 0 "Le téléviseur
             est à l'ouest tandis que l'ordinateur est à l'est.",
         before [;
           Climb:
@@ -559,7 +562,7 @@ Object  buffet_interieur "Dans le vieux buffet"
             'porte' 'portes' 'battants' 'battant' 'placard' 'pourtour' 'pourtours' 0 "Les
             portes du buffet sont verrouillées depuis l'extérieur, et semblent du même bois
             que le meuble."
-            'lumiere' 'filtre' 'eclairage' 0 "C'est vraiment diffus, mais vous voyez assez bien.",
+            'lumiere' 'eclairage' 0 "C'est vraiment diffus, mais vous voyez assez bien.",
         scenic_look2 'sortie' 'trou' 0 "Vous pouvez glisser le long de la paille.",
         d_to [;
           print "Vous glissez avec précaution le long de la paille.^";
@@ -579,7 +582,7 @@ Object  buffet_interieur "Dans le vieux buffet"
 Object  televiseur "Près du poste de télévision"
   with  description [;
           if (self hasnt visited) {
-            "A l'ouest du buffet où se trouve l'entrée du palais royal siège
+            "À l'ouest du buffet où se trouve l'entrée du palais royal siège
             fièrement un énorme téléviseur à écran cathodique, qui a longtemps été votre
             terrain de jeu lorsque vous n'étiez qu'un souriceau et que vous pouviez vous
             y faufiler. Aujourd'hui vous êtes trop grand pour y entrer, et vous n'avez
@@ -589,7 +592,7 @@ Object  televiseur "Près du poste de télévision"
             êtes au centre du salon et à l'est vous retournez sous le buffet.";
           }
           else {
-            "A l'ouest du buffet où se trouve l'entrée du palais royal siège
+            "À l'ouest du buffet où se trouve l'entrée du palais royal siège
             fièrement un énorme téléviseur à écran cathodique. Au nord vous pouvez vous glisser
             derrière le canapé installé devant l'écran et rejoindre le balcon, au nord-est vous
             êtes au centre du salon et à l'est vous retournez sous le buffet.";
@@ -675,7 +678,7 @@ Object  balcon "Sur le balcon"
 
 Object  balcon_televiseur "porte vers le salon" balcon class Entree
   with  name 'entree' 'porte' 'vers' 'salon' 'televiseur' 'tele' 'tv',
-        description "La porte derrière vous mene au salon où se trouve le televiseur.",
+        description "La porte derrière vous mene au salon où se trouve le téléviseur.",
         before [;
           Go,GoIn,Enter:
             <<Go in_obj>>;
@@ -725,7 +728,7 @@ Object  ordinateur "Sous le bureau de l'ordinateur"
             underline; print "clics"; style roman; " sous l'action effrénée du fils de la
             maison, scotché devant un écran d'une taille démesurée, casque sur les
             oreilles, et gesticulant visiblement aux prises avec des terroristes
-            virtuels. A l'ouest vous retrouvez le calme de votre buffet, le televiseur et
+            virtuels. À l'ouest vous retrouvez le calme de votre buffet, le téléviseur et
             plus loin le balcon, au nord-ouest s'ouvre toujours un espace vide et étrangement
             silencieux et à l'est se trouve l'entrée d'un couloir.";
         ],
@@ -758,12 +761,12 @@ Object  couloir_salon "Couloir vers la cuisine"
         description [;
           if (porte_toilettes has open) {
             "L'unique couloir de la maison qui joint, du nord au sud, la cuisine
-            et les chambres. A l'est se trouvent la salle de bain dont la porte est fermée,
+            et les chambres. À l'est se trouvent la salle de bain dont la porte est fermée,
             et les toilettes, dont l'accès vous est désormais possible.";
           }
           else {
             "L'unique couloir de la maison qui joint, du nord au sud, la cuisine
-            et les chambres. A l'est se trouvent la salle de bain et les toilettes,
+            et les chambres. À l'est se trouvent la salle de bain et les toilettes,
             mais les deux portes sont fermées.";
           }
         ],
@@ -1462,16 +1465,20 @@ Object  salle_reunion "Antichambre de la salle de réunion"
 
 !==============================================================================
 
+!--------------------------------------------
+! Objets
+!--------------------------------------------
+
 Object  _paille "paille de plastique" trou_dortoirs
   with  name 'paille' 'pailles',
         adjective 'plastique',
         description "Les pailles de plastique jonchent le sol de la cuisine tous les
             matins, et vos amis n'ont pas eu beaucoup de mal à s'en approprier
-            suffisament pour confectionner ces couchettes. Elles sont surprenament rigides,
+            suffisament pour confectionner ces couchettes. Elles sont surprenamment rigides,
             et peuvent supporter le poids d'une souris comme vous, svelte et agile.",
         prise 0,
         before [;
-          Touch,Take,Pull:
+          Touch,Take,Pull,Search:
             if (self.prise == 0) {
               self.prise = 1;
               move paille to player;
@@ -1494,7 +1501,7 @@ Object  paille "paille de plastique"
         before [;
           Touch,Take:
             if (buffet_interieur has visited) {
-              "Vous n'en aurez sûrement plus intérêt, autant la laisser là pour de
+              "Vous n'en aurez sûrement plus l'utilité, autant la laisser là pour de
               futures intrusions dans le buffet.";
             }
           Wear:
@@ -1772,7 +1779,7 @@ Object  fille "fille" televiseur
         article "la",
         description "La demoiselle que vous avez l'occasion de contempler dans toute sa
             magnificence de loque avachie est la fille des propriétaires du lieu, qui
-            semble vous affectionner et dépose parfois quelques pop-corn devant le sofa...
+            semble vous affectionner et dépose parfois quelques pop-corns devant le sofa...
             Vos semblables se font une joie de les récupérer pour festoyer au palais.",
         before [;
           Smell:
@@ -1859,7 +1866,8 @@ Object  _pot2 "pot de peinture" arbuste
 
 Object  _ordinateur "ordinateur" ordinateur
   with  name 'ordinateur' 'ordi' 'bureau' 'computer' 'pc' 'machine' 'fixe' 'engin'
-            'bouton' 'power' 'reset',
+            'bouton' 'power' 'reset' 'unite',
+        adjective 'centrale',
         description "L'énorme machine et son ronronnement monstrueux vous rappellent
             que vous avez failli mourir jadis étouffé par la poussière qui le garnit,
             d'une épaisseur résultant d'un amoncellement séculaire. Les cablages n'en
@@ -1895,15 +1903,15 @@ Object  _ordinateur "ordinateur" ordinateur
   has   scenery;
 
 Object  _cables "câbles" ordinateur
-  with  name 'cable' 'cables' 'fil' 'fils' 'cablages',
+  with  name 'cable' 'cables' 'fil' 'cablages',
         article "les",
-        description "Des fils et câbles entremêlés, entortillés, empêtrés, qui assurent le bon
+        description "Des câbles entremêlés, entortillés, empêtrés, qui assurent le bon
             fonctionnement de l'engin.",
         before [;
           Push,Pull,Touch,Take,Attack:
             <<SwitchOff _ordinateur>>;
         ],
-  has   scenery concealed;
+  has   scenery concealed pluralname;
 
 Object  fils "fils" ordinateur
   with  name 'homme' 'jeune' 'garcon' 'fils' 'enfant' 'gamin' 'mome' 'geek' 'nerd'
@@ -2351,7 +2359,7 @@ Object  clef_entrepot "clef de l'entrepôt" garde_entrepot
                 dans le repaire de Kay sans ressembler à un fantôme ou être tout noir!";
               }
             }
-          Take:
+          Take,Push,Pull,Turn:
             if (self in garde_entrepot_mort) {
               <<Search garde_entrepot_mort>>;
             }
@@ -2987,9 +2995,9 @@ Object  blason "blason de la famille royale"
   entrée en matière facile, ludique et passionnante.^^
   Merci aussi à toute la communauté francophone de fiction interactive ("; style underline; print 
   "http://www.fiction-interactive.fr"; style roman; print "), et principalement aux bêta-testeurs qui ont permis
-  d'améliorer grandement ce petit jeu : Samuel Verschelde (Stormi), Eric Forgeot (Otto Grimwald),
+  d'améliorer grandement ce petit jeu : Samuel Verschelde (Stormi), Éric Forgeot (Otto Grimwald),
   Benjamin Roux (Yoruk).^^
-  Merci ensuite à Eric Forgeot pour la conception de la jaquette du jeu, et à Matthieu Aubry pour la
+  Merci ensuite à Éric Forgeot pour la conception de la jaquette du jeu, et à Matthieu Aubry pour la
   photographie que l'on peut retrouver à l'adresse suivante : "; style underline; print
   "http://flickr.com/photos/matthieu-aubry/440634859/"; style roman; print ".^^
   Un dernier merci aux joueurs, car il n'est pas de jeu sans joueurs.^";
