@@ -1,5 +1,27 @@
 !% -S
 !==============================================================================
+! MIT license / Licence MIT
+!
+! Copyright (c) 2008 Rémi Verschelde (Akien) <remi@verschelde.fr>
+!
+! Permission is hereby granted, free of charge, to any person obtaining a copy
+! of this software and associated documentation files (the "Software"), to deal
+! in the Software without restriction, including without limitation the rights
+! to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+! copies of the Software, and to permit persons to whom the Software is
+! furnished to do so, subject to the following conditions:
+!
+! The above copyright notice and this permission notice shall be included in
+! all copies or substantial portions of the Software.
+!
+! THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+! IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+! AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+! SOFTWARE.
+!==============================================================================
 
 Constant Story "Brume";
 Constant Headline
@@ -1225,7 +1247,7 @@ Object  passage "passage sombre" class Decor
 
 [ HelpInfo;
   if (menu_item==1) {
-    print "Ce programme est un jeu d'aventure textuel, ou "; style underline; print "fiction interactive"; style roman; print " et se base donc sur un dialogue entre le joueur, vous, et sa machine. Ainsi vous pouvez interagir avec le milieu environnant à travers des ordres à l'infinitif, tels que ceux-ci :^"; print " > regarder les murs interieurs^ > prendre les gelules^ > ouvrir la fenetre^^Il peut parfois arriver (voire assez souvent pour un joueur néophyte) que vos instructions ne soient pas comprises, vous pouvez alors réessayer en reformulant d'une manière plus claire et simple (l'association "; style underline; print "verbe"; style roman; print " + "; style underline; print "complément"; style roman; print " est la plus courante).^^"; print "Pour déplacer votre personnage de lieux en lieux, utilisez les huits points cardinaux ("; style underline; print "nord, nord-est, est, sud-est, sud, sud-ouest, ouest, nord-ouest, nord"; style roman; print ") ainsi qu'"; style underline; print "entrer, sortir, haut, bas"; style roman; print ".^Pour avoir de nouveau la description d'un lieu qui apparaît lorsque l'on s'y rend, tapez "; style underline; print "regarder"; style roman; print " lorsque vous vous y trouvez, et pour lister vos acquisitions, tapez "; style underline; print "inventaire"; style roman; print ".^^Vous pouvez aussi utiliser les commandes "; style underline; print "annuler, sauvegarder, charger, recommencer"; style roman; print " et "; style underline; print "quitter"; style roman; print ".^^Enfin le site "; style underline; print "http://ifiction.free.fr"; style roman; print " et toute la communauté française de fiction interactive sont à votre disposition.^";
+    print "Ce programme est un jeu d'aventure textuel, ou "; style underline; print "fiction interactive"; style roman; print " et se base donc sur un dialogue entre le joueur, vous, et sa machine. Ainsi vous pouvez interagir avec le milieu environnant à travers des ordres à l'infinitif, tels que ceux-ci :^"; print " > regarder les murs interieurs^ > prendre les gelules^ > ouvrir la fenetre^^Il peut parfois arriver (voire assez souvent pour un joueur néophyte) que vos instructions ne soient pas comprises, vous pouvez alors réessayer en reformulant d'une manière plus claire et simple (l'association "; style underline; print "verbe"; style roman; print " + "; style underline; print "complément"; style roman; print " est la plus courante).^^"; print "Pour déplacer votre personnage de lieux en lieux, utilisez les huits points cardinaux ("; style underline; print "nord, nord-est, est, sud-est, sud, sud-ouest, ouest, nord-ouest, nord"; style roman; print ") ainsi qu'"; style underline; print "entrer, sortir, haut, bas"; style roman; print ".^Pour avoir de nouveau la description d'un lieu qui apparaît lorsque l'on s'y rend, tapez "; style underline; print "regarder"; style roman; print " lorsque vous vous y trouvez, et pour lister vos acquisitions, tapez "; style underline; print "inventaire"; style roman; print ".^^Vous pouvez aussi utiliser les commandes "; style underline; print "annuler, sauvegarder, charger, recommencer"; style roman; print " et "; style underline; print "quitter"; style roman; print ".^^Enfin le site "; style underline; print "http://www.fiction-interactive.fr"; style roman; print " et toute la communauté française de fiction interactive sont à votre disposition.^";
   }
   if (menu_item==2) { SoluceSub(); }
   if (menu_item==3) { AuthorSub(); }
@@ -1324,7 +1346,7 @@ Object  passage "passage sombre" class Decor
 ];
 
 [ AuthorSub;
-  print "Cette fiction interactive est la deuxième oeuvre de Rémi Verschelde (Akien), réalisée dans le cadre de la quatrième édition du concours des jeux d'aventures textuels organisé par la communauté francophone de fictions interactives (ifiction.free.fr).^^Le concours, qui comptait 5 jeux en lice, s'est terminé le lundi 15 décembre 2008 à 11:57, sur le classement suivant :^
+  print "Cette fiction interactive est la deuxième oeuvre de Rémi Verschelde (Akien), réalisée dans le cadre de la quatrième édition du concours des jeux d'aventures textuels organisé par la communauté francophone de fictions interactives (http://www.fiction-interactive.fr).^^Le concours, qui comptait 5 jeux en lice, s'est terminé le lundi 15 décembre 2008 à 11:57, sur le classement suivant :^
   - "; style underline; print "Brume"; style roman; print ",^
   - "; style underline; print "Lettres volées"; style roman; print ", par Éric Forgeot (Otto Grimwald),^
   - "; style underline; print "Survivre"; style roman; print ", par Benjamin Roux (Yoruk),^
@@ -1335,46 +1357,27 @@ Object  passage "passage sombre" class Decor
 ];
 
 [ ThanksSub;
-  print "Je tiens à remercier en premier lieu tous les protagonistes du concours 2008, auteurs, joueurs, testeurs et commentateurs, et surtout Éric Forgeot (Otto Grimwald) car sans son organisation le concours n'aurait pas eu lieu. Merci aux neuf personnes qui ont voté et émis des avis riches et constructifs, merci à Samuel Verschelde (Stormi) pour sa beta-test assez poussée avant l'échéance, merci aussi à Flap qui proposa le thème de cette édition du concours.^^Merci à Graham Nelson et à toutes les communautés de fiction interactive qui font évoluer cette discipline méconnue qu'est le jeu textuel mais néanmoins passionnante, et notamment à son carrefour francophone: "; style underline; print "ifiction.free.fr"; style roman; ".";
+  print "Je tiens à remercier en premier lieu tous les protagonistes du concours 2008, auteurs, joueurs, testeurs et commentateurs, et surtout Éric Forgeot (Otto Grimwald) car sans son organisation le concours n'aurait pas eu lieu. Merci aux neuf personnes qui ont voté et émis des avis riches et constructifs, merci à Samuel Verschelde (Stormi) pour sa beta-test assez poussée avant l'échéance, merci aussi à Flap qui proposa le thème de cette édition du concours.^^Merci à Graham Nelson et à toutes les communautés de fiction interactive qui font évoluer cette discipline méconnue qu'est le jeu textuel mais néanmoins passionnante, et notamment à son carrefour francophone: "; style underline; print "fiction-interactive.fr"; style roman; ".";
 ];
 
 [ LicenseSub;
-  print "Licence BSD^
-  Copyright (c) 2008 Rémi Verschelde (Akien) - http://ifiction.free.fr^^
-  Tous droits réservés.^
-  La redistribution et l'utilisation sous forme binaire ou de code source,
-  avec ou sans modification, est autorisée à condition que les conditions 
-  suivantes soient respectées:^^
-  1. Les redistributions du code source doivent conserver l'indication de 
-   copyright ci-dessus, cette liste de conditions et la renonciation suivante.^ 
-  2. Les redistributions sous forme binaire doivent reproduire l'indication 
-   de copyright ci-dessus, cette liste de conditions et la renonciation suivante 
-   dans la documentation et/ou les autres accessoires fournis avec la distribution.^ 
-  3. Toutes les publicités mentionnant les caractéristiques ou l'utilisation 
-   de ce logiciel doivent mentionner la phrase suivante : 
-   ~Ce produit inclus un logiciel et du travail développés par Rémi Verschelde (Akien) et
-   la communauté de la fiction interactive francophone (http://ifiction.free.fr/) 
-    et internationale, ainsi que par les créateurs du système INFORM 
-   (http://www.inform-fiction.org).~^
-  4. Les noms des créateurs et développeurs ne peuvent être utilisés pour 
-   approuver ou promouvoir les produits dérivés de ce logiciel sans une 
-   permission écrite spécifique préalable.^^";
-  KeyCharPrimitive();
-  print "CE LOGICIEL EST FOURNI PAR LES TITULAIRES DU COPYRIGHT ET LES PARTICIPANTS
-  ~TEL QUEL~ ET TOUTES LES GARANTIES EXPLICITES OU IMPLICITES, Y COMPRIS, 
-  MAIS NON LIMITÉES A CELLES-CI, LES GARANTIES IMPLICITES DE COMMERCIALISATION 
-  ET D'ADÉQUATION À UN USAGE PARTICULIER SONT DÉNIÉES.
-  EN AUCUN CAS LES TITULAIRES DU COPYRIGHT OU LES PARTICIPANTS NE PEUVENT 
-  ÊTRE TENUS POUR RESPONSABLE DES DOMMAGES DIRECTS, INDIRECTS, FORTUITS, 
-  PARTICULIERS, EXEMPLAIRES OU CONSÉCUTIFS À UNE ACTION (Y COMPRIS, MAIS NON 
-  LIMITÉS À CEUX-CI, L'ACQUISITION DE MARCHANDISES OU DE SERVICES DE REMPLACEMENT; 
-  LES PERTES D'UTILISATIONS, DE DONNÉES OU FINANCIÈRES; OU L'INTERRUPTION 
-  D'ACTIVITÉS) DE QUELQUE MANIÈRE QUE CES DOMMAGES SOIENT CAUSÉS ET CECI 
-  POUR TOUTES LES THÉORIES DE RESPONSABILITÉS, QUE CE SOIT DANS UN CONTRAT, 
-  POUR DES RESPONSABILITÉS STRICTES OU DES PRÉJUDICES (Y COMPRIS DUS À UNE 
-  NEGLIGENCE OU AUTRE CHOSE) SURVENANT DE QUELQUE MANIÈRE QUE CE SOIT EN DEHORS 
-  DE L'UTILISATION DE CE LOGICIEL, MÊME EN CAS D'AVERTISSEMENT DE LA POSSIBILITÉ 
-  DE TELS DOMMAGES.^";
+  print "License MIT / MIT license^^
+  Copyright (c) 2008 Rémi Verschelde (Akien) <remi@@64verschelde.fr>^^
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the ~Software~), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:^^
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.^^
+  THE SOFTWARE IS PROVIDED ~AS IS~, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.";
 ];
 
 [ OuvrirClefSub;

@@ -44,8 +44,7 @@ interpreter.
 
 ## License
 
-The two "finished" projects, Rats and Brume, are available under a
-[BSD 4-Clause](https://spdx.org/licenses/BSD-4-Clause.html) license.
+All projects are available under the [MIT license](/LICENSE.txt).
 
 The cover image for Rats is available under a Creative Commons Attribution -
 Non Commercial - Share Alike 2.0 ([CC BY-NC-SA 2.0](
@@ -55,9 +54,6 @@ photo [*Rats !!!!* by Matthieu Aubry](https://www.flickr.com/photos/matthieu-aub
 The cover image for Brume is derived from the photo [*Fire Fog* by Alex McCombie](
 https://www.flickr.com/photos/nylongbow/369355047/), all rights reserved, used
 with permission from the artist.
-
-Récits and Katabasis do not include license terms yet, so until I add one, they
-are proprietary.
 
 -----
 
@@ -109,8 +105,7 @@ format `.z8` ou `.z5`. Je peux recommender l'élégant interpréteur
 
 ## Licence
 
-Les deux projets "finis", Rats et Brume, sont disponibles sous une licence
-[BSD 4-Clause](https://spdx.org/licenses/BSD-4-Clause.html).
+Tous les projets sont disponibles sous la [licence MIT](/LICENSE.txt).
 
 L'image de couverture de Rats est disponible sous une license Creative Commons
 Paternité - Pas d'Utilisation Commerciale - Partage des Conditions Initiales à

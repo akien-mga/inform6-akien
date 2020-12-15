@@ -1,5 +1,27 @@
 !% -S
 !==============================================================================
+! MIT license / Licence MIT
+!
+! Copyright (c) 2008 Rémi Verschelde (Akien) <remi@verschelde.fr>
+!
+! Permission is hereby granted, free of charge, to any person obtaining a copy
+! of this software and associated documentation files (the "Software"), to deal
+! in the Software without restriction, including without limitation the rights
+! to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+! copies of the Software, and to permit persons to whom the Software is
+! furnished to do so, subject to the following conditions:
+!
+! The above copyright notice and this permission notice shall be included in
+! all copies or substantial portions of the Software.
+!
+! THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+! IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+! AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+! SOFTWARE.
+!==============================================================================
 
 Constant Story "Récits de grand-père";
 Constant Headline
@@ -451,7 +473,7 @@ Object  soldat "soldat italien" nomansland class Decor
 ];
 
 [ HelpSub;
-  print "Ce programme est un jeu d'aventure textuel, ou "; style underline; print "fiction interactive"; style roman; print " et se base donc sur un dialogue entre le joueur, vous, et sa machine. Ainsi vous pouvez interagir avec le milieu environnant à travers des ordres à l'infinitif, tels que ceux-ci :^"; print " > regarder les murs interieurs^ > prendre les gelules^ > ouvrir la fenetre^^Il peut parfois arriver (voire assez souvent pour un joueur néophyte) que vos instructions ne soient pas comprises, vous pouvez alors réessayer en reformulant d'une manière plus claire et simple (l'association "; style underline; print "verbe"; style roman; print " + "; style underline; print "complément"; style roman; print " est la plus courante).^^"; print "Pour déplacer votre personnage de lieux en lieux, utilisez les huits points cardinaux ("; style underline; print "nord, nord-est, est, sud-est, sud, sud-ouest, ouest, nord-ouest, nord"; style roman; print ") ainsi qu'"; style underline; print "entrer, sortir, haut, bas"; style roman; print ".^Pour avoir de nouveau la description d'un lieu qui apparaît lorsque l'on s'y rend, tapez "; style underline; print "regarder"; style roman; print " lorsque vous vous y trouvez, et pour lister vos acquisitions, tapez "; style underline; print "inventaire"; style roman; print ".^^Vous pouvez aussi utiliser les commandes "; style underline; print "annuler, sauvegarder, charger, recommencer"; style roman; print " et "; style underline; print "quitter"; style roman; print ".^^Enfin le site "; style underline; print "http://ifiction.free.fr"; style roman; print " et toute la communauté française de fiction interactive sont à votre disposition.^";
+  print "Ce programme est un jeu d'aventure textuel, ou "; style underline; print "fiction interactive"; style roman; print " et se base donc sur un dialogue entre le joueur, vous, et sa machine. Ainsi vous pouvez interagir avec le milieu environnant à travers des ordres à l'infinitif, tels que ceux-ci :^"; print " > regarder les murs interieurs^ > prendre les gelules^ > ouvrir la fenetre^^Il peut parfois arriver (voire assez souvent pour un joueur néophyte) que vos instructions ne soient pas comprises, vous pouvez alors réessayer en reformulant d'une manière plus claire et simple (l'association "; style underline; print "verbe"; style roman; print " + "; style underline; print "complément"; style roman; print " est la plus courante).^^"; print "Pour déplacer votre personnage de lieux en lieux, utilisez les huits points cardinaux ("; style underline; print "nord, nord-est, est, sud-est, sud, sud-ouest, ouest, nord-ouest, nord"; style roman; print ") ainsi qu'"; style underline; print "entrer, sortir, haut, bas"; style roman; print ".^Pour avoir de nouveau la description d'un lieu qui apparaît lorsque l'on s'y rend, tapez "; style underline; print "regarder"; style roman; print " lorsque vous vous y trouvez, et pour lister vos acquisitions, tapez "; style underline; print "inventaire"; style roman; print ".^^Vous pouvez aussi utiliser les commandes "; style underline; print "annuler, sauvegarder, charger, recommencer"; style roman; print " et "; style underline; print "quitter"; style roman; print ".^^Enfin le site "; style underline; print "http://www.fiction-interactive.fr"; style roman; print " et toute la communauté française de fiction interactive sont à votre disposition.^";
 ];
 
 [ PlaySub;

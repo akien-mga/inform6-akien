@@ -1,5 +1,27 @@
-!% -SD
-!=======================================================================================
+!% -S
+!==============================================================================
+! MIT license / Licence MIT
+!
+! Copyright (c) 2008 Rémi Verschelde (Akien) <remi@verschelde.fr>
+!
+! Permission is hereby granted, free of charge, to any person obtaining a copy
+! of this software and associated documentation files (the "Software"), to deal
+! in the Software without restriction, including without limitation the rights
+! to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+! copies of the Software, and to permit persons to whom the Software is
+! furnished to do so, subject to the following conditions:
+!
+! The above copyright notice and this permission notice shall be included in
+! all copies or substantial portions of the Software.
+!
+! THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+! IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+! AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+! SOFTWARE.
+!==============================================================================
 
 Constant Story "Katabasis";
 Constant Headline
@@ -11,11 +33,11 @@ Constant MAX_SCORE 2;
 Include "Parser";
 Include "VerbLib";
 
-!=======================================================================================
+!==============================================================================
 
 Global  dans_barque = 1;
 
-!=======================================================================================
+!==============================================================================
 
 Class   AverneScenic
   with  scenic_all
@@ -91,7 +113,7 @@ Class   Cocyte
             aucune odeur particulière si ce n'est la mort qui semble omniprésente dans
             ces lieux, ce qui n'a pas pour effet de vous rassurer.";
 
-!=======================================================================================
+!==============================================================================
 
 Object  neant "Néant"
   with  description "Néant.";
@@ -745,7 +767,7 @@ Object  acheron_03 "Embarcadère du nocher Charon"
   with  description "Vous débouchez à présent sur une petite plage de gravier.",
         e_to acheron_02;
 
-!=======================================================================================
+!==============================================================================
 
 [ Initialise;
     lookmode = 2;
@@ -789,14 +811,14 @@ Object  acheron_03 "Embarcadère du nocher Charon"
     "Vous sautillez sur place pour exprimer votre contentement.";
 ];
 
-!=======================================================================================
+!==============================================================================
 
 Global ScenicFlag = 4;
 Include "scenic5sens";
 
 ! Version 1.0.
 
-!=======================================================================================
+!==============================================================================
 
 Include "FrenchG";
 
@@ -827,4 +849,4 @@ Verb 'sautiller' 'sautille'
 Extend 'tirer'
     * noun 'vers'/'à'/'a'/'au' noun  -> PushDir;
 
-!=======================================================================================
+!==============================================================================
