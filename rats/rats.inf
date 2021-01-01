@@ -2567,13 +2567,18 @@ Object  dynamo "dynamo" kay_hall
         cassee 0,
         before [;
           Attack,Cut,SwitchOff:
-            score = score + 2;
-            self.cassee = 1;
-            "Vous glissant derrière le rat aveugle avec force précaution, vous lui assénez un
-            coup violent et l'assomez. Vous entreprenez ensuite de briser la dynamo et le
-            repaire est soudain plongé dans des ténèbres étrangement rassurantes pour vous.
-            Vous distinguez tout de même les objets, car quelques diodes fonctionnent toujours.
-            Il doit y avoir une autre source d'énergie, mais c'est toujours ça de gagné.";
+            if (self.cassee == 0) {
+              score = score + 2;
+              self.cassee = 1;
+              "Vous glissant derrière le rat aveugle avec force précaution, vous lui assénez un
+              coup violent et l'assomez. Vous entreprenez ensuite de briser la dynamo et le
+              repaire est soudain plongé dans des ténèbres étrangement rassurantes pour vous.
+              Vous distinguez tout de même les objets, car quelques diodes fonctionnent toujours.
+              Il doit y avoir une autre source d'énergie, mais c'est toujours ça de gagné.";
+            }
+            else {
+              "La dynamo est déjà hors service, pas la peine de s'acharner.";
+            }
         ],
   has   scenery concealed female;
 
