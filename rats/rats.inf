@@ -890,6 +890,9 @@ Object  cuisine "La cuisine"
         out_to [;
           <<Go e_obj>>;
         ],
+        d_to [;
+          <<Go w_obj>>;
+        ],
         w_to [;
           if (self.count >= 5) {
             PlayerTo(cave);
@@ -1025,6 +1028,9 @@ Object  cave "Au plus profond de la cave"
         ],
         in_to [;
           <<Go n_obj>>;
+        ],
+        u_to [;
+          <<Go e_obj>>;
         ],
         e_to cuisine;
 
@@ -2160,6 +2166,24 @@ Object  pere "père"
             effet. Pendant qu'il câline sa femme en plus...";
         ],
   has   animate male;
+
+Object  _escalier "escalier"
+  with  name "escalier" "marches" "marche",
+        article "l^",
+        adjective "pierre",
+        description "L'escalier comporte une dizaine de marches de pierre et relie la cuisine
+            à la cave.",
+        found_in cuisine cave,
+        before [;
+          Enter,Climb:
+            if (location == cuisine) {
+              <<Go d_obj>>;
+            }
+            else if (location == cave) {
+              <<Go u_obj>>;
+            }
+        ],
+  has   scenery;
 
 Object  garde_entrepot "gardien endormi" couloir_entrepots
   with  name 'garde' 'gardien' 'soldat' 'militaire' 'rat' 'vieux',
