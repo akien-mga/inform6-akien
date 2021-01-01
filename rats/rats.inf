@@ -783,7 +783,8 @@ Object  couloir_salon "Couloir vers la cuisine"
         w_to ordinateur, 
         s_to couloir_chambres,
         n_to cuisine,
-        e_to porte_toilettes;
+        e_to porte_toilettes,
+        se_to _porte_bains;
 
 Object  toilettes "Dans les toilettes"
   with  name 'cuvette' 'trone' 'toilettes',
@@ -1974,7 +1975,9 @@ Object  porte_toilettes "porte des toilettes"
 Object  _porte_bains "porte de la salle de bains" couloir_salon
   with  name 'porte' 'portes' 'bains' 'bain' 'salle' 'd^eau',
         article "la",
-        description "Une porte de bois peinte en bleue, à poignée de bois.",
+        description "Une porte de bois peinte en bleue, à poignée de bois.
+            La porte est fermée et vous bloque l'accès.",
+        door_dir se_to,
   has   ~open door scenery female;
 
 Object  _papier_toilette "feuilles de papier toilette" toilettes
@@ -2028,7 +2031,7 @@ Object  _porte_fils "porte de la chambre du fils" couloir_chambres
   with  name 'porte' 'portes' 'chambre' 'fils' 'garcon' 'enfant' 'no-life' 'geek',
         article "la",
         description "Une porte blanche que décore une énorme affiche de publicité pour le
-            dernier jeu de tir subjectif qu'il a acquis.",
+            dernier jeu de tir subjectif qu'il a acquis. La porte est fermée.",
         door_dir w_to,
   has   ~open door scenery female;
 
@@ -2036,14 +2039,14 @@ Object  _porte_fille "porte de la chambre de la fille" couloir_chambres
   with  name 'porte' 'portes' 'chambre' 'fille' 'enfant' 'demoiselle',
         article "la",
         description "Une porte blanche qui arbore plusieurs photographies de la jeune fille
-            et de poneys.",
+            et de poneys. La porte est fermée.",
         door_dir s_to,
   has   ~open door scenery female;
 
 Object  porte_parents "porte de la chambre des parents"
   with  name 'porte' 'portes' 'chambre' 'parents' 'parent' 'pere' 'mere',
         article "la",
-        description "Une porte blanche, et neutre.",
+        description "Une porte blanche, et neutre. La porte est ouverte.",
         found_in couloir_chambres chambre_parents,
         door_dir [;
           if (location == chambre_parents) {
