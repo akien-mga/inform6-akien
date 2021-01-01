@@ -413,7 +413,7 @@ Object  trou_trone "Palais du roi Mice"
           else {
             "Vous êtes devant le trône de votre roi, Mice VII, dressé dans une
             cavité creusée dans le béton par les pattes de vos ancêtres, derrière le vieux
-            buffet du salon. Le roi grignotte un morceau de fromage en plastique sur son
+            buffet du salon. Le roi grignote un morceau de fromage en plastique sur son
             trône, d'où il contemple ses sujets affairés dans la pièce.^
             La porte est au nord, tandis qu'à l'est s'étendent les dortoirs.";
           }
@@ -439,7 +439,7 @@ Object  trou_trone "Palais du roi Mice"
             permettant de faire passer deux sujets de front, qui débouche sous le buffet."
             'embleme' 'armes' 'armoiries' 'sceau' 'blason' 'ecu' 'bouclier' 'symbole'
             'emplacement' 'circulaire' 'cercle' 'trou' 0 "L'emplacement qui contient
-            habituellement le blason décoré du gruyère sans trous, emblême de la famille
+            habituellement le blason décoré du gruyère sans trous, emblème de la famille
             royale, est désespérément vide.",
         scenic_touch 'trone' 'siege' 'fauteuil' 'chaise' 'somptueux' 'polystyrene'
             'pieux' 'accoudoirs' 'pieu' 'accoudoir' 'cure-dents' 0 "Poser ne serait-ce
@@ -469,7 +469,7 @@ Object  trou_trone "Palais du roi Mice"
             KeyCharPrimitive();
             print "~Hu... Excuse-moi... Bref, je disais que j'ai besoin de toi pour récupérer
             cet artefact de valeur inestimable, rongé dans une plaque de PVC par mon
-            arrière-grand-oncle, et gravé par sa soeur et deux jeunes vierges.^
+            arrière-grand-oncle, et gravé par sa sœur, artiste de renom.^
             Voici tes ordres de mission. J'ai confiance en toi, mon meilleur Chevalier.
             Je sais que tu ne me décevras pas. Maintenant, va !~^";
             KeyCharPrimitive();
@@ -615,7 +615,7 @@ Object  televiseur "Près du poste de télévision"
             }
           Listen: 
             if (noun == 0) {
-              "Le bruit des ondes du téléviseur, ponctué parfois de ~Non, Stecy ne quitte
+              "Le bruit des ondes du téléviseur, ponctué parfois de ~Non, Stacy ne quitte
               pas Brandon, sinon il te trompera avec Vanessa !~";
             }
         ],
@@ -643,20 +643,20 @@ Object  balcon "Sur le balcon"
         description "La porte du balcon entrouverte vous permet de vous y faufiler, et
             une légère brise vient caresser vos moustaches frémissantes. Ce lieu semble
             être une annexe du garage pour les propriétaires du lieu tant il est encombré
-            de bicyclettes, de pots de peinture et balconières garnies de fleurs. Au sud
+            de bicyclettes, de pots de peinture et balconnières garnies de fleurs. Au sud
             vous retrouvez le canapé ainsi que le téléviseur tandis qu'à l'est vous
             traversez le salon à découvert.",
         scenic_look 'bicyclette' 'bicyclettes' 'velo' 'vtt' 0 "Ces engins à roues vous
-            fascinent toujours autant, bien que ceux-ci soient manifestement viellis et
+            fascinent toujours autant, bien que ceux-ci soient manifestement vieillis et
             rouillés par des averses fréquentes dans la région."
             'pinceau' 'pinceaux' 'brosse' 'brosses' 'poil' 'poils' 0 "Des pinceaux et brosses
             dont les poils se sont solidifiés avec la peinture qui y a séché.",
-        scenic_look2 'balconiere' 'balconieres' 'fleur' 'fleurs' 'tige' 'tiges'
+        scenic_look2 'balconniere' 'balconnieres' 'fleur' 'fleurs' 'tige' 'tiges'
             'feuille' 'feuilles' 0 "Des fleurs de multiples couleurs poussent là dans ces
             bacs spécifiquement prévus pour la culture horticole, surplombant des pots
             de peinture. Un arbuste a même une de ses feuilles qui plonge dans la
             peinture noire tandis qu'une branche descend jusqu'à vos pieds.",
-        scenic_smell 'balconiere' 'balconieres' 'fleur' 'fleurs' 'tige' 'tiges'
+        scenic_smell 'balconniere' 'balconnieres' 'fleur' 'fleurs' 'tige' 'tiges'
             'feuille' 'feuilles' 0 "De délicates fragrances horticoles viennent chatouiller
             votre museau, et vous vous surprenez a les humer avec entrain.",
         scenic_taste 'peinture' 'pot' 'pots' 0 "Sans façons.",
@@ -691,11 +691,11 @@ Object  arbuste "Au sommet de l'arbuste"
             pouvez redescendre sur le balcon par une de ses branches qui chemine vers
             le sol.",
         scenic_look 'bicyclette' 'bicyclettes' 'velo' 'vtt' 0 "Ces engins à roues vous
-            fascinent toujours autant, bien que ceux-ci soient manifestement viellis et
+            fascinent toujours autant, bien que ceux-ci soient manifestement vieillis et
             rouillés par des averses fréquentes dans la région."
             'pinceau' 'pinceaux' 'brosse' 'brosses' 0 "Des pinceaux et brosses dont les
             poils se sont solidifiés avec la peinture qui y a séché.",
-        scenic_look2 'balconiere' 'balconieres' 'balcon' 'fleur' 'fleurs' 'tige' 'tiges'
+        scenic_look2 'balconniere' 'balconnieres' 'balcon' 'fleur' 'fleurs' 'tige' 'tiges'
             'feuille' 'feuilles' 0 "Des fleurs de multiples couleurs poussent là dans ces
             bacs spécifiquement prévus pour la culture horticole, surplombant des pots
             de peinture.",
@@ -732,7 +732,7 @@ Object  ordinateur "Sous le bureau de l'ordinateur"
             plus loin le balcon, au nord-ouest s'ouvre toujours un espace vide et étrangement
             silencieux et à l'est se trouve l'entrée d'un couloir.";
         ],
-        scenic_look 'ecran' 'cathodique' 'plasma' 'tubes' 'tube' 'plat' 'lcd' 0 "Un écran LCD
+        scenic_look 'ecran' 'lcd' 'plat' 'moniteur' 0 "Un écran LCD
             toute dernière génération, qui reluit des postillons du jeune homme qui se déchaîne,
             seul, devant lui."
             'casque' 'audio' 'ecouteur' 'ecouteurs' 'micro' 'oreillette' 'oreillettes' 0 "Deux
@@ -910,7 +910,7 @@ Object  cave "Au plus profond de la cave"
             voyez néanmoins l'entrée du repaire de Kay sur le mur nord. L'escalier
             remonte à la cuisine à l'est.",
         scenic_look 'soupirail' 'lumiere' 'fenetre' 'cercle' 'fonte' 'verre' 0 "Une portion de
-            cercle en fonte réhaussée de verre gris de crasse, on peut appeler ça un soupirail,
+            cercle en fonte rehaussée de verre gris de crasse, on peut appeler ça un soupirail,
             avec de l'imagination."
             'vin' 'bouteille' 'bouteilles' 'pinard' 'alcool' 'boisson' 'outils' 'vetements'
             'jardin' 'pantalon' 'pelle' 'cotes' 'rhone' 'caisse' 'caisses' 'etabli' 0
@@ -1180,7 +1180,7 @@ Object  prison "Dans une geôle vide"
   with  name 'prison' 'geole' 'geoles' 'trou' 'taule' 'oubliette' 'cellule' 'mur' 'murs'
             'griffes',
         description "Des murs griffés par les générations de prisonniers qui s'y sont
-            succédées, cette geôle vous apparaît lugubre, dans sa sinistre robe grisâtre.
+            succédé, cette geôle vous apparaît lugubre, dans sa sinistre robe grisâtre.
             Des barreaux verticaux, serrés et raides, forment la façade sud dans laquelle
             s'ouvre la porte, de barreaux elle aussi, par laquelle vous êtes entré.",
         temps 0,
@@ -1225,7 +1225,7 @@ Object  entrepot "Entrepôt du gang de Kay"
             paille naturelle, pas comme vos restes de petit déjeuner, est agglutinée en un
             matelas qui semble plutôt confortable."
             'verre' 'renverse' 'table' 'tablette' 0 "Une table originale sur laquelle
-            trainent, là aussi, de vieux morceaux de fromage.",
+            traînent, là aussi, de vieux morceaux de fromage.",
         before [;
           Smell:
             if (noun == 0) {
@@ -1273,7 +1273,7 @@ Object  couloir_dortoirs "Couloir des dortoirs"
             }
         ],
         n_to [;
-          print "Vous jetez un oeil du côté du dortoir nord et repérez trois soldats en
+          print "Vous jetez un œil du côté du dortoir nord et repérez trois soldats en
           train de jouer aux dés en riant grassement et en écoutant la "; style underline;
           print "Lettre à Élise"; style roman; print " sur un vieil autoradio qui prend
           la moitié de la salle à lui seul. La lumière y abonde et vous doutez que votre
@@ -1389,7 +1389,7 @@ Object  salle_reunion "Antichambre de la salle de réunion"
             StopTimer(self);
           }
           else {
-            print "^^Haletant, Kay vous ratrappe avec une joie sadique non feinte.";
+            print "^^Haletant, Kay vous rattrape avec une joie sadique non feinte.";
             deadflag = 5;
           }
         ],
@@ -1398,7 +1398,7 @@ Object  salle_reunion "Antichambre de la salle de réunion"
         n_to [;
           if (self.vu == 0) {
             self.vu = 1;
-            "Vous jetez un oeil en entrouvrant la porte au nord, et vous voyez Kay et
+            "Vous jetez un œil en entrouvrant la porte au nord, et vous voyez Kay et
             deux acolytes en train de discuter autour d'une table en plastique jaune. De
             nombreux éclats de miroir constellent les parois de la salle et lui donnent une
             allure étrange. Le blason est au milieu d'eux, sur la table.^^
@@ -1427,7 +1427,7 @@ Object  salle_reunion "Antichambre de la salle de réunion"
               else {
                 print "La lampe allumée à la patte, vous faites brusquement irruption dans
                 la salle de réunion. Jouant des reflets sur les miroirs, vous vous
-                éblouissez vous même autant que les trois rats et chancellez, si bien que
+                éblouissez vous même autant que les trois rats et chancelez, si bien que
                 Kay pose sa patte sur votre épaule...^";
                 deadflag = 5;
                 rtrue;
@@ -1481,7 +1481,7 @@ Object  _paille "paille de plastique" trou_dortoirs
         adjective 'plastique',
         description "Les pailles de plastique jonchent le sol de la cuisine tous les
             matins, et vos amis n'ont pas eu beaucoup de mal à s'en approprier
-            suffisament pour confectionner ces couchettes. Elles sont surprenamment rigides,
+            suffisamment pour confectionner ces couchettes. Elles sont surprenamment rigides,
             et peuvent supporter le poids d'une souris comme vous, svelte et agile.",
         prise 0,
         before [;
@@ -1794,7 +1794,7 @@ Object  fille "fille" televiseur
             pourrait avoir un certain charme si elle évitait de vider son flacon dans son
             cou, pensez-vous.";
           Listen:
-            "Un silence captivé, ponctué parfois de ~Non, Stecy ne quitte pas Brandon,
+            "Un silence captivé, ponctué parfois de ~Non, Stacy ne quitte pas Brandon,
             sinon il te trompera avec Vanessa !~";
           Search:
             "Elle est un peu grande pour que vous puissiez la fouiller.";
@@ -1877,14 +1877,14 @@ Object  _ordinateur "ordinateur" ordinateur
         adjective 'centrale',
         description "L'énorme machine et son ronronnement monstrueux vous rappellent
             que vous avez failli mourir jadis étouffé par la poussière qui le garnit,
-            d'une épaisseur résultant d'un amoncellement séculaire. Les cablages n'en
+            d'une épaisseur résultant d'un amoncellement séculaire. Les câblages n'en
             sont pas moins négligés et branlant sous l'effet d'un courant d'air, derrière
             l'unité centrale.",
         eteint 0,
         before [;
           Touch,SwitchOff:
             if (self.eteint == 0) {
-              print "Vous promenez une patte discrète sur les cablages de la machine
+              print "Vous promenez une patte discrète sur les câblages de la machine
               et suite à une maladresse, débranchez un des fils. Un hurlement de rage
               retentit et le jeune garçon se lève d'un bond, proférant jurons et
               injures. Il lui faut plusieurs minutes pour découvrir la source de la
@@ -2197,7 +2197,7 @@ Object  garde_entrepot "gardien endormi" couloir_entrepots
               move garde_entrepot_mort to couloir_entrepots;
               move clef_entrepot to garde_entrepot_mort;
               score = score - 5;
-              "Vous posez un regard sur votre poignard et exprimez une moue de dégout...
+              "Vous posez un regard sur votre poignard et exprimez une moue de dégoût...
               Cependant, saisissant fermement l'arme blanche, vous effectuez votre sale
               besogne d'un geste précis, tailladant profondément la gorge du garde
               endormi.";
@@ -2206,7 +2206,7 @@ Object  garde_entrepot "gardien endormi" couloir_entrepots
               "Sans arme c'est du suicide. Et tuer un rat dans son sommeil vous répugne.";
             }
           Search:
-            "Vous repérez une clef dorée mal acrochée dans la poche intérieure de la veste du
+            "Vous repérez une clef dorée mal accrochée dans la poche intérieure de la veste du
             gardien. Peut-être pourriez-vous la subtiliser si vous êtes assez discret.";
           WakeOther:
             "Le réveiller directement vous ferait repérer, mais si vous l'attiriez vers
@@ -2268,21 +2268,21 @@ Object  _poignard "poignard d'acier trempé" kay_dortoir
               vous pensez qu'il vaut mieux coopérer jusqu'à ce qu'une occasion se
               présente d'elle-même.^";
               if (heros.etat == 4) {
-                "Vous vous dépétrez non sans mal de l'amas de feuilles de papier qui vous
+                "Vous vous dépêtrez non sans mal de l'amas de feuilles de papier qui vous
                 recouvre tandis que le visage du rat s'éclaire.^^
                 ~Un moment j'ai eu un doute mais je vois que c'est bien toi Stan !~
                 Et l'autre de s'esclaffer bêtement.
-                ~C'est vrai que des petiots comme toi y'en a pas des masses. Fallait bien
+                ~C'est vrai que des petiots comme toi y-en a pas des masses. Fallait bien
                 ça pour le blason, hein ?~^
                 Le rat vous tapote l'épaule et repart, rieur.";
               }
               else if (heros.etat == 5) {
-                "Vous vous dépétrez non sans mal de l'amas de feuilles de papier qui vous
+                "Vous vous dépêtrez non sans mal de l'amas de feuilles de papier qui vous
                 recouvre et retirez le foulard noir qui vous masque le museau, tandis que
                 le visage du rat s'éclaire.^^
                 ~Un moment j'ai eu un doute mais je vois que c'est bien toi Stan !~
                 Et l'autre de s'esclaffer bêtement.
-                ~C'est vrai que des petiots comme toi y'en a pas des masses. Fallait bien
+                ~C'est vrai que des petiots comme toi y-en a pas des masses. Fallait bien
                 ça pour le blason, hein ?~^
                 Le rat vous tapote l'épaule et repart, rieur.";
               }
@@ -2291,7 +2291,7 @@ Object  _poignard "poignard d'acier trempé" kay_dortoir
                 sourire gauche, tandis que le visage du rat s'éclaire.^^
                 ~Un moment j'ai eu un doute mais je vois que c'est bien toi Stan !~
                 Et l'autre de s'esclaffer bêtement.
-                ~C'est vrai que des petiots comme toi y'en a pas des masses. Fallait bien
+                ~C'est vrai que des petiots comme toi y-en a pas des masses. Fallait bien
                 ça pour le blason, hein ?~^
                 Le rat vous tapote l'épaule et repart, rieur.";
               }
@@ -2328,7 +2328,7 @@ Object  porte_prison "porte de la prison"
   with  name 'porte' 'portes',
         article "la",
         description "Des piques à brochettes découpés sont alignés et insérez dans un cadre de
-            métal, formant une porte de prison des plus... opressantes. Elle ne s'ouvre ou se
+            métal, formant une porte de prison des plus... oppressantes. Elle ne s'ouvre ou se
             ferme que de l'extérieur.",
         found_in couloir_prisons prison,
         door_dir [;
@@ -2373,7 +2373,7 @@ Object  clef_entrepot "clef de l'entrepôt" garde_entrepot
                 rtrue;
               }
               if (heros.etat == 3) {
-                print "Vous approchez du garde et tendez votre patte, mais en frolant ses
+                print "Vous approchez du garde et tendez votre patte, mais en frôlant ses
                 moustaches, vous éveillez le rat qui, tout estourbi, ne vous voit pas
                 grâce à votre teinture noire, et se rendort. Vous subtilisez la clef de
                 l'entrepot au garde endormi.^";
@@ -2383,7 +2383,7 @@ Object  clef_entrepot "clef de l'entrepôt" garde_entrepot
               }
               else {
                 "Veuillez signaler au concepteur du jeu que vous êtes parvenu à vous balader
-                dans le repaire de Kay sans ressembler à un fantôme ou être tout noir!";
+                dans le repaire de Kay sans ressembler à un fantôme ou être tout noir !";
               }
             }
           Take,Push,Pull,Turn:
@@ -2595,7 +2595,7 @@ Object  dynamo "dynamo" kay_hall
               score = score + 2;
               self.cassee = 1;
               "Vous glissant derrière le rat aveugle avec force précaution, vous lui assénez un
-              coup violent et l'assomez. Vous entreprenez ensuite de briser la dynamo et le
+              coup violent et l'assommez. Vous entreprenez ensuite de briser la dynamo et le
               repaire est soudain plongé dans des ténèbres étrangement rassurantes pour vous.
               Vous distinguez tout de même les objets, car quelques diodes fonctionnent toujours.
               Il doit y avoir une autre source d'énergie, mais c'est toujours ça de gagné.";
@@ -2709,7 +2709,7 @@ Object  lampe "petite lampe pour bicyclette" kay_chambre
               give self light;
               give self on;
               kay_chambre.voir = 1;
-              "Vous allumez la lampe qui éclaire brillament le lieu.";
+              "Vous allumez la lampe qui éclaire brillamment le lieu.";
             }
           SwitchOff:
             if (self.allume == 20) {
@@ -2748,7 +2748,7 @@ Object  blason "blason de la famille royale"
   with  name 'blason' 'ecu' 'bouclier' 'armes' 'armoiries' 'ecusson' 'heraldique' 'royal'
             'royale',
         article "le",
-        description "L'objet qui vous aura vallu cette quête dont vous vous seriez bien
+        description "L'objet qui vous aura valu cette quête dont vous vous seriez bien
             passé. En son centre est gravé un gruyère sans trous.",
         before [;
           Drop,ThrowAt,ThrowDir:
@@ -2835,31 +2835,7 @@ Object  blason "blason de la famille royale"
 
 [ HelpInfo;
   if (menu_item == 1) {
-    print "Ce programme est un jeu d'aventure textuel, ou "; style underline; print
-    "fiction interactive"; style roman; print " et se base donc sur un dialogue entre
-    le joueur, vous, et sa machine. Ainsi vous pouvez interagir avec le milieu
-    environnant à travers des ordres à l'infinitif, tels que ceux-ci :^";
-    print " > prendre la boite^ > manger le fromage^ > regarder le roi^^
-    Il peut arriver (voire assez souvent pour un joueur néophyte) que vos instructions ne
-    soient pas comprises, vous pouvez alors réessayer en reformulant d'une manière plus
-    claire et simple (l'association "; style underline; print "verbe"; style roman; print
-    " + "; style underline; print "complément"; style roman; print " est la plus
-    courante).^^";
-    print "Pour déplacer votre personnage de lieux en lieux, utilisez les huits points
-    cardinaux ("; style underline; print "nord, nord-est, est, sud-est, sud, sud-ouest,
-    ouest, nord-ouest, nord"; style roman; print ") ainsi qu'"; style underline; print
-    "entrer, sortir, haut, bas"; style roman; print ".^Pour avoir de nouveau la description
-    d'un lieu qui apparaît lorsque l'on s'y rend, tapez "; style underline; print
-    "regarder"; style roman; print " lorsque vous vous y trouvez.^Pour lister vos
-    acquisitions, tapez "; style underline; print "inventaire"; style roman; print " et
-    enfin en rapport avec votre progression, utilisez "; style underline; print "score"; style
-    roman; print " ou "; style underline; print "fullscore"; style roman; print " pour en avoir
-    connaissance, ainsi que les commandes "; style underline; print "sauvegarder, charger";
-    style roman; print " et "; style underline; print "recommencer"; style roman; print ".^^
-    Si vous ne savez plus que faire pour progresser dans l'intrigue, la commande "; style underline;
-    print "astuces"; style roman; print " vous fournira une aide appréciable.^^
-    Enfin le site "; style underline; print "http://www.fiction-interactive.fr"; style roman;
-    print " et toute la communauté française de fiction interactive sont à votre disposition.^";
+    AideSub();
   }
   if (menu_item == 2) {
     SoluceSub();
@@ -2878,6 +2854,33 @@ Object  blason "blason de la famille royale"
   }
 ];
 
+[ AideSub;
+  print "Ce programme est un jeu d'aventure textuel, ou "; style underline; print
+  "fiction interactive"; style roman; print " et se base donc sur un dialogue entre
+  le joueur, vous, et sa machine. Ainsi vous pouvez interagir avec le milieu
+  environnant à travers des ordres à l'infinitif, tels que ceux-ci :^";
+  print " > prendre la boite^ > manger le fromage^ > regarder le roi^^
+  Il peut arriver (voire assez souvent pour un joueur néophyte) que vos instructions ne
+  soient pas comprises, vous pouvez alors réessayer en reformulant d'une manière plus
+  claire et simple (l'association "; style underline; print "verbe"; style roman; print
+  " + "; style underline; print "complément"; style roman; print " est la plus
+  courante).^^";
+  print "Pour déplacer votre personnage de lieux en lieux, utilisez les huit points
+  cardinaux ("; style underline; print "nord, nord-est, est, sud-est, sud, sud-ouest,
+  ouest, nord-ouest, nord"; style roman; print ") ainsi qu'"; style underline; print
+  "entrer, sortir, haut, bas"; style roman; print ".^Pour avoir de nouveau la description
+  d'un lieu qui apparaît lorsque l'on s'y rend, tapez "; style underline; print
+  "regarder"; style roman; print " lorsque vous vous y trouvez.^Pour lister vos
+  acquisitions, tapez "; style underline; print "inventaire"; style roman; print " et
+  enfin en rapport avec votre progression, utilisez "; style underline; print "score"; style
+  roman; print " ou "; style underline; print "fullscore"; style roman; print " pour en avoir
+  connaissance, ainsi que les commandes "; style underline; print "sauvegarder, charger";
+  style roman; print " et "; style underline; print "recommencer"; style roman; print ".^^
+  Si vous ne savez plus que faire pour progresser dans l'intrigue, la commande "; style underline;
+  print "astuces"; style roman; print " vous fournira une aide appréciable.^^
+  Enfin le site "; style underline; print "http://www.fiction-interactive.fr"; style roman;
+  print " et toute la communauté francophone de fiction interactive sont à votre disposition.^";
+];
 
 [ TipsSub;
   if (trou_trone hasnt visited) {
@@ -2897,7 +2900,7 @@ Object  blason "blason de la famille royale"
     la confiance du rat idiot qui en garde l'entrée. Ses allures de glouton ne trompent pas.";
   }
   if (salle_reunion.vu == 0) {
-    "Aller un peu au nord, pour jeter un oeil furtif dans la salle.";
+    "Aller un peu au nord, pour jeter un œil furtif dans la salle.";
   }
   if (salle_reunion.vu == 1) {
     "Cette fois vous devez subtiliser le blason, soit grâce à un déguisement, soit grâce à un
@@ -2968,7 +2971,7 @@ Object  blason "blason de la famille royale"
     style bold; print "Solution du voleur"; style roman; print "^Si vous êtes peint en noir
     et que vous portez le foulard, vous pourrez directement subtiliser la clef du garde
     durant son sommeil, discrètement.^^";
-    style bold; print "Solution musciale"; style roman; print "^Munissez-vous de la boîte de
+    style bold; print "Solution musicale"; style roman; print "^Munissez-vous de la boîte de
     conserve trouvée dans la prison du côté nord, et une fois à côté du gardien endormi,
     lancez-la à l'ouest. Le vacarme réveillera le garde qui fera tomber la clef en se
     déplaçant.^";
