@@ -833,11 +833,20 @@ Object  chambre_parents "Chambre des parents"
         ],
         count 0,
         scenic_look 'cigarette' 'clope' 'cigare' 'petard' 0 "Une cigarette sans filtre, banale."
-            'fenetre' 'carreau' 0 "Une fenêtre a carreaux, comme dans le reste de la
+            'fenetre' 'carreau' 0 "Une fenêtre à carreaux, comme dans le reste de la
             maison.",
+        initial [;
+          self.count = 0;
+        ],
         each_turn [;
           self.count = self.count + 1;
-          if (self.count == 6) {
+          if (self.count == 5) {
+            "^La mère étant son bras vers le jardin, et tapotte sa cigarette de l'index
+            pour laisser choir des cendres de tabac consumé. Elle détourne brièvement son
+            regard vers l'intérieur de la chambre, mais ne semble pas vous remarquer. Ouf !
+            Mieux vaut ne pas s'attarder, sa musophobie est légendaire dans tout le royaume.";
+          }
+          if (self.count == 8) {
             print "^Un cri de stupeur retentit lorsque la femme se détourne de la
             fenêtre, sa cigarette consumée, et vous comprenez que vous en êtes le
             motif. Affolée, elle court vers le couloir et vous écrase au passage.";
